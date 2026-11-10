@@ -76,6 +76,9 @@ npm run build
 # chrome://extensions -> Developer mode -> Load unpacked -> .output/chrome-mv3
 ```
 
+Prefer a packaged download? Grab the
+[latest release](https://github.com/loftwah/thinktype/releases/latest), unzip it, and load the folder.
+
 Open [chatgpt.com](https://chatgpt.com), start a new chat, and type a real prompt. The HUD appears in
 the top-right. Send the message to get a receipt; **Copy receipt** puts the card on your clipboard.
 
