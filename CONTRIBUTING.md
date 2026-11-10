@@ -10,12 +10,8 @@ npm install
 npm run dev
 ```
 
-`npm run dev` starts WXT and launches Chrome with the extension loaded. For a production build:
-
-```bash
-npm run build
-# chrome://extensions -> Developer mode -> Load unpacked -> .output/chrome-mv3
-```
+`npm run dev` starts WXT and launches Chrome with the extension loaded. For a production build, run
+`npm run build`, then load `.output/chrome-mv3` as an unpacked extension.
 
 `npm run demo` serves the real HUD and share-receipt components with sample data at
 `http://localhost:4173` — useful for visual work without reloading the extension.

@@ -19,10 +19,13 @@ Everything here is a real capture of the built UI with sample data. It is placeh
 
 ```bash
 npm run demo
-# http://localhost:4173/preview.html  -> hero.png (1280×960)
-# http://localhost:4173/card.html     -> #card-stage (1200×630)
-# http://localhost:4173/hud.html      -> .hud element (or capture the real extension)
 ```
+
+Then open these pages:
+
+- `http://localhost:4173/preview.html` → `hero.png` (1280×960)
+- `http://localhost:4173/card.html` → the `#card-stage` element (1200×630)
+- `http://localhost:4173/hud.html` → the `.hud` element (or capture the real extension)
 
 Sample data lives in `demo/preview.ts`. Change it there, not in the images.
 

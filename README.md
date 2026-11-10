@@ -69,12 +69,8 @@ npm run dev
 ```
 
 `npm run dev` starts WXT and opens Chrome with the extension loaded. If you prefer a production
-build:
-
-```bash
-npm run build
-# chrome://extensions -> Developer mode -> Load unpacked -> .output/chrome-mv3
-```
+build, run `npm run build`, then open `chrome://extensions`, enable Developer mode, choose **Load
+unpacked**, and select `.output/chrome-mv3`.
 
 Prefer a packaged download? Grab the
 [latest release](https://github.com/loftwah/thinktype/releases/latest), unzip it, and load the folder.
@@ -152,17 +148,21 @@ wxt.config.ts            manifest and permissions
 
 ## Development
 
-```bash
-npm run dev        # WXT dev server + Chrome
-npm run typecheck  # tsc --noEmit
-npm test           # vitest
-npm run build      # .output/chrome-mv3
-npm run zip        # .output/thinktype-0.1.0-chrome.zip
-npm run demo       # visual preview at localhost:4173
-npm run icons      # regenerate public/icon from assets/icon.svg
-```
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Start WXT and Chrome |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm test` | Run the Vitest suite |
+| `npm run build` | Production build in `.output/chrome-mv3` |
+| `npm run zip` | Store-ready zip in `.output/` |
+| `npm run demo` | Visual preview at `localhost:4173` |
+| `npm run icons` | Regenerate `public/icon` from `assets/icon.svg` |
+| `npm run check` | Typecheck, test and build |
 
 `npm run typecheck && npm test && npm run build` is the full check.
+
+> **zsh note:** interactive comments are off by default, so a trailing `# comment` is passed to the
+> command as arguments. Run commands on their own, or add `setopt interactivecomments` to `~/.zshrc`.
 
 ## Limitations (v0.1)
 
