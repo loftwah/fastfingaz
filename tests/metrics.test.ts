@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { RawSession, SessionRecord } from '../src/shared/types';
+import type { RawSession, SessionRecord } from '../shared/types';
 import {
   aggregate,
   computeStats,
@@ -10,7 +10,7 @@ import {
   median,
   thinkRatio,
   wpmFrom,
-} from '../src/shared/metrics';
+} from '../shared/metrics';
 
 function raw(overrides: Partial<RawSession> = {}): RawSession {
   return {

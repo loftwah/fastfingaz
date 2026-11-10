@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="manifest.open_in_tab" content="true" />
+    <title>Thinktype — settings</title>
+    <link rel="stylesheet" href="/fonts.css" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="top-rule" aria-hidden="true"></div>
+
+    <header class="masthead">
+      <div class="brand">
+        <span class="wordmark">THINKTYPE</span>
+        <span class="serial">TT-01</span>
+      </div>
+      <p class="tagline">A typing instrument for thoughts.</p>
+      <div class="meta-row">
+        <span>SETTINGS / REV. <span id="version">0.1.0</span></span>
+        <span>LOCAL ONLY / NO SERVER</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="spec-section">
+        <div class="section-label">
+          <h1>MEASUREMENT</h1>
+          <p class="section-note">THE SIGNAL MODEL</p>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <div class="field-head">
+              <label for="idle">Thinking threshold</label>
+              <output id="idle-value" for="idle">2.0s</output>
+            </div>
+            <input type="range" id="idle" min="1000" max="5000" step="250" />
+            <p class="hint">
+              Gaps longer than this count as thinking and are excluded from flow WPM. Lower it for
+              stricter numbers; raise it if you pause mid-sentence.
+            </p>
+          </div>
+
+          <div class="field row">
+            <div>
+              <label for="minchars">Minimum message length</label>
+              <p class="hint">Quick “thanks” messages are conversation, not a reading.</p>
+            </div>
+            <div class="input-wrap">
+              <input type="number" id="minchars" min="0" max="200" step="1" />
+              <span>CHARS</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="spec-section">
+        <div class="section-label">
+          <h1>HUD</h1>
+          <p class="section-note">THE FLOATING READOUT</p>
+        </div>
+        <div class="section-body">
+          <label class="switch-row" for="show-hud">
+            <span class="switch-copy">
+              <b>Show the floating HUD</b>
+              <span>Tracking continues when it is hidden. Toggle any time with Alt+Shift+T.</span>
+            </span>
+            <input type="checkbox" id="show-hud" class="switch" />
+          </label>
+
+          <div class="field row">
+            <div>
+              <label for="theme">Theme</label>
+              <p class="hint">Auto follows the ChatGPT page.</p>
+            </div>
+            <select id="theme">
+              <option value="auto">AUTO</option>
+              <option value="dark">DARK</option>
+              <option value="light">PAPER</option>
+            </select>
+          </div>
+
+          <button id="reset-pos" class="ghost" type="button">RESET HUD POSITION</button>
+        </div>
+      </section>
+
+      <section class="spec-section">
+        <div class="section-label">
+          <h1>PRIVACY</h1>
+          <p class="section-note">WHAT LEAVES THIS MACHINE</p>
+        </div>
+        <div class="section-body">
+          <label class="switch-row" for="store-text">
+            <span class="switch-copy">
+              <b>Store the text of sent prompts</b>
+              <span>
+                Off by default. When on, text stays in <code>chrome.storage.local</code> on this
+                machine and appears in your export.
+              </span>
+            </span>
+            <input type="checkbox" id="store-text" class="switch" />
+          </label>
+
+          <div class="callout">
+            <span class="callout-mark" aria-hidden="true"></span>
+            <p>
+              Thinktype has no server. Numbers and text stay in this browser unless you export them
+              yourself.
+            </p>
+          </div>
+
+          <div class="actions">
+            <button id="export" class="ghost" type="button">EXPORT DATA</button>
+            <button id="clear" class="danger" type="button">CLEAR ALL SESSIONS</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="spec-section">
+        <div class="section-label">
+          <h1>SPEC</h1>
+          <p class="section-note">BUILD + SOURCE</p>
+        </div>
+        <div class="section-body">
+          <div class="spec-line"><span>VERSION</span><b id="version-line">0.1.0</b></div>
+          <div class="spec-line"><span>PLATFORM</span><b>CHROME MV3</b></div>
+          <div class="spec-line"><span>STACK</span><b>WXT / TYPESCRIPT</b></div>
+          <div class="spec-line">
+            <span>SOURCE</span>
+            <b><a href="https://github.com/loftwah/thinktype" target="_blank" rel="noreferrer">GITHUB ↗</a></b>
+          </div>
+          <div class="spec-line">
+            <span>METRICS</span>
+            <b
+              ><a
+                href="https://github.com/loftwah/thinktype/blob/main/docs/METRICS.md"
+                target="_blank"
+                rel="noreferrer"
+                >METHOD ↗</a
+              ></b
+            >
+          </div>
+          <p class="hint closing">
+            Built for people who type better when they are thinking, not copying. The numbers are a
+            mirror, not a scoreboard.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="page-footer">
+      <span>THINKTYPE / LOCAL ONLY</span>
+      <span>MIT © DEAN LOFTS</span>
+    </footer>
+
+    <div class="toast" id="toast" hidden></div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

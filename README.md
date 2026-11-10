@@ -1,88 +1,115 @@
 <div align="center">
-  <img src="docs/art/hero.png" alt="Thinktype — your real typing speed, while you're actually thinking" width="100%" />
+  <img src="docs/art/hero.png" alt="Thinktype — a typing instrument for thoughts" width="100%" />
 </div>
 
 <h1 align="center">thinktype</h1>
 
-<p align="center"><strong>Your real typing speed, while you're actually thinking.</strong></p>
+<p align="center"><strong>A typing instrument for thoughts.</strong></p>
 
 <p align="center">
-  Chrome (Manifest V3) · local-only · <a href="docs/METRICS.md">how the metrics work</a> ·
-  <a href="CONTRIBUTING.md">contributing</a>
+  Chrome MV3 · <a href="docs/METRICS.md">how the metrics work</a> ·
+  <a href="DESIGN.md">design notes</a> · <a href="CONTRIBUTING.md">contributing</a>
 </p>
 
-A Chrome extension for ChatGPT that measures how fast you compose your own words. It watches the
-composer locally, separates typing from thinking, and turns each prompt into a shareable stat card.
+Thinktype measures how fast you compose your own words inside ChatGPT, separates thinking time from
+hands-on typing time, and prints a receipt for every prompt you send.
 
-Typing tests measure transcription: you copy a sentence that is already on screen. That number says
-very little about writing original thought. Thinktype measures the thing you actually care about —
-how quickly a finished idea becomes text — and shows you both clocks:
+Typing tests measure transcription: the sentence already exists. That number says very little about
+writing original thought. Thinktype has no target text, so it measures the thing you actually care
+about — how quickly a finished idea becomes text — and shows both clocks:
 
 - **Think WPM** — the whole message, thinking pauses included.
 - **Flow WPM** — your hands-only cadence when the words are already there.
 
 The gap between them is the interesting part.
 
+## The instrument
+
+The visual world is a field instrument, not a SaaS dashboard. The reference is **Teenage
+Engineering**'s anodised black, signal orange, technical-label language (OP-1 field, TX-6) — the
+palette, type, density and one signature move, not a pretend hardware shell.
+
+The type system is Vercel's **Geist** family, self-hosted under the SIL Open Font License:
+
+| Face | Job |
+| --- | --- |
+| **Geist Sans** | UI, running copy, settings prose |
+| **Geist Mono** | Every number, technical label, serial and timestamp |
+| **Geist Pixel Square** | The T mark and display wordmark only — never body copy |
+
+No gradient text, glass, glows, or serif accents. The signature move is the **receipt**: when you
+send a prompt, the HUD prints a paper receipt. That receipt is also the share card.
+
+Geist is bundled in `public/fonts/`. Inside ChatGPT the font files are inlined as `data:` URIs in the
+content script, because the page's CSP allows `font-src data:` but not `chrome-extension:`.
+
 ## What it measures
 
 | Metric | Definition |
 | --- | --- |
-| **Think WPM** | Final characters ÷ 5 ÷ wall-clock minutes. From first keystroke to send. This is your finished-thought speed. |
-| **Flow WPM** | Inserted characters ÷ 5 ÷ active minutes. Gaps over your idle threshold are clamped out. This is your hands. |
-| **Peak** | Best 5-second burst in the session. |
-| **Consistency** | 100 minus the coefficient of variation of inter-key intervals (0–100, Monkeytype-style). |
+| **Think WPM** | Final characters ÷ 5 ÷ wall-clock minutes, from first keystroke to send. |
+| **Flow WPM** | Inserted characters ÷ 5 ÷ active minutes. Gaps over the idle threshold are clamped out. |
+| **Peak** | Best 5-second burst. |
+| **Consistency** | 100 minus the coefficient of variation of inter-key intervals. |
 | **Correction rate** | Deleted characters as a share of all edit keystrokes. |
-| **Thinking overhead** | `1 − think/flow`, shown on the share card. The share of your raw cadence that thinking consumed. |
-| **Signal** | How much of the final text is attributable to observed keystrokes. Drops with paste, autocorrect, undo and IMEs. |
+| **Thinking overhead** | `1 − think/flow`; the share of raw cadence consumed by thinking. |
+| **Signal** | How much of the final text is attributable to observed keystrokes. |
 | **Pauses** | Gaps over the idle threshold, with a median and longest. |
 
-There is no target text, so "accuracy" is not a meaningful metric here. Correction rate plus signal
-quality is the honest replacement. [docs/METRICS.md](docs/METRICS.md) has the formulas and the
-reasoning.
+There is no target text, so "accuracy" is not meaningful here. Correction rate plus signal quality
+is the honest replacement. The formulas and limitations are in [docs/METRICS.md](docs/METRICS.md).
 
-## Install (developer build)
+## Install
 
 ```bash
 git clone https://github.com/loftwah/thinktype.git
 cd thinktype
 npm install
-npm run build
+npm run dev
 ```
 
-Then:
+`npm run dev` starts WXT and opens Chrome with the extension loaded. If you prefer a production
+build:
 
-1. Open `chrome://extensions`.
-2. Turn on **Developer mode**.
-3. Choose **Load unpacked** and select the `dist/` folder.
-4. Open [chatgpt.com](https://chatgpt.com), start a new chat, and type a real prompt.
+```bash
+npm run build
+# chrome://extensions -> Developer mode -> Load unpacked -> .output/chrome-mv3
+```
 
-The HUD appears in the top-right. Send the message to get a receipt with **Copy card**. Toggle the
-HUD any time with <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd>.
+Open [chatgpt.com](https://chatgpt.com), start a new chat, and type a real prompt. The HUD appears in
+the top-right. Send the message to get a receipt; **Copy receipt** puts the card on your clipboard.
+
+Toggle the HUD any time with <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd>.
 
 ## Screenshots
 
 <p align="center">
-  <img src="docs/art/hud.png" alt="Thinktype HUD while typing" width="420" />
-  <img src="docs/art/share-card.png" alt="Thinktype share card" width="680" />
+  <img src="docs/art/hud.png" alt="Thinktype HUD over ChatGPT" width="420" />
 </p>
 
-The artwork in `docs/art/` is placeholder brand material; see [docs/art/README.md](docs/art/README.md)
-for sizes and what to replace. The card itself is generated on your machine by the extension — no
-template service.
+<p align="center">
+  <img src="docs/art/share-card.png" alt="Thinktype share receipt" width="720" />
+</p>
+
+<p align="center">
+  <img src="docs/art/popup.png" alt="Thinktype history popup" width="300" />
+  <img src="docs/art/options.png" alt="Thinktype settings sheet" width="480" />
+</p>
+
+More placeholder captures live in [docs/art](docs/art), including the session detail view.
 
 ## How it works
 
-- A content script finds the ChatGPT composer (`div.ProseMirror[data-composer-markdown]`, with
+- **WXT** owns the manifest, entrypoints, dev server and store packaging. Chrome MV3 first; the
+  structure is ready for Firefox.
+- A content script finds ChatGPT's composer (`div.ProseMirror[data-composer-markdown]`, with
   fallbacks for older textareas and generic editables).
-- It listens to `keydown`, `beforeinput`, `paste` and input events. It never intercepts, blocks or
-  rewrites a keystroke.
+- It listens to `keydown`, `beforeinput`, `paste` and input events. It never intercepts or rewrites a
+  keystroke.
 - On send — Enter or the send button, followed by the composer clearing — it computes stats from the
-  final text plus the keystroke timings.
+  final text plus keystroke timings.
 - Only metrics are written to `chrome.storage.local`. There is no network code in the extension.
-- The HUD lives in a closed-off shadow root. The share card is drawn with Canvas.
-
-Sending a message is the only "confirm" action: drafts you delete are discarded. Sessions shorter
-than the minimum length are ignored.
+- The HUD lives in a shadow root; the share card is drawn with Canvas at 2× and copied as a PNG.
 
 ## Privacy
 
@@ -96,39 +123,43 @@ than the minimum length are ignored.
 ## Project layout
 
 ```text
-src/
+entrypoints/
   background.ts          service worker: badge + keyboard command
-  content/
-    composer.ts          resilient composer discovery and text extraction
-    tracker.ts           DOM adapter: keystrokes -> sessions
-    typing-session.ts    pure measurement state machine (tested)
-    overlay.ts/.css      floating HUD in a shadow root
-    index.ts             content-script bootstrap
-  popup/                 history, chart, share-card detail
+  content.ts             content-script bootstrap
+  popup/                 history, chart, receipt detail
   options/               measurement, HUD, privacy settings
-  shared/
-    metrics.ts           pure WPM / consistency / pause math (tested)
-    share-card.ts        1200x630 canvas card
-    storage.ts           chrome.storage.local helpers
-    types.ts             data model
+content/
+  composer.ts            resilient composer discovery and text extraction
+  tracker.ts             DOM adapter: keystrokes -> sessions
+  typing-session.ts      pure measurement state machine (tested)
+  overlay.ts/.css        floating HUD in a shadow root
+  font-faces.ts          data-URI fonts for the page context
+shared/
+  metrics.ts             pure WPM / consistency / pause math (tested)
+  share-card.ts          1200x630 canvas receipt
+  storage.ts             chrome.storage.local helpers
+  brand.ts               palette, type, font faces, serials
+public/
+  fonts/                 Geist Sans / Mono / Pixel + OFL
+  icon/                  16/32/48/128 pixel-T icons
+demo/                    Vite visual preview without installing the extension
 tests/                   24 unit tests for the state machine and metrics
-demo/                    visual preview without installing the extension
-docs/                    metrics, design, roadmap, placeholder art
+wxt.config.ts            manifest and permissions
 ```
 
 ## Development
 
 ```bash
-npm run dev        # esbuild watch
+npm run dev        # WXT dev server + Chrome
 npm run typecheck  # tsc --noEmit
 npm test           # vitest
-npm run build      # dist/
+npm run build      # .output/chrome-mv3
+npm run zip        # .output/thinktype-0.1.0-chrome.zip
 npm run demo       # visual preview at localhost:4173
-npm run zip        # Chrome Web Store zip
+npm run icons      # regenerate public/icon from assets/icon.svg
 ```
 
-The `demo/` pages render the real HUD and share-card code with sample data, so UI work does not
-require loading the extension. `npm run typecheck && npm test && npm run build` is the full check.
+`npm run typecheck && npm test && npm run build` is the full check.
 
 ## Limitations (v0.1)
 
@@ -138,7 +169,8 @@ require loading the extension. `npm run typecheck && npm test && npm run build` 
   approximate there.
 - Typing into an existing draft is not counted. Start from an empty composer.
 - Autocorrect, undo and paste lower confidence rather than pretending to be precise.
-- Chrome only for now. The measurement core is host-agnostic; more hosts are on the roadmap.
+- Chrome only for now. The measurement core is host-agnostic; WXT makes Firefox a realistic next
+  target.
 
 ## Roadmap
 
@@ -147,4 +179,5 @@ better IME handling, and then other chat UIs. Full list in [docs/ROADMAP.md](doc
 
 ## License
 
-MIT © Dean Lofts. See [LICENSE](LICENSE).
+MIT © Dean Lofts. Geist is © Vercel and licensed under the SIL Open Font License 1.1; the license
+text ships in `public/fonts/OFL.txt`.

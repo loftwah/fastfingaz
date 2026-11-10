@@ -1,17 +1,21 @@
 {
+  "extends": "./.wxt/tsconfig.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "strict": true,
+    "noUncheckedIndexedAccess": false,
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
     "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "skipLibCheck": true,
-    "noEmit": true,
-    "types": ["chrome"]
+    "skipLibCheck": true
   },
-  "include": ["src", "tests", "demo"]
+  "include": [
+    ".wxt/types/**/*.d.ts",
+    "entrypoints",
+    "content",
+    "shared",
+    "types",
+    "tests",
+    "demo",
+    "wxt.config.ts"
+  ]
 }

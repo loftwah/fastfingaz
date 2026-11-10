@@ -1,5 +1,7 @@
 node_modules/
 dist/
+.output/
+.wxt/
 demo/dist/
 *.zip
 .DS_Store
@@ -7,3 +9,5 @@ demo/dist/
 .idea/
 coverage/
 *.log
+.impeccable/*
+!.impeccable/design.json

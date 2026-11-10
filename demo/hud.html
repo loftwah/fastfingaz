@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>Thinktype HUD</title>
+    <link rel="stylesheet" href="/fonts.css" />
     <style>
       html,
       body {
@@ -10,18 +11,15 @@
         padding: 0;
       }
       body {
-        width: 400px;
-        height: 240px;
+        width: 420px;
+        height: 260px;
         overflow: hidden;
-        background:
-          radial-gradient(60% 80% at 90% 0%, rgba(155, 140, 255, 0.14), transparent 70%),
-          radial-gradient(60% 80% at 0% 100%, rgba(201, 247, 91, 0.07), transparent 70%),
-          #07080a;
+        background: #f2efe6;
       }
     </style>
   </head>
   <body>
     <div id="hud-stage"></div>
-    <script src="dist/preview.js"></script>
+    <script type="module" src="./preview.ts"></script>
   </body>
 </html>

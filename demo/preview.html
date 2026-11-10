@@ -4,7 +4,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Thinktype — visual preview</title>
+    <link rel="stylesheet" href="/fonts.css" />
     <style>
+      :root {
+        --paper: #f2efe6;
+        --ink: #0b0b0a;
+        --muted: #6d675c;
+        --faint: #9a9488;
+        --line: #d5cfc1;
+        --line-strong: #bdb6a7;
+        --orange: #ff4d00;
+        --orange-ink: #b83600;
+      }
       * {
         box-sizing: border-box;
       }
@@ -17,191 +28,196 @@
         width: 1280px;
         height: 960px;
         overflow: hidden;
-        background:
-          radial-gradient(55% 45% at 92% 0%, rgba(155, 140, 255, 0.16), transparent 70%),
-          radial-gradient(45% 40% at 0% 100%, rgba(201, 247, 91, 0.08), transparent 70%),
-          #07080a;
-        color: #f2f4f7;
+        background: var(--paper);
+        color: var(--ink);
         font-family:
-          -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Helvetica, Arial, sans-serif;
+          'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
       }
-      .dots {
-        position: fixed;
-        inset: 0;
-        background-image: radial-gradient(rgba(255, 255, 255, 0.5) 0.6px, transparent 0.7px);
-        background-size: 26px 26px;
-        opacity: 0.045;
-        pointer-events: none;
+
+      .top-rule {
+        height: 6px;
+        background: var(--orange);
       }
-      .brand {
-        position: absolute;
-        top: 46px;
-        left: 64px;
+
+      .header {
         display: flex;
-        align-items: center;
+        align-items: baseline;
+        justify-content: space-between;
+        padding: 40px 64px 0;
+      }
+
+      .brand {
+        display: flex;
+        align-items: baseline;
         gap: 11px;
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
       }
-      .mark {
-        width: 24px;
-        height: 24px;
+
+      .wordmark {
+        font-family: 'Geist Pixel', 'Geist Mono', ui-monospace, monospace;
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 1;
       }
+
+      .serial,
+      .meta {
+        font-family: 'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+      }
+
+      .meta {
+        color: var(--faint);
+      }
+
       .copy {
         position: absolute;
-        top: 150px;
+        top: 132px;
         left: 64px;
-        width: 660px;
+        width: 700px;
       }
+
       h1 {
         margin: 0;
-        font-size: 56px;
-        line-height: 1.04;
+        max-width: 700px;
+        font-size: 54px;
+        line-height: 1.03;
         letter-spacing: -0.035em;
         font-weight: 600;
       }
-      h1 span {
-        background: linear-gradient(100deg, #e6ffa8, #5eead4);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-      }
+
       .sub {
-        margin: 22px 0 0;
-        max-width: 520px;
-        font-size: 17px;
+        margin: 20px 0 0;
+        max-width: 470px;
+        font-size: 16px;
         line-height: 1.55;
-        color: #8b929c;
+        color: var(--muted);
       }
+
       .card-block {
         position: absolute;
-        top: 450px;
+        top: 420px;
         left: 64px;
-        width: 800px;
+        width: 820px;
       }
+
       .block-label {
-        margin-bottom: 10px;
-        font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
-        font-size: 9px;
-        font-weight: 600;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: #5f6670;
+        margin-bottom: 8px;
+        font-family: 'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+        font-size: 8px;
+        letter-spacing: 0.12em;
+        color: var(--faint);
       }
+
       #hero-card {
-        border: 1px solid rgba(255, 255, 255, 0.09);
-        border-radius: 18px;
-        overflow: hidden;
-        box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.9);
+        border: 1px solid var(--line-strong);
+        box-shadow: 0 24px 50px -36px rgba(30, 24, 12, 0.45);
+      }
+
+      #hero-card canvas {
+        display: block;
+        width: 100%;
+        height: auto;
       }
 
       .features {
         position: absolute;
-        top: 450px;
+        top: 420px;
         right: 64px;
-        width: 320px;
-      }
-      .feature {
-        padding: 16px 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-      }
-      .feature:last-child {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      }
-      .feature b {
-        display: block;
-        margin-bottom: 5px;
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: #c9f75b;
-      }
-      .feature:nth-child(2) b {
-        color: #9b8cff;
-      }
-      .feature:nth-child(3) b {
-        color: #5eead4;
-      }
-      .feature p {
-        margin: 0;
-        font-size: 13px;
-        line-height: 1.5;
-        color: #8b929c;
+        width: 356px;
       }
 
-      .foot {
+      .feature {
+        padding: 14px 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .feature:last-child {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .feature b {
+        display: block;
+        margin-bottom: 4px;
+        font-family: 'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        color: var(--orange-ink);
+      }
+
+      .feature p {
+        margin: 0;
+        font-size: 11.5px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+
+      .footer {
         position: absolute;
         left: 64px;
         right: 64px;
-        bottom: 34px;
+        bottom: 30px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
-        font-size: 10px;
-        color: #5f6670;
-      }
-      .foot a {
-        color: #8b929c;
-        text-decoration: none;
+        padding-top: 10px;
+        border-top: 1px solid var(--line);
+        font-family: 'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+        font-size: 8px;
+        letter-spacing: 0.1em;
+        color: var(--faint);
       }
     </style>
   </head>
   <body>
-    <div class="dots"></div>
+    <div class="top-rule"></div>
 
-    <div class="brand">
-      <svg class="mark" viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="5" y="5" width="13" height="2.8" rx="1.4" fill="url(#g)" />
-        <rect x="10" y="5" width="2.8" height="15" rx="1.4" fill="url(#g)" />
-        <defs>
-          <linearGradient id="g" x1="5" y1="5" x2="18" y2="20">
-            <stop offset="0" stop-color="#e6ffa8" />
-            <stop offset="1" stop-color="#5eead4" />
-          </linearGradient>
-        </defs>
-      </svg>
-      <span>thinktype</span>
-    </div>
+    <header class="header">
+      <div class="brand">
+        <span class="wordmark">THINKTYPE</span>
+        <span class="serial">TT-01</span>
+      </div>
+      <span class="meta">VISUAL PREVIEW / REV. 0.2</span>
+    </header>
 
     <div class="copy">
-      <h1>Your real typing speed,<br />while you're <span>actually thinking.</span></h1>
+      <h1>Your real typing speed,<br />while you're actually thinking.</h1>
       <p class="sub">
-        A Chrome extension that measures how fast you compose your own words in ChatGPT. No test
-        paragraphs. No memorising. Think WPM versus flow WPM.
+        A typing instrument for thoughts. It measures finished-thought speed and hands-on cadence
+        inside ChatGPT — no test paragraphs, no memorising.
       </p>
     </div>
 
     <div class="card-block">
-      <div class="block-label">Share card · generated locally</div>
+      <div class="block-label">SHARE RECEIPT / 1200 × 630 / GENERATED LOCALLY</div>
       <div id="hero-card"></div>
     </div>
 
     <div class="features">
       <div class="feature">
-        <b>Think WPM</b>
+        <b>THINK WPM</b>
         <p>Finished words per minute across the whole message, thinking pauses included.</p>
       </div>
       <div class="feature">
-        <b>Flow WPM</b>
+        <b>FLOW WPM</b>
         <p>Your hands-only cadence: the speed you type when the words are already there.</p>
       </div>
       <div class="feature">
-        <b>Local only</b>
-        <p>No server, no account. Metrics stay in the browser. Text is not stored by default.</p>
+        <b>LOCAL ONLY</b>
+        <p>No server, no account. Numbers stay in the browser; prompt text is opt-in.</p>
       </div>
     </div>
 
-    <div class="foot">
+    <footer class="footer">
       <span>github.com/loftwah/thinktype</span>
-      <span>Chrome MV3 · v0.1.0 · visual placeholder</span>
-    </div>
+      <span>WXT / CHROME MV3 / PLACEHOLDER ART</span>
+    </footer>
 
-    <div id="demo-hud"></div>
-    <script src="dist/preview.js"></script>
+    <div id="demo-hud" hidden></div>
+    <script type="module" src="./preview.ts"></script>
   </body>
 </html>

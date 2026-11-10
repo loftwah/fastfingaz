@@ -1,0 +1,716 @@
+:root {
+  --bg: #f2efe6;
+  --text: #0b0b0a;
+  --muted: #6d675c;
+  --faint: #6d675c;
+  --line: #d5cfc1;
+  --line-strong: #bdb6a7;
+  --orange: #b83600;
+  --orange-bright: #ff4d00;
+  --solid-bg: #0b0b0a;
+  --solid-text: #f2efe6;
+  --device-bg: #0b0b0a;
+  --device-text: #f7f5ef;
+  --device-muted: #b9b3a6;
+  --device-line: #2a2824;
+  --device-orange: #ff4d00;
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #0b0b0a;
+  --text: #f7f5ef;
+  --muted: #9a9488;
+  --faint: #9a9488;
+  --line: #2a2824;
+  --line-strong: #3a3732;
+  --orange: #ff4d00;
+  --orange-bright: #ff4d00;
+  --solid-bg: #f2efe6;
+  --solid-text: #0b0b0a;
+  --device-bg: #171715;
+  --device-text: #f7f5ef;
+  --device-muted: #9a9488;
+  --device-line: #2a2824;
+  --device-orange: #ff4d00;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 380px;
+  max-height: 600px;
+  overflow-y: auto;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::selection {
+  background: var(--orange-bright);
+  color: #0b0b0a;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 1px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.app {
+  padding: 0 16px 12px;
+}
+
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 0 10px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.wordmark {
+  font-family:
+    'Geist Pixel', 'Geist Mono', ui-monospace, monospace;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.serial {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tiny {
+  padding: 5px 7px;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text);
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  transition:
+    background 90ms linear,
+    color 90ms linear,
+    border-color 90ms linear;
+}
+
+.tiny:hover {
+  background: var(--solid-bg);
+  color: var(--solid-text);
+  border-color: var(--solid-bg);
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--muted);
+  transition:
+    border-color 90ms linear,
+    color 90ms linear;
+}
+
+.icon-btn:hover {
+  border-color: var(--orange-bright);
+  color: var(--orange-bright);
+}
+
+/* Today device ----------------------------------------------------------- */
+
+.device {
+  margin-top: 14px;
+  padding: 13px 14px 12px;
+  border: 1px solid var(--device-line);
+  border-radius: 6px;
+  background: var(--device-bg);
+  color: var(--device-text);
+}
+
+.device-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--device-muted);
+}
+
+.device-head .orange {
+  color: var(--device-orange);
+}
+
+.device-readout {
+  display: flex;
+  align-items: flex-end;
+  gap: 30px;
+  margin-top: 13px;
+}
+
+.reading {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.reading-value {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 52px;
+  font-weight: 500;
+  line-height: 0.84;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--device-text);
+}
+
+.reading-value.flow {
+  color: var(--device-orange);
+}
+
+.reading-label {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--device-muted);
+}
+
+.device-note {
+  margin: 11px 0 0;
+  max-width: 300px;
+  font-size: 10px;
+  line-height: 1.45;
+  color: var(--device-muted);
+}
+
+/* Blocks ----------------------------------------------------------------- */
+
+.block {
+  margin-top: 16px;
+  padding-top: 11px;
+  border-top: 1px solid var(--line);
+}
+
+.block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.block-head h2 {
+  margin: 0;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--text);
+}
+
+.block-head span {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.chart .bar {
+  fill: var(--orange-bright);
+  opacity: 0.32;
+  transition: opacity 90ms linear;
+}
+
+.chart .bar.today {
+  opacity: 1;
+}
+
+.chart .bar:hover {
+  opacity: 0.7;
+}
+
+.chart .base {
+  stroke: var(--line-strong);
+  stroke-width: 1;
+}
+
+.chart-axis {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+}
+
+/* Session rows ----------------------------------------------------------- */
+
+.sessions {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sessions li {
+  border-bottom: 1px solid var(--line);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 28px 56px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 4px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  transition:
+    background 90ms linear,
+    color 90ms linear;
+}
+
+.row:hover,
+.row:focus-visible {
+  background: var(--solid-bg);
+  color: var(--solid-text);
+}
+
+.row:focus-visible {
+  outline: 1px solid var(--orange);
+  outline-offset: -1px;
+}
+
+.row-serial {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+
+.row-wpm {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.row-wpm em {
+  font-size: 7px;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.row:hover .row-wpm em,
+.row:focus-visible .row-wpm em,
+.row:hover .row-serial,
+.row:focus-visible .row-serial,
+.row:hover .row-meta,
+.row:focus-visible .row-meta,
+.row:hover .row-when,
+.row:focus-visible .row-when {
+  color: inherit;
+  opacity: 0.65;
+}
+
+.row-mid {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.row-mid b {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.row-meta {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.row-when {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  color: var(--faint);
+  white-space: nowrap;
+}
+
+.badge {
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--orange);
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+
+/* Empty ------------------------------------------------------------------ */
+
+.empty {
+  padding: 12px 0 4px;
+}
+
+.empty-title {
+  margin: 0;
+  font-family:
+    'Geist Pixel', 'Geist Mono', ui-monospace, monospace;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.empty-copy {
+  margin: 6px 0 0;
+  max-width: 300px;
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.primary {
+  margin-top: 10px;
+  padding: 7px 10px;
+  border: 1px solid var(--solid-bg);
+  border-radius: 3px;
+  background: var(--solid-bg);
+  color: var(--solid-text);
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  transition:
+    background 90ms linear,
+    border-color 90ms linear,
+    color 90ms linear;
+}
+
+.primary:hover {
+  background: var(--orange-bright);
+  border-color: var(--orange-bright);
+  color: #0b0b0a;
+}
+
+.primary:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.ghost {
+  padding: 7px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text);
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  transition:
+    background 90ms linear,
+    color 90ms linear,
+    border-color 90ms linear;
+}
+
+.ghost:hover {
+  background: var(--solid-bg);
+  border-color: var(--solid-bg);
+  color: var(--solid-text);
+}
+
+/* Footer ----------------------------------------------------------------- */
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+}
+
+.foot-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.foot a {
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.foot a:hover {
+  color: var(--text);
+}
+
+/* Detail ----------------------------------------------------------------- */
+
+#view-detail {
+  padding-bottom: 4px;
+}
+
+.back {
+  margin: 8px 0 8px;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.back:hover {
+  color: var(--text);
+}
+
+.detail-head {
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--line);
+}
+
+.detail-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.detail-nums {
+  display: flex;
+  align-items: flex-end;
+  gap: 28px;
+  margin-top: 11px;
+}
+
+.detail-nums div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-nums b {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 42px;
+  font-weight: 500;
+  line-height: 0.86;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.detail-nums div:nth-child(2) b {
+  color: var(--orange);
+}
+
+.detail-nums span {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.receipt-preview {
+  margin-top: 12px;
+  border: 1px solid var(--line-strong);
+  background: #f2efe6;
+  line-height: 0;
+}
+
+.receipt-preview canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.spec {
+  margin: 14px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.stat {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.stat span {
+  font-size: 9px;
+  color: var(--muted);
+}
+
+.stat b {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.detail-actions .primary {
+  margin-top: 0;
+}
+
+.signal {
+  margin: 10px 0 0;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--faint);
+}
+
+/* Toast ------------------------------------------------------------------ */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 12px;
+  z-index: 20;
+  transform: translateX(-50%);
+  padding: 8px 10px;
+  border: 1px solid var(--solid-bg);
+  border-radius: 3px;
+  background: var(--solid-bg);
+  color: var(--solid-text);
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+[hidden] {
+  display: none !important;
+}

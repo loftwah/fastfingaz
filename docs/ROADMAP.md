@@ -2,14 +2,15 @@
 
 ## v0.1 — the instrument (current)
 
-- [x] Chrome MV3 extension for `chatgpt.com` and `chat.openai.com`
+- [x] WXT + Chrome MV3 for `chatgpt.com` and `chat.openai.com`
 - [x] Composer discovery with legacy and generic fallbacks
 - [x] Think WPM / Flow WPM / Peak / Consistency / Corrections / Pauses / Signal
 - [x] Paste, autocorrect, undo and IME awareness
-- [x] Floating HUD, collapsed orb, receipt, keyboard toggle
+- [x] Floating HUD, collapsed orb, printed receipt, keyboard toggle
 - [x] Local storage and 14-day history
-- [x] Share card (copy PNG or download) and text summary
+- [x] Share receipt (copy PNG or download) and text summary
 - [x] Options: threshold, minimum length, theme, privacy, export, clear
+- [x] Instrument brand system: Teenage Engineering reference, Geist Sans/Mono/Pixel, paper + signal orange
 - [x] 24 unit tests for the measurement core
 - [x] Placeholder brand art and a no-install visual demo
 

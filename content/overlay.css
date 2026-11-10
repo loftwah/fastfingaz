@@ -1,0 +1,585 @@
+:host {
+  all: initial;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.hud {
+  --ink: #0b0b0a;
+  --panel: #111110;
+  --panel-2: #171715;
+  --paper: #f2efe6;
+  --orange: #ff4d00;
+  --orange-ink: #b83600;
+  --text: #f7f5ef;
+  --muted: #9a9488;
+  --line: #2a2824;
+  --line-strong: #3a3732;
+
+  position: fixed;
+  left: var(--tt-x, 24px);
+  top: var(--tt-y, 84px);
+  z-index: 2147483647;
+  width: 320px;
+  padding: 10px 14px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow:
+    0 18px 44px -24px rgba(0, 0, 0, 0.9),
+    0 1px 0 rgba(255, 255, 255, 0.045) inset;
+  color: var(--text);
+  font-family:
+    'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.3;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  pointer-events: auto;
+  overflow: hidden;
+  transition:
+    width 140ms linear,
+    background 140ms linear,
+    border-color 140ms linear;
+}
+
+.hud[data-theme='light'] {
+  --panel: #f2efe6;
+  --panel-2: #e8e3d7;
+  --text: #0b0b0a;
+  --muted: #6d675c;
+  --line: #d5cfc1;
+  --line-strong: #bdb6a7;
+  --orange: #b83600;
+  box-shadow:
+    0 18px 44px -26px rgba(30, 25, 15, 0.35), 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+}
+
+.hud.dragging {
+  cursor: grabbing;
+  border-color: var(--orange);
+}
+
+.topline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--line);
+}
+
+.topline span {
+  display: block;
+  width: 42px;
+  height: 2px;
+  background: var(--orange);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 18px;
+  margin: 3px 0 7px;
+  cursor: grab;
+}
+
+.hud.dragging .bar {
+  cursor: grabbing;
+}
+
+.mark {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  background: var(--orange);
+}
+
+.brand {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--text);
+}
+
+.serial {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    background 90ms linear,
+    color 90ms linear;
+}
+
+.icon:hover {
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.icon:focus-visible {
+  outline: 1px solid var(--orange);
+  outline-offset: 1px;
+}
+
+.readout {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 58px;
+}
+
+.primary {
+  min-width: 0;
+}
+
+.num {
+  display: inline-block;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 50px;
+  font-weight: 500;
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  transition: opacity 90ms linear;
+}
+
+.unit {
+  margin-left: 5px;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.mode {
+  display: block;
+  margin-top: 5px;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+}
+
+.hud[data-state='typing'] .mode {
+  color: var(--orange);
+}
+
+.hud[data-state='idle'] .num {
+  color: var(--muted);
+}
+
+.meta {
+  display: flex;
+  gap: 14px;
+  padding-bottom: 2px;
+  text-align: right;
+}
+
+.meta div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+.meta dd {
+  margin: 0;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.meta dt {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.meter {
+  margin: 9px 0 5px;
+}
+
+.meter-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 3px;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 28px;
+  padding-bottom: 1px;
+  border-bottom: 1px solid var(--line);
+}
+
+.bars span {
+  flex: 1 1 0;
+  min-width: 1px;
+  height: 1px;
+  background: var(--orange);
+  opacity: 0.12;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.foot [data-status] {
+  color: var(--text);
+}
+
+.hud[data-state='typing'] .foot [data-status] {
+  color: var(--orange);
+}
+
+.hud[data-state='thinking'] .num {
+  opacity: 0.4;
+}
+
+.hud[data-state='thinking'] .foot [data-status] {
+  color: var(--orange);
+  animation: tt-blink 1s steps(2, start) infinite;
+}
+
+@keyframes tt-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0.25;
+  }
+}
+
+/* Receipt ---------------------------------------------------------------- */
+
+.receipt {
+  display: none;
+  margin-top: 7px;
+  padding-top: 9px;
+  border-top: 1px dashed var(--line-strong);
+}
+
+.hud[data-state='receipt'] {
+  --text: #0b0b0a;
+  --muted: #6d675c;
+  --orange: #b83600;
+  --line: #d5cfc1;
+  --line-strong: #bdb6a7;
+  background: #f2efe6;
+  border-color: #d5cfc1;
+  box-shadow:
+    0 22px 50px -26px rgba(0, 0, 0, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.65) inset;
+}
+
+.hud[data-state='receipt'] .mark {
+  background: var(--orange-ink);
+}
+
+.hud[data-state='receipt'] .brand {
+  color: var(--text);
+}
+
+.hud[data-state='receipt'] .serial,
+.hud[data-state='receipt'] .icon {
+  color: var(--muted);
+}
+
+.hud[data-state='receipt'] .icon:hover {
+  background: #e8e3d7;
+  color: var(--text);
+}
+
+.hud[data-state='receipt'] .readout,
+.hud[data-state='receipt'] .meter,
+.hud[data-state='receipt'] .foot {
+  display: none;
+}
+
+.hud[data-state='receipt'] .receipt {
+  display: block;
+  animation: tt-print 220ms steps(5, end) both;
+}
+
+@keyframes tt-print {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+.r-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.r-head .kicker {
+  color: var(--orange-ink);
+}
+
+.r-serial {
+  color: var(--muted);
+}
+
+.r-nums {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.r-nums div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.r-nums b {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 31px;
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.r-nums div:nth-child(2) b {
+  color: var(--orange-ink);
+}
+
+.r-nums span {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.r-meta {
+  margin-top: 9px;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.r-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 11px;
+}
+
+.barcode {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 20px;
+  opacity: 0.85;
+}
+
+.barcode span {
+  display: block;
+  width: 1px;
+  height: 100%;
+  background: var(--text);
+}
+
+.share {
+  flex: none;
+  padding: 8px 10px;
+  border: 1px solid var(--text);
+  border-radius: 3px;
+  background: var(--text);
+  color: #f2efe6;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition:
+    background 90ms linear,
+    color 90ms linear,
+    border-color 90ms linear;
+}
+
+.share:hover {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #0b0b0a;
+}
+
+.share:focus-visible {
+  outline: 1px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.share:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+/* Collapsed orb ---------------------------------------------------------- */
+
+.orb {
+  display: none;
+  width: 56px;
+  height: 56px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  padding: 0;
+  border: 1px solid var(--orange);
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--orange);
+  cursor: pointer;
+  transition:
+    background 90ms linear,
+    color 90ms linear;
+}
+
+.orb:hover {
+  background: var(--orange);
+  color: #0b0b0a;
+}
+
+.orb:focus-visible {
+  outline: 1px solid var(--orange);
+  outline-offset: 3px;
+}
+
+.orb-num {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.orb-unit {
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.hud[data-collapsed='true'] {
+  width: 56px;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.hud[data-collapsed='true'] .topline,
+.hud[data-collapsed='true'] .bar,
+.hud[data-collapsed='true'] .readout,
+.hud[data-collapsed='true'] .meter,
+.hud[data-collapsed='true'] .foot,
+.hud[data-collapsed='true'] .receipt {
+  display: none;
+}
+
+.hud[data-collapsed='true'] .orb {
+  display: flex;
+}
+
+.hud.has-receipt .orb {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud,
+  .hud *,
+  .hud *::before,
+  .hud *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

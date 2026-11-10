@@ -1,6 +1,7 @@
-import { Overlay } from '../src/content/overlay';
-import { renderCard } from '../src/shared/share-card';
-import type { LiveStats, SessionRecord } from '../src/shared/types';
+import { FONT_FACE_CSS } from '../shared/brand';
+import { Overlay } from '../content/overlay';
+import { ensureCardFonts, renderCard } from '../shared/share-card';
+import type { LiveStats, SessionRecord } from '../shared/types';
 
 const SERIES = [
   52, 58, 64, 71, 76, 82, 88, 91, 86, 79, 72, 68, 74, 81, 87, 92, 95, 90, 84, 78, 70, 64, 58, 66,
@@ -48,6 +49,7 @@ function setupOverlay(pos: { x: number; y: number }): Overlay {
     theme: 'dark',
     collapsed: false,
     pos,
+    fontFacesCss: FONT_FACE_CSS,
     onMove: () => undefined,
     onCollapse: () => undefined,
     onHide: () => undefined,
@@ -57,30 +59,22 @@ function setupOverlay(pos: { x: number; y: number }): Overlay {
   return overlay;
 }
 
-const hero = document.getElementById('demo-hud');
-if (hero) setupOverlay({ x: 860, y: 118 });
 
-const hudStage = document.getElementById('hud-stage');
-if (hudStage) setupOverlay({ x: 32, y: 32 });
+async function bootDemo(): Promise<void> {
+  if (document.getElementById('demo-hud')) setupOverlay({ x: 840, y: 118 });
+  if (document.getElementById('hud-stage')) setupOverlay({ x: 32, y: 32 });
 
-const paintCard = (container: HTMLElement) => {
+  const cardStage = document.getElementById('card-stage');
+  const heroCard = document.getElementById('hero-card');
+  if (!cardStage && !heroCard) return;
+
+  await ensureCardFonts();
   const canvas = renderCard(SAMPLE);
   canvas.style.width = '100%';
   canvas.style.height = 'auto';
   canvas.style.display = 'block';
-  container.replaceChildren(canvas);
-};
+  (cardStage ?? heroCard)?.replaceChildren(canvas);
 
-const cardStage = document.getElementById('card-stage');
-if (cardStage) paintCard(cardStage);
-
-const heroCard = document.getElementById('hero-card');
-if (heroCard) paintCard(heroCard);
-
-declare global {
-  interface Window {
-    thinktypeDemo: { sample: SessionRecord; live: LiveStats };
-  }
 }
 
-window.thinktypeDemo = { sample: SAMPLE, live: LIVE };
+void bootDemo();

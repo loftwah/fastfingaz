@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { TypingSession } from '../src/content/typing-session';
+import { TypingSession } from '../content/typing-session';
 
 describe('TypingSession', () => {
   it('records keys and inserts, then produces a raw session', () => {

@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-11T00:15:00.000Z",
+  "title": "Design System: Thinktype",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#0b0b0a",
+        "tonalRamp": ["#000000", "#0b0b0a", "#1a1a17", "#2a2824", "#47433d", "#6d675c", "#a39d91", "#f2efe6"]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel",
+        "canonical": "#111110",
+        "tonalRamp": ["#050505", "#111110", "#1b1b18", "#2a2824", "#47433d", "#6d675c", "#a39d91", "#f2efe6"]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "canonical": "#f2efe6",
+        "tonalRamp": ["#2a2824", "#47433d", "#6d675c", "#a39d91", "#d5cfc1", "#e8e3d7", "#f2efe6", "#faf8f2"]
+      },
+      "paper-deep": {
+        "role": "neutral",
+        "displayName": "Paper Deep",
+        "canonical": "#e8e3d7",
+        "tonalRamp": ["#2a2824", "#47433d", "#6d675c", "#a39d91", "#c8c0b0", "#d5cfc1", "#e8e3d7", "#f2efe6"]
+      },
+      "signal-orange": {
+        "role": "primary",
+        "displayName": "Signal Orange",
+        "canonical": "#ff4d00",
+        "tonalRamp": ["#2a0d00", "#5c1c00", "#8f2b00", "#c23a00", "#ff4d00", "#ff7a3d", "#ffa87a", "#ffd6bd"]
+      },
+      "signal-orange-display": {
+        "role": "primary",
+        "displayName": "Signal Orange Display",
+        "canonical": "#e84a00",
+        "tonalRamp": ["#2a0d00", "#5c1c00", "#8f2b00", "#b83600", "#e84a00", "#ff7a3d", "#ffa87a", "#ffd6bd"]
+      },
+      "signal-orange-ink": {
+        "role": "primary",
+        "displayName": "Signal Orange Ink",
+        "canonical": "#b83600",
+        "tonalRamp": ["#2a0d00", "#5c1c00", "#8f2b00", "#b83600", "#d13f00", "#ff6a3d", "#ffa87a", "#ffd6bd"]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "Warm White",
+        "canonical": "#f7f5ef",
+        "tonalRamp": ["#2a2824", "#47433d", "#6d675c", "#a39d91", "#d5cfc1", "#e8e3d7", "#f2efe6", "#f7f5ef"]
+      },
+      "muted-dark": {
+        "role": "neutral",
+        "displayName": "Muted on Ink",
+        "canonical": "#9a9488",
+        "tonalRamp": ["#2a2824", "#47433d", "#6d675c", "#807a6d", "#9a9488", "#b9b3a6", "#d5cfc1", "#f2efe6"]
+      },
+      "muted-paper": {
+        "role": "neutral",
+        "displayName": "Muted on Paper",
+        "canonical": "#6d675c",
+        "tonalRamp": ["#2a2824", "#47433d", "#5b554b", "#6d675c", "#807a6d", "#9a9488", "#b9b3a6", "#d5cfc1"]
+      },
+      "line-dark": {
+        "role": "neutral",
+        "displayName": "Hairline on Ink",
+        "canonical": "#2a2824",
+        "tonalRamp": ["#111110", "#1b1b18", "#24221f", "#2a2824", "#3a3732", "#47433d", "#5b554b", "#6d675c"]
+      },
+      "line-paper": {
+        "role": "neutral",
+        "displayName": "Hairline on Paper",
+        "canonical": "#d5cfc1",
+        "tonalRamp": ["#6d675c", "#a39d91", "#bdb6a7", "#c8c0b0", "#d5cfc1", "#e8e3d7", "#f2efe6", "#faf8f2"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "WPM numerals and receipt headlines; tabular mono." },
+      "headline": { "displayName": "Headline", "purpose": "Demo hero only; not product chrome." },
+      "title": { "displayName": "Title", "purpose": "Today and session readout numbers." },
+      "body": { "displayName": "Body", "purpose": "Settings prose, hints and detail notes." },
+      "label": { "displayName": "Label", "purpose": "Technical labels, serials, axes and footers." },
+      "wordmark": { "displayName": "Wordmark", "purpose": "Pixel T mark and display wordmark only." }
+    },
+    "shadows": [
+      {
+        "name": "floating-device",
+        "value": "0 18px 44px -24px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.045) inset",
+        "purpose": "The floating HUD only. Paper surfaces stay flat."
+      }
+    ],
+    "motion": [
+      { "name": "receipt-print", "value": "220ms steps(5, end)", "purpose": "The receipt printing down after send." },
+      { "name": "state-change", "value": "90ms linear", "purpose": "Hover, focus and state transitions." },
+      { "name": "thinking-blink", "value": "1s steps(2, start) infinite", "purpose": "The hardware-style thinking indicator." }
+    ],
+    "breakpoints": [
+      { "name": "settings-stack", "value": "760px" },
+      { "name": "settings-row-stack", "value": "520px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one filled action on a paper document.",
+      "html": "<button class=\"ds-btn\">COPY RECEIPT</button>",
+      "css": ".ds-btn{background:#0b0b0a;color:#f2efe6;border:1px solid #0b0b0a;border-radius:2px;padding:8px 10px;font-family:'Geist Mono',ui-monospace,monospace;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background 90ms linear,color 90ms linear,border-color 90ms linear}.ds-btn:hover{background:#ff4d00;border-color:#ff4d00;color:#0b0b0a}.ds-btn:focus-visible{outline:1px solid #ff4d00;outline-offset:2px}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary document action; hairline border only.",
+      "html": "<button class=\"ds-ghost\">DOWNLOAD</button>",
+      "css": ".ds-ghost{background:transparent;color:#0b0b0a;border:1px solid #bdb6a7;border-radius:2px;padding:8px 10px;font-family:'Geist Mono',ui-monospace,monospace;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}.ds-ghost:hover{background:#0b0b0a;border-color:#0b0b0a;color:#f2efe6}.ds-ghost:focus-visible{outline:1px solid #ff4d00;outline-offset:2px}"
+    },
+    {
+      "name": "Live HUD",
+      "kind": "custom",
+      "refersTo": "hud",
+      "description": "The floating field instrument: live flow WPM and a 5-second cadence meter.",
+      "html": "<div class=\"ds-hud\"><div class=\"ds-hud-head\"><span class=\"ds-mark\"></span><span class=\"ds-brand\">THINKTYPE</span><span class=\"ds-serial\">TT-01</span><span class=\"ds-topline\"></span></div><div class=\"ds-readout\"><div><span class=\"ds-wpm\">78</span><span class=\"ds-unit\">WPM</span><span class=\"ds-mode\">LIVE FLOW</span></div><div class=\"ds-meta\"><b>1:52</b><small>TIME</small><b>96</b><small>WORDS</small></div></div><div class=\"ds-meter\"><span style=\"height:10px\"></span><span style=\"height:16px\"></span><span style=\"height:12px\"></span><span style=\"height:20px\"></span><span style=\"height:17px\"></span><span style=\"height:23px\"></span><span style=\"height:19px\"></span><span style=\"height:26px\"></span><span style=\"height:22px\"></span><span style=\"height:27px\"></span><span style=\"height:24px\"></span><span style=\"height:28px\"></span></div><div class=\"ds-hud-foot\"><span>TYPING</span><span>THINK 63 / FLOW 78</span></div></div>",
+      "css": ".ds-hud{position:relative;width:320px;padding:10px 14px 12px;border:1px solid #2a2824;border-radius:12px;background:#111110;color:#f7f5ef;font-family:'Geist',sans-serif;box-shadow:0 18px 44px -24px rgba(0,0,0,.9),0 1px 0 rgba(255,255,255,.045) inset;overflow:hidden}.ds-topline{position:absolute;top:0;left:0;width:42px;height:2px;background:#ff4d00}.ds-hud-head{display:flex;align-items:center;gap:7px;margin:3px 0 8px;font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.2em}.ds-mark{width:7px;height:7px;background:#ff4d00}.ds-serial{font-size:8px;letter-spacing:.08em;color:#9a9488}.ds-readout{display:flex;align-items:flex-end;justify-content:space-between}.ds-wpm{font-family:'Geist Mono',monospace;font-size:50px;font-weight:500;line-height:.82;letter-spacing:-.04em}.ds-unit{margin-left:5px;font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.14em;color:#9a9488}.ds-mode{display:block;margin-top:5px;font-family:'Geist Mono',monospace;font-size:8px;letter-spacing:.16em;color:#ff4d00}.ds-meta{display:grid;grid-template-columns:auto auto;gap:1px 14px;text-align:right;font-family:'Geist Mono',monospace;font-size:14px}.ds-meta small{font-size:8px;letter-spacing:.12em;color:#9a9488}.ds-meter{display:flex;align-items:flex-end;gap:2px;height:28px;margin:9px 0 5px;border-bottom:1px solid #2a2824}.ds-meter span{flex:1;background:#ff4d00;opacity:.55}.ds-meter span:nth-last-child(-n+3){opacity:1}.ds-hud-foot{display:flex;justify-content:space-between;font-family:'Geist Mono',monospace;font-size:8px;letter-spacing:.1em;color:#9a9488}.ds-hud-foot span:first-child{color:#ff4d00}"
+    },
+    {
+      "name": "Session Receipt",
+      "kind": "card",
+      "refersTo": "receipt",
+      "description": "The paper record printed after a sent prompt; also the share-card content.",
+      "html": "<div class=\"ds-receipt\"><div class=\"ds-r-head\"><span>SESSION PRINTED</span><span>NO. F52D</span></div><div class=\"ds-r-nums\"><div><b>62</b><span>THINK</span></div><div><b>78</b><span>FLOW</span></div><div><b>212</b><span>WORDS</span></div></div><div class=\"ds-r-meta\">4:12 / 94% SIGNAL</div><div class=\"ds-r-foot\"><span class=\"ds-barcode\"></span><button class=\"ds-btn\">COPY RECEIPT</button></div></div>",
+      "css": ".ds-receipt{width:320px;padding:10px 14px 12px;background:#f2efe6;border:1px solid #d5cfc1;border-radius:6px;color:#0b0b0a;font-family:'Geist',sans-serif}.ds-r-head{display:flex;justify-content:space-between;padding-top:9px;border-top:1px dashed #bdb6a7;font-family:'Geist Mono',monospace;font-size:8px;letter-spacing:.14em}.ds-r-head span:first-child{color:#b83600}.ds-r-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}.ds-r-nums div{display:flex;flex-direction:column;gap:2px}.ds-r-nums b{font-family:'Geist Mono',monospace;font-size:31px;font-weight:500;line-height:.9;letter-spacing:-.04em}.ds-r-nums div:nth-child(2) b{color:#b83600}.ds-r-nums span,.ds-r-meta{font-family:'Geist Mono',monospace;font-size:8px;letter-spacing:.12em;color:#6d675c}.ds-r-meta{margin-top:9px;font-size:9px;letter-spacing:.04em}.ds-r-foot{display:flex;align-items:flex-end;justify-content:space-between;margin-top:11px}.ds-barcode{width:96px;height:14px;background:repeating-linear-gradient(90deg,#0b0b0a 0 2px,transparent 2px 4px,#0b0b0a 4px 5px,transparent 5px 8px)}.ds-receipt .ds-btn{font-size:8px;padding:7px 9px}" 
+    },
+    {
+      "name": "Instrument Toggle",
+      "kind": "input",
+      "description": "A square hardware-style switch used in the settings sheet.",
+      "html": "<label class=\"ds-toggle\"><span>SHOW THE FLOATING HUD</span><input type=\"checkbox\" checked><i></i></label>",
+      "css": ".ds-toggle{display:flex;align-items:center;justify-content:space-between;gap:24px;width:420px;font-family:'Geist',sans-serif;font-size:13px;font-weight:600;color:#0b0b0a;cursor:pointer}.ds-toggle input{position:absolute;opacity:0;pointer-events:none}.ds-toggle i{position:relative;flex:none;width:38px;height:20px;border:1px solid #bdb6a7;border-radius:2px;background:transparent}.ds-toggle i::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:1px;background:#0b0b0a;transition:transform 90ms linear,background 90ms linear}.ds-toggle input:checked+i{background:#ff4d00;border-color:#ff4d00}.ds-toggle input:checked+i::after{transform:translateX(18px);background:#0b0b0a}.ds-toggle input:focus-visible+i{outline:1px solid #ff4d00;outline-offset:3px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Field Instrument",
+    "overview": "A small, well-made measuring device on a workbench: anodised black, warm paper, one signal orange. The instrument measures; the paper records. The reference is Teenage Engineering's OP-1 field / TX-6 language — palette, technical labelling, density and one signature move, not a costume of hardware controls. The type is Vercel's Geist family: Sans for prose, Mono for every number, Pixel for the mark and wordmark. The signature move is the printed receipt, which is also the share card.",
+    "keyCharacteristics": [
+      "Paper documents and anodised device panels, never the same surface twice.",
+      "One signal orange used for live state, data and interaction — not decoration.",
+      "Mono numerals and technical labels; Sans prose; Pixel only as a mark.",
+      "Hairline rules, tight corners, flat colour, one soft shadow on the floating device.",
+      "The printed receipt is the brand artifact and the share action."
+    ],
+    "rules": [
+      { "name": "The Paper/Device Rule", "body": "Documents are paper with ink text; instruments are ink panels with paper text. Do not invert them for fashion.", "section": "colors" },
+      { "name": "The One Signal Rule", "body": "Signal orange is reserved for live data, the meter, focus and primary interaction. It never becomes a background wash, a gradient, or a second decorative accent.", "section": "colors" },
+      { "name": "The Small Orange Rule", "body": "On paper, small orange text uses Signal Orange Ink, display numerals use Signal Orange Display, and bright signal orange is reserved for graphics and ink fields.", "section": "colors" },
+      { "name": "The Mono Measures Rule", "body": "Every number, unit, serial, timestamp and technical label is Geist Mono. Prose is never mono; measurement is never proportional.", "section": "typography" },
+      { "name": "The Pixel Is a Mark Rule", "body": "Geist Pixel Square may draw the T mark or a wordmark at 18px or larger. It never sets body copy, small labels, or numbers.", "section": "typography" },
+      { "name": "The Single Shadow Rule", "body": "If it is not the floating HUD (or its collapsed orb), it does not cast a shadow. No glass, no blur, no coloured halos.", "section": "elevation" },
+      { "name": "The Tight Corner Rule", "body": "Radii stay under 12px except the orb. If a rectangle needs 16px to feel friendly, the composition is doing the work wrong.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do keep documents paper and instruments ink; use the 1px hairline as the main divider.",
+      "Do set every number and technical label in Geist Mono with tabular numerals.",
+      "Do use Signal Orange for live state, data, focus and one primary action.",
+      "Do keep the receipt's serial, barcode and dashed perforation.",
+      "Do self-host Geist and preserve the OFL licence."
+    ],
+    "donts": [
+      "Don't use gradients, glass, backdrop blur, neon glows or coloured halos.",
+      "Don't add a second accent colour or reintroduce lime/violet.",
+      "Don't set body copy or small labels in Geist Pixel.",
+      "Don't put bright Signal Orange on paper for small text or display numerals.",
+      "Don't use cards inside cards, section numbers, eyebrow labels or emoji icons.",
+      "Don't animate everything; the receipt print and the two-step thinking blink are the only authored motions."
+    ]
+  }
+}
