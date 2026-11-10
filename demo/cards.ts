@@ -31,6 +31,7 @@ const SESSION: SessionRecord = {
   confidence: 0.94,
   resumed: false,
   ime: false,
+  manualPauseMs: 0,
   series: SERIES,
 };
 

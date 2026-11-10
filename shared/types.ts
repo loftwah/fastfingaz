@@ -59,6 +59,8 @@ export interface SessionStats {
   /** True when the session resumed text that already existed in the composer. */
   resumed: boolean;
   ime: boolean;
+  /** Time spent in an explicit manual pause. Excluded from wall and active time. */
+  manualPauseMs: number;
   /** Rolling WPM samples for sparklines. Downsampled. */
   series: number[];
 }
@@ -89,6 +91,8 @@ export interface RawSession {
   ime: boolean;
   undoCount: number;
   replacementCount: number;
+  /** Explicit manual pauses, excluded from the measurement clocks. */
+  pauseIntervals: Array<{ start: number; end: number }>;
 }
 
 export interface DailyBucket {
@@ -169,7 +173,7 @@ export interface HistorySummary {
   totals: HistoryTotals;
 }
 
-export type LiveStatus = 'idle' | 'typing' | 'thinking';
+export type LiveStatus = 'idle' | 'typing' | 'thinking' | 'paused';
 
 export interface LiveStats {
   active: boolean;

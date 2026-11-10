@@ -173,8 +173,20 @@ export function pauseStats(
 
 export function computeStats(raw: RawSession, idleThresholdMs = 2000): SessionStats {
   const keys = raw.keyTimes.filter(Number.isFinite).sort((a, b) => a - b);
-  const wallMs = Math.max(0, raw.endedAt - raw.startedAt);
-  const activeMs = computeActiveMs(keys, raw.startedAt, raw.endedAt, idleThresholdMs);
+  const pauseIntervals = raw.pauseIntervals ?? [];
+  const manualPauseMs = pauseIntervals.reduce(
+    (sum, pause) => sum + Math.max(0, pause.end - pause.start),
+    0,
+  );
+  const pausedActiveMs = pauseIntervals.reduce(
+    (sum, pause) => sum + Math.min(Math.max(0, pause.end - pause.start), idleThresholdMs),
+    0,
+  );
+  const wallMs = Math.max(0, raw.endedAt - raw.startedAt - manualPauseMs);
+  const activeMs = Math.max(
+    0,
+    computeActiveMs(keys, raw.startedAt, raw.endedAt, idleThresholdMs) - pausedActiveMs,
+  );
   const finalText = raw.finalText ?? '';
   const chars = finalText.length;
   const words = countWords(finalText);
@@ -220,6 +232,7 @@ export function computeStats(raw: RawSession, idleThresholdMs = 2000): SessionSt
     confidence: Math.round(clamp(confidence, 0.05, 1) * 100) / 100,
     resumed,
     ime: raw.ime,
+    manualPauseMs,
     series: buildSeries(keys, raw.startedAt, raw.endedAt),
   };
 }

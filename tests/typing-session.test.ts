@@ -79,4 +79,38 @@ describe('TypingSession', () => {
     session.noteKey(10_000);
     expect(session.activeMs(10_000, 2000)).toBe(3000);
   });
+
+  it('freezes the clocks during a manual pause and records the interval', () => {
+    const session = new TypingSession(0);
+    session.noteKey(0);
+    session.noteInsert(100, 20);
+    session.pause(1000);
+    expect(session.isPaused).toBe(true);
+    expect(session.pausedTotal(4000)).toBe(3000);
+    session.resume(4000);
+    session.noteKey(4100);
+    session.noteInsert(4200, 20);
+
+    expect(session.activeMs(5000, 2000)).toBe(900);
+    const raw = session.finish(5000, 'a'.repeat(40));
+    expect(raw.pauseIntervals).toEqual([{ start: 1000, end: 4000 }]);
+  });
+
+  it('resumes automatically on the next keystroke', () => {
+    const session = new TypingSession(0);
+    session.noteKey(0);
+    session.pause(1000);
+    session.noteKey(3000);
+    expect(session.isPaused).toBe(false);
+    const raw = session.finish(4000, 'ok');
+    expect(raw.pauseIntervals).toEqual([{ start: 1000, end: 3000 }]);
+  });
+
+  it('closes an open pause when the run is finished', () => {
+    const session = new TypingSession(0);
+    session.noteKey(0);
+    session.pause(1000);
+    const raw = session.finish(3500, 'ok');
+    expect(raw.pauseIntervals).toEqual([{ start: 1000, end: 3500 }]);
+  });
 });

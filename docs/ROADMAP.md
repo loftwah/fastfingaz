@@ -1,6 +1,6 @@
 # Roadmap
 
-## v0.2 — trustworthy numbers (current)
+## v0.2 — trustworthy numbers
 
 - [x] Vertical, bottom-anchored HUD in the empty gutter beside the conversation
 - [x] Full / medium / slim layouts; never covers the composer or last message
@@ -19,7 +19,15 @@
 - [x] 38 unit tests; green typecheck, tests and production build
 - [x] No new manifest permissions
 
-## v0.3 — calibration and trust
+## v0.3 — pause and hold (current)
+
+- [x] Manual pause button in the HUD header and `Alt+Shift+P` shortcut
+- [x] Paused time excluded from wall and active time; typing resumes automatically
+- [x] Amber/play state and `PAUSED` labels in the header and footer
+- [x] 8-second rolling live window and a held number through short gaps
+- [x] 42 unit tests (pause intervals, wall/active exclusion, auto-resume)
+
+## v0.4 — calibration and trust
 
 - [ ] Calibrate the idle threshold against Monkeytype runs (see `docs/METRICS.md`)
 - [ ] Threshold presets: "fast hands", "balanced", "deep thinking"
@@ -31,7 +39,7 @@
 - [ ] Surface metric definitions in the popup (hover/tap)
 - [ ] A personal baseline band on the 14-day chart
 
-## v0.4 — shareable by default
+## v0.5 — shareable by default
 
 - [ ] "This week" recap card with a small trend
 - [ ] Optional comparison card: this session vs your baseline
@@ -40,7 +48,7 @@
 - [ ] Better empty states and first-run onboarding
 - [ ] A real Chrome Web Store submission with five captures
 
-## v0.5 — beyond one host
+## v0.6 — beyond one host
 
 - [ ] Host adapters: Claude, Gemini, Perplexity
 - [ ] Generic contenteditable mode with a manual "track this box" picker

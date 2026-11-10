@@ -84,15 +84,19 @@ export class ComposerTracker {
       };
     }
 
-    const now = performance.now();
+    const paused = this.session.isPaused;
+    const now = paused ? (this.session.pausedAt ?? performance.now()) : performance.now();
     const text = getComposerText(this.el);
     const keys = [...this.session.keyTimes];
-    const wallMs = Math.max(0, now - this.session.startedAt);
+    const wallMs = Math.max(0, now - this.session.startedAt - this.session.pausedTotal(now));
     const activeMs = Math.max(1, this.session.activeMs(now, this.settings.idleThresholdMs));
     const sinceKey = now - this.lastKeyAt;
-    const active = sinceKey <= Math.max(1200, this.settings.idleThresholdMs);
-    const liveWpm = rollingWpm(keys, now);
-    if (liveWpm > 0) this.heldWpm = liveWpm;
+    const active = !paused && sinceKey <= Math.max(1800, this.settings.idleThresholdMs);
+    const liveWpm = rollingWpm(keys, now, 8000);
+    if (liveWpm > 0 && !paused) this.heldWpm = liveWpm;
+    // Hold the last measured cadence through a short pause instead of letting
+    // the rolling window bleed the number down key by key.
+    const displayWpm = sinceKey > 700 ? this.heldWpm : liveWpm;
 
     const flow = wpmFrom(this.session.insertedCount, activeMs);
     // A resumed draft measures the characters typed after tracking began.
@@ -107,7 +111,7 @@ export class ComposerTracker {
 
     return {
       active: true,
-      wpm: active ? liveWpm : this.heldWpm,
+      wpm: paused ? this.heldWpm : active ? displayWpm : this.heldWpm,
       thinkWpm: think,
       flowWpm: flow,
       peakWpm: peakWpm(keys),
@@ -116,11 +120,19 @@ export class ComposerTracker {
       words: countWords(text),
       ms: wallMs,
       activeMs,
-      status: active ? 'typing' : 'thinking',
+      status: paused ? 'paused' : active ? 'typing' : 'thinking',
       draft: false,
-      holding: !active,
+      holding: !paused && !active,
       series: buildSeries(keys, this.session.startedAt, now),
     };
+  }
+
+  /** Manual pause/resume. Typing resumes automatically. */
+  togglePause(): boolean {
+    if (!this.session || this.session.isEnded) return false;
+    if (this.session.isPaused) this.session.resume(performance.now());
+    else this.session.pause(performance.now());
+    return true;
   }
 
   /** A text-free snapshot for chrome.storage.session. */

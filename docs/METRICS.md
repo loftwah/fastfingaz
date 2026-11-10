@@ -63,6 +63,14 @@ moving, and the final sent prompt is measured as one run.
 The idle HUD (no active run) shows the last eligible session, the best think WPM and the rolling
 average. Before the first reading it shows dashes, never zero.
 
+### Manual pause
+
+The pause button in the HUD header (or **Alt+Shift+P**) freezes the run explicitly. The display shows
+`PAUSED`, the big number holds, and the wall and active clocks stop. The paused duration is excluded
+from `wallMs` and from the clamped `activeMs`; typing resumes automatically. This is different from
+the automatic THINKING state, where the pause is still counted as part of the run. A manual pause is
+a declared break, not a failed run, and it never creates a receipt on its own.
+
 ## Peak
 
 The best 5-second window, measured against the real span of that window:

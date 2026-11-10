@@ -25,9 +25,11 @@ about — how quickly a finished idea becomes text — and shows both clocks:
 - **Flow WPM** — your hands-only cadence when the words are already there.
 
 The gap between them is the interesting part. A pause is not a reset: the HUD holds the live reading
-in THINKING and the idle state shows your last, best and rolling average.
+in THINKING, and the idle state shows your last, best and rolling average. For a deliberate break, the
+pause button (or <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) freezes both clocks, holds the
+display and excludes the pause from the final session; typing resumes automatically.
 
-**Live:** https://thinktype.loftwah.com · **Current build:** v0.2.2 (early, unpacked install)
+**Live:** https://thinktype.loftwah.com · **Current build:** v0.3.0 (early, unpacked install)
 
 ## The instrument
 
@@ -178,7 +180,7 @@ images.
   included in your export.
 - Export or clear everything from the options page.
 - Permissions: `storage`, `clipboardWrite`, and the two ChatGPT host permissions. No new permissions
-  in v0.2.2.
+  in v0.3.0.
 
 Canonical policy: https://thinktype.loftwah.com/privacy · Source: [docs/PRIVACY.md](docs/PRIVACY.md)
 

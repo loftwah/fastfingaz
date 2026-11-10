@@ -169,6 +169,7 @@ function statRows(session: SessionRecord): Array<[string, string]> {
         : 'NONE',
     ],
     ['HANDS-ON TIME', formatClock(session.activeMs)],
+    ['MANUAL PAUSE', session.manualPauseMs ? formatClock(session.manualPauseMs) : 'NONE'],
     [
       'SENT AT',
       new Date(session.endedAt)

@@ -61,6 +61,9 @@ async function boot(): Promise<void> {
       settings = { ...settings, showHud: false };
       void saveSettings({ showHud: false });
     },
+    onPause: () => {
+      tracker?.togglePause();
+    },
   });
   overlay.mount();
   overlay.setHistory(history);
@@ -187,13 +190,10 @@ async function boot(): Promise<void> {
   chrome.storage.onChanged.addListener(onStorage);
 
   chrome.runtime.onMessage.addListener((message: unknown) => {
-    if (
-      typeof message === 'object' &&
-      message !== null &&
-      (message as { type?: string }).type === 'toggle-hud'
-    ) {
-      void saveSettings({ showHud: !settings.showHud });
-    }
+    if (typeof message !== 'object' || message === null) return;
+    const type = (message as { type?: string }).type;
+    if (type === 'toggle-hud') void saveSettings({ showHud: !settings.showHud });
+    if (type === 'pause-run') tracker?.togglePause();
   });
 
   window.addEventListener('pagehide', () => {

@@ -31,6 +31,7 @@ function raw(overrides: Partial<RawSession> = {}): RawSession {
     ime: false,
     undoCount: 0,
     replacementCount: 0,
+    pauseIntervals: [],
     ...overrides,
   };
 }
@@ -150,6 +151,22 @@ describe('computeStats', () => {
     // 50 characters over 30 seconds = 20 WPM.
     expect(stats.wpm.think).toBeCloseTo(20, 5);
     expect(stats.confidence).toBeLessThan(0.95);
+  });
+
+  it('excludes explicit manual pauses from wall and active time', () => {
+    const stats = computeStats(
+      raw({
+        startedAt: 0,
+        endedAt: 60_000,
+        keyTimes: [0, 1000, 60_000],
+        pauseIntervals: [{ start: 2000, end: 12_000 }],
+      }),
+      2000,
+    );
+    expect(stats.manualPauseMs).toBe(10_000);
+    expect(stats.wallMs).toBe(50_000);
+    expect(stats.activeMs).toBe(1000);
+    expect(stats.wpm.think).toBeCloseTo(24, 5);
   });
 
   it('builds a bounded, non-negative series', () => {

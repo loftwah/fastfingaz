@@ -156,6 +156,43 @@
   outline-offset: 1px;
 }
 
+.icon:disabled {
+  opacity: 0.32;
+  cursor: default;
+}
+
+.icon:disabled:hover {
+  background: transparent;
+  color: var(--muted);
+}
+
+.pause-glyph {
+  display: block;
+}
+
+.play-glyph {
+  display: none;
+}
+
+.hud[data-state='paused'] .pause-glyph {
+  display: none;
+}
+
+.hud[data-state='paused'] .play-glyph {
+  display: block;
+}
+
+.hud[data-state='paused'] .pause-icon {
+  background: var(--orange);
+  color: var(--ink);
+  opacity: 1;
+}
+
+.hud[data-panel='receipt'] .pause-icon,
+.hud[data-panel='share'] .pause-icon {
+  display: none;
+}
+
 .frame {
   position: relative;
   flex: 1;
@@ -468,9 +505,12 @@
   color: var(--orange);
 }
 
-.hud[data-state='draft'] .num,
-.hud[data-state='paused'] .num {
+.hud[data-state='draft'] .num {
   opacity: 0.55;
+}
+
+.hud[data-state='paused'] .num {
+  opacity: 0.95;
 }
 
 .hud[data-state='thinking'] .num {

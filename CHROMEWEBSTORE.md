@@ -21,7 +21,8 @@ Every prompt gives you two readings. Think WPM is the whole message, thinking pa
 A pause is not a failed run. The HUD holds the live reading in THINKING while you think, and the idle state shows your last, best and rolling average instead of dropping to zero. A slower run never overwrites a personal best.
 
 Key features:
-• A tall, bottom-anchored instrument that lives in the empty gutter beside the ChatGPT conversation, with a 38-bar cadence meter and a 72–80 px live WPM reading
+• A tall, bottom-anchored instrument that lives in the empty gutter beside the ChatGPT conversation, with a 38-bar cadence meter and a 72–120 px live WPM reading
+• A manual pause button and Alt+Shift+P shortcut: the clocks freeze, the number holds, and the break is excluded from the final reading
 • Think WPM, flow WPM, peak, best, weighted 20-session average, words, time, signal and consistency
 • A printed receipt after every sent prompt, with a serial, barcode and a small NEW BEST stamp
 • Share cards in three designed formats — 1200×630, 1080×1080 and 1080×1920 — with a share sheet, live preview, copy and PNG download
@@ -150,7 +151,8 @@ https://github.com/loftwah/thinktype
 
 | Version | Date | Changes | Status |
 | --- | --- | --- | --- |
-| 0.2.2 | 2026-11-11 | Stable dock: the HUD and rail no longer re-dock as the ChatGPT composer grows, wider gutter buffers, fixed 680px frame across all states, 38 tests | Draft — not submitted |
+| 0.3.0 | 2026-11-11 | Manual pause button and Alt+Shift+P, frozen clocks and held number, pause time excluded from the session, slower live-number decay, 42 tests | Draft — not submitted |
+| 0.2.2 | 2026-11-11 | Stable dock: the HUD and rail no longer re-dock as the ChatGPT composer grows, wider gutter buffers, fixed 680px frame across all states, 38 tests | Draft — superseded by 0.3.0 |
 | 0.2.1 | 2026-11-11 | Anodised black fixed-frame HUD, 360/286/142 side-gutter layouts, left baseline rail at wide widths, 120px primary, receipt cadence chart, share sheet inside the fixed frame, no size change between states, 38 tests | Draft — superseded by 0.2.2 |
 | 0.2.0 | 2026-11-11 | Vertical bottom-anchored HUD, THINKING hold, LAST/BEST/AVG idle, durable best/flow/peak history, weighted 20-session average, eligibility gates, draft and IME buckets, three share formats, share sheet, static site, 38 tests | Draft — superseded by 0.2.1 |
 | 0.1.1 | 2026-11-11 | Draft-aware sessions, larger paper HUD with black LCD, smart docking beside the composer, removed the theme setting, 27 tests | Draft |

@@ -36,6 +36,12 @@ export default defineConfig({
         },
         description: 'Show or hide the Thinktype HUD',
       },
+      'pause-run': {
+        suggested_key: {
+          default: 'Alt+Shift+P',
+        },
+        description: 'Pause or resume the Thinktype run',
+      },
     },
   },
 });

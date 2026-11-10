@@ -151,6 +151,7 @@
         confidence,
         resumed: false,
         ime: false,
+        manualPauseMs: 0,
         series: [52, 58, 64, 71, 76, 82, 88, 91, 86, 79, 72, 68, 74, 81, 87, 92, 95, 90, 84, 78],
         ...extra,
       });
@@ -182,7 +183,7 @@
       };
       window.chrome = {
         runtime: {
-          getManifest: () => ({ version: '0.2.2' }),
+          getManifest: () => ({ version: '0.3.0' }),
           openOptionsPage: () => {},
           sendMessage: () => Promise.resolve(),
         },

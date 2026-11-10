@@ -31,6 +31,7 @@ const SESSION: SessionRecord = {
   confidence: 0.94,
   resumed: false,
   ime: false,
+  manualPauseMs: 0,
   series: SERIES,
 };
 
@@ -105,7 +106,7 @@ function liveFor(state: string): LiveStats {
     series: [],
   };
 
-  if (state === 'typing' || state === 'thinking') {
+  if (state === 'typing' || state === 'thinking' || state === 'paused') {
     return {
       ...base,
       active: true,
@@ -118,7 +119,7 @@ function liveFor(state: string): LiveStats {
       words: 96,
       ms: 112_000,
       activeMs: 94_000,
-      status: state === 'thinking' ? 'thinking' : 'typing',
+      status: state === 'paused' ? 'paused' : state === 'thinking' ? 'thinking' : 'typing',
       holding: state === 'thinking',
       series: SERIES.slice(0, 44),
     };
@@ -161,6 +162,7 @@ async function boot(): Promise<void> {
     onMove: () => undefined,
     onCollapse: () => undefined,
     onHide: () => undefined,
+    onPause: () => undefined,
   });
   overlay.mount();
   overlay.setHistory(history);

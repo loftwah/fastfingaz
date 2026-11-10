@@ -6,7 +6,7 @@
     <title>Changelog — Thinktype</title>
     <meta
       name="description"
-      content="Thinktype release notes: the v0.2.2 stable dock, honest best and average history, three share card formats, and the static site."
+      content="Thinktype release notes: the v0.3.0 pause and hold, honest best and average history, three share card formats, and the static site."
     />
     <link rel="canonical" href="https://thinktype.loftwah.com/changelog" />
     <meta name="theme-color" content="#f2efe6" />
@@ -81,13 +81,14 @@
           <div>
             <h1>Build notes, not marketing beats.</h1>
             <p class="meta">
-              CURRENTLY v0.2.2 / 11 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
+              CURRENTLY v0.3.0 / 11 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
             </p>
           </div>
         </header>
 
         <div class="doc-body">
           <nav class="doc-toc" aria-label="Releases">
+            <a href="#v030">v0.3.0</a>
             <a href="#v022">v0.2.2</a>
             <a href="#v021">v0.2.1</a>
             <a href="#v020">v0.2.0</a>
@@ -97,9 +98,38 @@
           </nav>
 
           <div>
+            <section class="release" id="v030">
+              <div>
+                <span class="version">v0.3.0 <span class="tag">CURRENT</span></span>
+                <span class="date">11 NOV 2026</span>
+              </div>
+              <div>
+                <h2>Pause and hold.</h2>
+                <ul>
+                  <li>
+                    A pause button in the HUD header and the <strong>Alt+Shift+P</strong> shortcut.
+                    A manual pause freezes the wall and active clocks, holds the big number, and shows
+                    <code>PAUSED</code> in the header and footer. Typing resumes automatically.
+                  </li>
+                  <li>
+                    The paused interval is excluded from the final session’s wall and active time;
+                    it is a declared break, not a reset. It is not recorded as a receipt on its own.
+                  </li>
+                  <li>
+                    The live number is held for short gaps instead of bleeding down key by key, and
+                    the rolling window is 8 seconds. Automatic THINKING now waits 1.8 seconds.
+                  </li>
+                  <li>
+                    Same dark fixed 680px instrument, side-gutter rail and stable dock from 0.2.2.
+                    No new permissions; 42 tests.
+                  </li>
+                </ul>
+              </div>
+            </section>
+
             <section class="release" id="v022">
               <div>
-                <span class="version">v0.2.2 <span class="tag">CURRENT</span></span>
+                <span class="version">v0.2.2</span>
                 <span class="date">11 NOV 2026</span>
               </div>
               <div>
@@ -275,7 +305,7 @@
         </div>
         <div class="footer-bottom">
           <span>THINKTYPE.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
-          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.2.2</span></span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.0</span></span>
         </div>
       </div>
     </footer>

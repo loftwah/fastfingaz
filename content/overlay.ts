@@ -47,6 +47,7 @@ export interface OverlayOptions {
   onMove: (pos: { x: number; y: number } | null) => void;
   onCollapse: (collapsed: boolean) => void;
   onHide: () => void;
+  onPause: () => void;
 }
 
 export interface ReceiptMeta {
@@ -72,6 +73,7 @@ export class Overlay {
   private railBars: HTMLElement[] = [];
   private sessions: SessionRecord[] = [];
   private bar: HTMLDivElement;
+  private pauseButton: HTMLButtonElement;
   private num: HTMLElement;
   private unit: HTMLElement;
   private orbNum: HTMLElement;
@@ -159,6 +161,13 @@ export class Overlay {
           <span class="brand">THINKTYPE</span>
           <span class="serial">TT-02</span>
           <span class="spacer"></span>
+          <button class="icon pause-icon" data-act="pause" aria-label="Pause measurement (Alt+Shift+P)" title="Pause measurement (Alt+Shift+P)">
+            <svg class="pause-glyph" viewBox="0 0 12 12" width="12" height="12" fill="none"
+                 stroke="currentColor" stroke-width="1.6" stroke-linecap="square"
+                 aria-hidden="true"><path d="M3.5 2v8M8.5 2v8"/></svg>
+            <svg class="play-glyph" viewBox="0 0 12 12" width="12" height="12" fill="currentColor"
+                 aria-hidden="true"><path d="M3.5 2.2l6 3.8-6 3.8z"/></svg>
+          </button>
           <button class="icon" data-act="dock" aria-label="Dock Thinktype to the bottom" title="Dock to the bottom">
             <svg viewBox="0 0 12 12" width="12" height="12" fill="none"
                  stroke="currentColor" stroke-width="1.2" stroke-linecap="square"
@@ -345,6 +354,7 @@ export class Overlay {
     this.railAvgFlow = pick<HTMLElement>('[data-rail-avg-flow]');
     this.railReadings = pick<HTMLElement>('[data-rail-readings]');
     this.bar = pick<HTMLDivElement>('.bar');
+    this.pauseButton = pick<HTMLButtonElement>('[data-act="pause"]');
     this.num = pick<HTMLElement>('[data-wpm]');
     this.unit = pick<HTMLElement>('.unit');
     this.orbNum = pick<HTMLElement>('[data-orb]');
@@ -584,6 +594,14 @@ export class Overlay {
           : 'idle';
     this.hud.dataset.state = state;
 
+    const pausedNow = live.active && live.status === 'paused';
+    this.pauseButton.disabled = !live.active;
+    const pauseLabel = pausedNow
+      ? 'Resume measurement (Alt+Shift+P)'
+      : 'Pause measurement (Alt+Shift+P)';
+    this.pauseButton.setAttribute('aria-label', pauseLabel);
+    this.pauseButton.title = pauseLabel;
+
     const last = this.history.last;
     const idle = idleReadout(this.history);
     const read = (value: number | null | undefined) =>
@@ -610,22 +628,37 @@ export class Overlay {
     let thinking = false;
 
     if (live.active) {
-      primary = formatWpm(live.wpm);
-      mode = live.status === 'thinking' ? 'THINKING' : 'LIVE FLOW';
-      status = live.status === 'thinking' ? 'THINKING' : 'TYPING';
-      pair =
-        live.status === 'thinking'
-          ? 'PAUSE HELD / NOT A RESET'
-          : 'NOT SAVED UNTIL SENT';
-      flowValue = read(live.flowWpm);
-      thinkValue = read(live.thinkWpm);
-      peakValue = read(live.peakWpm);
-      timeValue = formatClock(live.ms);
-      wordsValue = formatWords(live.words);
-      signalValue = signal(live.signal);
-      steadyValue = percent(live.consistency);
-      series = live.series;
-      thinking = live.status === 'thinking';
+      if (live.status === 'paused') {
+        primary = formatWpm(live.wpm);
+        mode = 'PAUSED';
+        status = 'PAUSED';
+        pair = 'CLOCKS FROZEN / ALT+SHIFT+P TO RESUME';
+        flowValue = read(live.flowWpm);
+        thinkValue = read(live.thinkWpm);
+        peakValue = read(live.peakWpm);
+        timeValue = formatClock(live.ms);
+        wordsValue = formatWords(live.words);
+        signalValue = signal(live.signal);
+        steadyValue = percent(live.consistency);
+        series = live.series;
+      } else {
+        primary = formatWpm(live.wpm);
+        mode = live.status === 'thinking' ? 'THINKING' : 'LIVE FLOW';
+        status = live.status === 'thinking' ? 'THINKING' : 'TYPING';
+        pair =
+          live.status === 'thinking'
+            ? 'PAUSE HELD / NOT A RESET'
+            : 'NOT SAVED UNTIL SENT';
+        flowValue = read(live.flowWpm);
+        thinkValue = read(live.thinkWpm);
+        peakValue = read(live.peakWpm);
+        timeValue = formatClock(live.ms);
+        wordsValue = formatWords(live.words);
+        signalValue = signal(live.signal);
+        steadyValue = percent(live.consistency);
+        series = live.series;
+        thinking = live.status === 'thinking';
+      }
     } else if (live.draft) {
       mode = 'DRAFT';
       status = 'TYPE TO MEASURE';
@@ -1049,6 +1082,7 @@ export class Overlay {
       const action = target?.closest<HTMLElement>('[data-act]')?.dataset.act;
       if (!action) return;
 
+      if (action === 'pause') this.options.onPause();
       if (action === 'collapse') this.setCollapsed(true);
       if (action === 'expand') {
         this.setCollapsed(false);

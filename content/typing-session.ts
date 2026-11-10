@@ -18,6 +18,8 @@ export class TypingSession {
   private undoCount = 0;
   private replacementCount = 0;
   private ended = false;
+  private pauseStartedAt: number | null = null;
+  private pauseIntervals: Array<{ start: number; end: number }> = [];
 
   constructor(startedAt: number, prefilledChars = 0) {
     this.startedAt = startedAt;
@@ -26,6 +28,42 @@ export class TypingSession {
 
   get isEnded(): boolean {
     return this.ended;
+  }
+
+  get isPaused(): boolean {
+    return this.pauseStartedAt !== null;
+  }
+
+  get pausedAt(): number | null {
+    return this.pauseStartedAt;
+  }
+
+  /** Freeze the measurement clocks until `resume` or the next keystroke. */
+  pause(timestamp: number): void {
+    if (this.ended || this.pauseStartedAt !== null) return;
+    this.pauseStartedAt = timestamp;
+  }
+
+  resume(timestamp: number): void {
+    if (this.pauseStartedAt === null) return;
+    const start = this.pauseStartedAt;
+    this.pauseIntervals.push({ start, end: Math.max(start, timestamp) });
+    this.pauseStartedAt = null;
+  }
+
+  pausedTotal(now: number): number {
+    const completed = this.pauseIntervals.reduce((sum, pause) => sum + (pause.end - pause.start), 0);
+    const current = this.pauseStartedAt === null ? 0 : Math.max(0, now - this.pauseStartedAt);
+    return completed + current;
+  }
+
+  private pausedActiveTotal(now: number, idleThresholdMs: number): number {
+    const sum = (pause: { start: number; end: number }) =>
+      Math.min(Math.max(0, pause.end - pause.start), idleThresholdMs);
+    const completed = this.pauseIntervals.reduce((total, pause) => total + sum(pause), 0);
+    const current =
+      this.pauseStartedAt === null ? 0 : Math.min(Math.max(0, now - this.pauseStartedAt), idleThresholdMs);
+    return completed + current;
   }
 
   get keyTimes(): readonly number[] {
@@ -46,11 +84,13 @@ export class TypingSession {
 
   noteKey(timestamp: number): void {
     if (this.ended || !Number.isFinite(timestamp) || timestamp < this.startedAt) return;
+    this.resume(timestamp);
     this.keys.push(timestamp);
   }
 
   noteInsert(timestamp: number, chars: number, source: InsertSource = 'type'): void {
     if (this.ended || !Number.isFinite(chars) || chars <= 0) return;
+    this.resume(timestamp);
     this.insertedChars += chars;
     if (source === 'paste') this.pastedChars += chars;
     if (source === 'replacement') this.replacementCount += 1;
@@ -76,10 +116,15 @@ export class TypingSession {
   }
 
   activeMs(now: number, idleThresholdMs: number): number {
-    return computeActiveMs(this.keys, this.startedAt, now, idleThresholdMs);
+    return Math.max(
+      0,
+      computeActiveMs(this.keys, this.startedAt, now, idleThresholdMs) -
+        this.pausedActiveTotal(now, idleThresholdMs),
+    );
   }
 
   finish(endedAt: number, finalText: string): RawSession {
+    if (this.pauseStartedAt !== null) this.resume(endedAt);
     this.ended = true;
     return {
       startedAt: this.startedAt,
@@ -93,6 +138,7 @@ export class TypingSession {
       ime: this.ime,
       undoCount: this.undoCount,
       replacementCount: this.replacementCount,
+      pauseIntervals: [...this.pauseIntervals],
     };
   }
 }

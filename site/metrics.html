@@ -81,7 +81,7 @@
           <div>
             <h1>How Thinktype measures typing.</h1>
             <p class="meta">
-              TWO CLOCKS / AN EXPLICIT IDLE MODEL / AN HONEST SIGNAL SCORE / v0.2.2
+              TWO CLOCKS / AN EXPLICIT IDLE MODEL / AN HONEST SIGNAL SCORE / v0.3.0
             </p>
           </div>
         </header>
@@ -161,8 +161,14 @@
             </p>
             <p>
               The threshold is also used to define “thinking” for the live HUD. If no key has
-              arrived for <code>max(1200ms, threshold)</code>, the HUD switches to THINKING. The
+              arrived for <code>max(1800ms, threshold)</code>, the HUD switches to THINKING. The
               live number is held, not reset to zero; a pause is not a failed run.
+            </p>
+            <p>
+              The HUD also has an explicit pause button and the <code>Alt+Shift+P</code> shortcut.
+              A manual pause freezes the wall and active clocks and shows <code>PAUSED</code>; the
+              paused duration is excluded from both. Typing resumes automatically. This is a
+              declared break, not a reset or a receipt.
             </p>
 
             <h2 id="peak">Peak and consistency</h2>
@@ -333,7 +339,7 @@ averageFlowWpm  = sum(insertedChars) / 5 / (sum(activeMs) / 60000)</code></pre>
         </div>
         <div class="footer-bottom">
           <span>THINKTYPE.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
-          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.2.2</span></span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.0</span></span>
         </div>
       </div>
     </footer>

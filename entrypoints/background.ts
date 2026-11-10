@@ -44,12 +44,14 @@ export default defineBackground(() => {
   });
 
   chrome.commands.onCommand.addListener((command) => {
-    if (command !== 'toggle-hud') return;
+    const type =
+      command === 'toggle-hud' ? 'toggle-hud' : command === 'pause-run' ? 'pause-run' : null;
+    if (!type) return;
     void (async () => {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tab?.id) return;
       try {
-        await chrome.tabs.sendMessage(tab.id, { type: 'toggle-hud' });
+        await chrome.tabs.sendMessage(tab.id, { type });
       } catch {
         // Not a ChatGPT tab, or the content script is not ready yet.
       }

@@ -286,10 +286,16 @@ a paper card inside the dark frame; the share sheet is dark with a paper card pr
 content changes.
 
 States: `LIVE FLOW` while typing; `THINKING` with the live number held; `DRAFT / TYPE TO MEASURE`
-when text already exists; `PAUSED / NOT RECORDED` after a reload; idle `LAST SESSION` with
-LAST / BEST / AVG on the instrument. A dash, never a zero, means no reading yet. The receipt state
-removes the LCD, prints down in five steps, and shows think/flow/peak, words/time/signal, best and
-average, a serial, a barcode, a small **NEW BEST** stamp and **SHARE CARD / DONE**. The share sheet
+when text already exists; `PAUSED` with frozen clocks for a manual pause; `PAUSED / NOT RECORDED` after
+a reload; idle `LAST SESSION` with LAST / BEST / AVG on the instrument. A dash, never a zero, means
+no reading yet. The receipt state removes the LCD, prints down in five steps, and shows
+think/flow/peak, words/time/signal, best and average, a serial, a barcode, a small **NEW BEST** stamp
+and **SHARE CARD / DONE**.
+
+A pause/play button sits in the header, with **Alt+Shift+P** as the shortcut. A manual pause is a
+declared break: both clocks freeze, the display holds, and the paused time is excluded from the
+session. Typing resumes automatically. The button is orange with a play glyph while paused, so the
+state is readable at a glance. The share sheet
 replaces the receipt with three format tabs, a live preview, the file name and PNG size, and
 **COPY IMAGE / DOWNLOAD / BACK**.
 
@@ -301,6 +307,10 @@ position returns it to the dock.
 
 **The Hold Rule.** A pause is not a reset. The live number holds in THINKING; only the cadence meter
 dims. Never snap the big number to zero while the run is alive.
+
+**The Pause Rule.** Automatic THINKING still counts the pause as part of the run. A manual pause
+freezes both clocks and excludes the break from the session. The pause button and `Alt+Shift+P` are
+the only way to declare it; typing resumes automatically.
 
 **The Baseline Rule.** Idle shows LAST / BEST / AVG, with dashes before the first reading. A slower
 run never overwrites a best, and a resumed draft never enters the baseline.

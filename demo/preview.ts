@@ -31,6 +31,7 @@ const SAMPLE: SessionRecord = {
   confidence: 0.94,
   resumed: false,
   ime: false,
+  manualPauseMs: 0,
   series: SERIES,
 };
 
@@ -59,6 +60,7 @@ function setupOverlay(pos: { x: number; y: number }): Overlay {
     onMove: () => undefined,
     onCollapse: () => undefined,
     onHide: () => undefined,
+    onPause: () => undefined,
   });
   overlay.mount();
   overlay.update(LIVE);
