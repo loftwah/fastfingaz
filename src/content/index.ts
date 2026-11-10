@@ -36,10 +36,13 @@ async function boot(): Promise<void> {
     },
   });
   overlay.mount();
-  overlay.setVisible(settings.showHud);
 
   let currentEl: HTMLElement | null = null;
   let tracker: ComposerTracker | null = null;
+
+  const syncVisibility = (): void => {
+    overlay.setVisible(settings.showHud && !!currentEl?.isConnected);
+  };
 
   const handleSession = (record: SessionRecord): void => {
     void appendSession(record).catch((error) => {
@@ -55,11 +58,18 @@ async function boot(): Promise<void> {
 
   const ensureComposer = (): void => {
     const el = findComposer();
-    if (!el) return;
-    if (el === currentEl && tracker && el.isConnected) return;
+    if (!el) {
+      syncVisibility();
+      return;
+    }
+    if (el === currentEl && tracker && el.isConnected) {
+      syncVisibility();
+      return;
+    }
     tracker?.destroy();
     currentEl = el;
     tracker = new ComposerTracker(el, settings, { onSession: handleSession });
+    syncVisibility();
   };
 
   ensureComposer();
@@ -84,7 +94,7 @@ async function boot(): Promise<void> {
     overlay.setTheme(next.theme);
     overlay.setCollapsed(next.hudCollapsed, false);
     overlay.setPosition(next.hudPos);
-    overlay.setVisible(next.showHud);
+    syncVisibility();
   });
 
   chrome.runtime.onMessage.addListener((message: unknown) => {
