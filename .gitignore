@@ -13,3 +13,5 @@ coverage/
 *.log
 .impeccable/*
 !.impeccable/design.json
+
+.env
