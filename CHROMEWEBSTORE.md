@@ -150,7 +150,7 @@ https://github.com/loftwah/thinktype
 
 | Version | Date | Changes | Status |
 | --- | --- | --- | --- |
-| 0.2.0 | 2026-11-11 | Vertical bottom-anchored HUD with full/medium/slim gutter layouts, THINKING hold, LAST/BEST/AVG idle, durable best/flow/peak history, weighted 20-session average, eligibility gates, draft and IME buckets, three share formats, share sheet, static site, 38 tests | Draft — not submitted |
+| 0.2.0 | 2026-11-11 | Anodised black HUD in a fixed 680px frame, 360/286/142 gutter layouts, left baseline rail at wide widths, THINKING hold, LAST/BEST/AVG idle, durable best/flow/peak history, weighted 20-session average, eligibility gates, draft and IME buckets, three share formats, share sheet, static site, 38 tests | Draft — not submitted |
 | 0.1.1 | 2026-11-11 | Draft-aware sessions, larger paper HUD with black LCD, smart docking beside the composer, removed the theme setting, 27 tests | Draft |
 | 0.1.0 | 2026-11-10 | Initial local-first typing measurement extension, HUD, receipts, history, settings | Draft |
 

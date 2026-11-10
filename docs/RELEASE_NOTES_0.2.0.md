@@ -5,10 +5,15 @@ beside the conversation, never over the composer, send button or last message.
 
 ## The instrument
 
-- Full 300px, medium 232px and slim 142px layouts, chosen from the space beside the conversation.
-- 72–80px primary reading; flow, think, peak, time, words, signal and steady rhythm in the LCD.
+- Anodised black housing: the live HUD is an instrument, not a light paper card. Paper is reserved for
+  the receipt and the documents.
+- Fixed 680px frame. It does not change size between idle, draft, typing, thinking, receipt and share.
+- Full 360px, medium 286px and slim 142px layouts, chosen from the true gutter beside the conversation.
+- 72–120px primary reading; flow, think, peak, time, words, signal and steady rhythm in the LCD.
 - A baseline strip with best think, average think, best flow, average flow, readings and drafts.
-- Collapses to the 60px orb and remembers a dragged position; Dock resets it.
+- When the left gutter is wide enough, a companion baseline rail shows LAST / BEST / AVG, a 14-day
+  chart, best/avg flow and the recent readings.
+- Collapses to the 60px orb when no gutter fits, and remembers a dragged position; Dock resets it.
 
 ## Honest history
 

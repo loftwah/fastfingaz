@@ -6,6 +6,7 @@ import {
   clearLiveSnapshot,
   loadHistory,
   loadLiveSnapshot,
+  loadSessions,
   loadSettings,
   onSettingsChanged,
   saveLiveSnapshot,
@@ -36,6 +37,7 @@ export default defineContentScript({
 async function boot(): Promise<void> {
   let settings: Settings = await loadSettings();
   let history: HistorySummary = await loadHistory();
+  let sessions: SessionRecord[] = await loadSessions();
 
   let currentEl: HTMLElement | null = null;
   let tracker: ComposerTracker | null = null;
@@ -62,6 +64,7 @@ async function boot(): Promise<void> {
   });
   overlay.mount();
   overlay.setHistory(history);
+  overlay.setSessions(sessions);
 
   const syncVisibility = (): void => {
     overlay.setVisible(settings.showHud && !!currentEl?.isConnected);
@@ -75,7 +78,9 @@ async function boot(): Promise<void> {
     try {
       await appendSession(record);
       history = await loadHistory();
+      sessions = await loadSessions();
       overlay.setHistory(history);
+      overlay.setSessions(sessions);
       overlay.showReceipt(record, { newBest, firstReading, history });
       await clearLiveSnapshot();
     } catch (error) {
@@ -98,6 +103,7 @@ async function boot(): Promise<void> {
       return;
     }
     if (el === currentEl && tracker && el.isConnected) {
+      overlay.refreshPosition();
       syncVisibility();
       return;
     }
@@ -105,6 +111,7 @@ async function boot(): Promise<void> {
     currentEl = el;
     tracker = new ComposerTracker(el, settings, { onSession: handleSession });
     if (!settings.hudPos) overlay.setPosition(null);
+    overlay.refreshPosition();
     syncVisibility();
   };
 
@@ -156,10 +163,18 @@ async function boot(): Promise<void> {
     changes: Record<string, chrome.storage.StorageChange>,
     area: string,
   ): void => {
-    if (area !== 'local' || !changes[STORAGE_KEYS.history]) return;
-    void loadHistory().then((next) => {
-      history = next;
-      overlay.setHistory(next);
+    if (
+      area !== 'local' ||
+      (!changes[STORAGE_KEYS.history] && !changes[STORAGE_KEYS.sessions])
+    ) {
+      return;
+    }
+    void Promise.all([loadHistory(), loadSessions()]).then(([nextHistory, nextSessions]) => {
+      history = nextHistory;
+      sessions = nextSessions;
+      overlay.setHistory(nextHistory);
+      overlay.setSessions(nextSessions);
+      overlay.refreshPosition();
     });
   };
   chrome.storage.onChanged.addListener(onStorage);

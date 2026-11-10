@@ -34,8 +34,8 @@ const SESSION: SessionRecord = {
   series: SERIES,
 };
 
-function historySample(): HistorySummary {
-  const sessions: SessionRecord[] = [
+function sampleSessions(): SessionRecord[] {
+  return [
     SESSION,
     {
       ...SESSION,
@@ -77,7 +77,10 @@ function historySample(): HistorySummary {
       activeMs: 104_000,
     },
   ];
-  return buildHistory(sessions);
+}
+
+function historySample(): HistorySummary {
+  return buildHistory(sampleSessions());
 }
 
 function blankHistory(): HistorySummary {
@@ -137,6 +140,12 @@ async function boot(): Promise<void> {
     document.getElementById('thread')?.classList.add('wide');
     document.getElementById('composer')?.classList.add('wide');
   }
+  if (params.get('chatgpt') === '1') {
+    const composer = document.getElementById('composer');
+    const thread = document.getElementById('thread');
+    if (composer) composer.style.width = '880px';
+    if (thread) thread.style.width = '880px';
+  }
   const pageLabel = document.getElementById('page-label')!;
   pageLabel.textContent = `GALLERY / ${state.toUpperCase()}`;
   if (params.get('label') === '0') pageLabel.hidden = true;
@@ -155,6 +164,7 @@ async function boot(): Promise<void> {
   });
   overlay.mount();
   overlay.setHistory(history);
+  overlay.setSessions(state === 'empty' ? [] : sampleSessions());
 
   if (state === 'receipt' || state === 'receipt-draft' || state === 'share') {
     const session =

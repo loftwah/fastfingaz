@@ -35,10 +35,12 @@ The visual world is a field instrument, not a SaaS dashboard. The reference is *
 Engineering**'s anodised black, signal orange, technical-label language (OP-1 field, TX-6) — the
 palette, type, density and one signature move, not a pretend hardware shell.
 
-The HUD is a tall paper housing around a black LCD, anchored to the bottom of the viewport and
-docked in the empty gutter beside the conversation. It has three widths — 300px full, 232px medium
-and 142px slim — and collapses to a 60px orb. It never covers the composer, send button or the last
-message. The primary reading is 72–80px; the cadence meter is 38 bars.
+The HUD is a tall anodised black instrument with a black LCD, anchored to the bottom of the viewport
+and docked in the empty gutter beside the conversation. It has a fixed 680px frame and three widths
+— 360px full, 286px medium and 142px slim — and collapses to a 60px orb when no gutter fits. It never
+covers the composer, send button or the last message. The primary reading is 72–120px; the cadence
+meter is 38 bars. When the left gutter allows it, a companion baseline rail shows LAST / BEST / AVG,
+a 14-day chart and the recent readings. The live HUD is dark; the receipt and documents are paper.
 
 The type system is Vercel's **Geist** family, self-hosted under the SIL Open Font License:
 

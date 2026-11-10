@@ -1,6 +1,6 @@
 import { ensureDocumentFonts, serialFromId } from '../shared/brand';
-import { formatClock, formatWpm, formatWords } from '../shared/format';
-import { emptyHistory, idleReadout } from '../shared/metrics';
+import { formatClock, formatRelative, formatWpm, formatWords } from '../shared/format';
+import { dailyBuckets, dayKey, emptyHistory, idleReadout } from '../shared/metrics';
 import {
   CARD_FORMATS,
   cardBlob,
@@ -58,6 +58,19 @@ export interface ReceiptMeta {
 export class Overlay {
   private host: HTMLDivElement;
   private hud: HTMLDivElement;
+  private frame: HTMLDivElement;
+  private rail: HTMLElement;
+  private railLast: HTMLElement;
+  private railBest: HTMLElement;
+  private railAvg: HTMLElement;
+  private railBarsEl: HTMLElement;
+  private railRows: HTMLElement;
+  private railCount: HTMLElement;
+  private railBestFlow: HTMLElement;
+  private railAvgFlow: HTMLElement;
+  private railReadings: HTMLElement;
+  private railBars: HTMLElement[] = [];
+  private sessions: SessionRecord[] = [];
   private bar: HTMLDivElement;
   private num: HTMLElement;
   private unit: HTMLElement;
@@ -82,6 +95,9 @@ export class Overlay {
   private barsEl: HTMLElement;
   private bars: HTMLElement[] = [];
   private stamp: HTMLElement;
+  private rBarsEl: HTMLElement;
+  private rBars: HTMLElement[] = [];
+  private rOverhead: HTMLElement;
   private shareFile: HTMLElement;
   private shareSpec: HTMLElement;
   private shareSize: HTMLElement;
@@ -160,6 +176,7 @@ export class Overlay {
           </button>
         </div>
 
+        <div class="frame">
         <div class="dashboard">
           <div class="display">
             <div class="readout">
@@ -227,6 +244,13 @@ export class Overlay {
             <div><span>AVG / 20</span><b data-r-avg>—</b></div>
             <div><span>STEADY</span><b data-r-steady>—</b></div>
           </div>
+          <div class="r-cadence">
+            <div class="r-cadence-head">
+              <span>CADENCE / 5 SEC</span>
+              <span data-r-overhead>—</span>
+            </div>
+            <div class="r-bars" data-r-bars aria-hidden="true"></div>
+          </div>
           <div class="r-note" data-r-note>LOCAL ONLY / NO SERVER</div>
           <div class="r-foot">
             <div class="barcode" data-r-barcode aria-hidden="true"></div>
@@ -265,12 +289,41 @@ export class Overlay {
           </div>
           <p class="s-note">Drawn on this machine. No upload.</p>
         </section>
+        </div>
 
         <button class="orb" data-act="expand" aria-label="Expand Thinktype">
           <span class="orb-num" data-orb>${DASH}</span>
           <span class="orb-unit">WPM</span>
         </button>
       </div>
+
+      <aside class="rail" data-visible="false" aria-label="Thinktype baseline log">
+        <div class="rail-top">
+          <span class="mark" aria-hidden="true"></span>
+          <span class="rail-brand">BASELINE</span>
+          <span class="rail-serial">TT-02 / LOG</span>
+        </div>
+        <div class="rail-rule" aria-hidden="true"></div>
+        <div class="rail-stats">
+          <div><span data-rail-last>${DASH}</span><em>LAST</em></div>
+          <div><span data-rail-best>${DASH}</span><em>BEST</em></div>
+          <div><span data-rail-avg>${DASH}</span><em>AVG / 20</em></div>
+        </div>
+        <div class="rail-chart">
+          <div class="rail-chart-head"><span>14 DAYS</span><span>THINK WPM</span></div>
+          <div class="rail-bars" data-rail-bars aria-hidden="true"></div>
+        </div>
+        <div class="rail-spec">
+          <div><span>BEST FLOW</span><b data-rail-best-flow>${DASH}</b></div>
+          <div><span>AVG FLOW / 20</span><b data-rail-avg-flow>${DASH}</b></div>
+          <div><span>READINGS / DRAFTS</span><b data-rail-readings>${DASH}</b></div>
+        </div>
+        <div class="rail-log">
+          <div class="rail-log-head"><span>RECENT</span><span data-rail-count>NO READINGS</span></div>
+          <div class="rail-rows" data-rail-rows></div>
+        </div>
+        <div class="rail-foot"><span>LOCAL ONLY</span><span>NO SERVER</span></div>
+      </aside>
     `;
 
     const pick = <T extends Element>(selector: string): T => {
@@ -280,6 +333,17 @@ export class Overlay {
     };
 
     this.hud = pick<HTMLDivElement>('.hud');
+    this.frame = pick<HTMLDivElement>('.frame');
+    this.rail = pick<HTMLElement>('.rail');
+    this.railLast = pick<HTMLElement>('[data-rail-last]');
+    this.railBest = pick<HTMLElement>('[data-rail-best]');
+    this.railAvg = pick<HTMLElement>('[data-rail-avg]');
+    this.railBarsEl = pick<HTMLElement>('[data-rail-bars]');
+    this.railRows = pick<HTMLElement>('[data-rail-rows]');
+    this.railCount = pick<HTMLElement>('[data-rail-count]');
+    this.railBestFlow = pick<HTMLElement>('[data-rail-best-flow]');
+    this.railAvgFlow = pick<HTMLElement>('[data-rail-avg-flow]');
+    this.railReadings = pick<HTMLElement>('[data-rail-readings]');
     this.bar = pick<HTMLDivElement>('.bar');
     this.num = pick<HTMLElement>('[data-wpm]');
     this.unit = pick<HTMLElement>('.unit');
@@ -303,6 +367,8 @@ export class Overlay {
     this.steady = pick<HTMLElement>('[data-steady]');
     this.barsEl = pick<HTMLElement>('[data-bars]');
     this.stamp = pick<HTMLElement>('[data-r-stamp]');
+    this.rBarsEl = pick<HTMLElement>('[data-r-bars]');
+    this.rOverhead = pick<HTMLElement>('[data-r-overhead]');
     this.shareFile = pick<HTMLElement>('[data-s-file]');
     this.shareSpec = pick<HTMLElement>('[data-s-spec]');
     this.shareSize = pick<HTMLElement>('[data-s-size]');
@@ -329,6 +395,18 @@ export class Overlay {
       const el = document.createElement('span');
       this.barsEl.appendChild(el);
       this.bars.push(el);
+    }
+
+    for (let i = 0; i < 14; i++) {
+      const el = document.createElement('span');
+      this.railBarsEl.appendChild(el);
+      this.railBars.push(el);
+    }
+
+    for (let i = 0; i < 48; i++) {
+      const el = document.createElement('span');
+      this.rBarsEl.appendChild(el);
+      this.rBars.push(el);
     }
 
     this.setCollapsed(options.collapsed, false);
@@ -364,6 +442,12 @@ export class Overlay {
   setHistory(history: HistorySummary): void {
     this.history = history;
     if (this.panel === 'dashboard') this.renderDashboard(this.lastLive);
+    this.renderRail();
+  }
+
+  setSessions(sessions: SessionRecord[]): void {
+    this.sessions = sessions;
+    this.renderRail();
   }
 
   setPaused(snapshot: LiveSnapshot | null): void {
@@ -434,6 +518,14 @@ export class Overlay {
       this.receipt.steady.textContent = session.consistency > 0 ? `${Math.round(session.consistency)}%` : DASH;
     }
     if (this.receipt.serial) this.receipt.serial.textContent = `NO. ${serial}`;
+    if (this.rOverhead) {
+      const overhead =
+        session.wpm.flow > 0
+          ? Math.max(0, Math.round((1 - session.wpm.think / session.wpm.flow) * 100))
+          : 0;
+      this.rOverhead.textContent = `${overhead}% OVERHEAD`;
+    }
+    this.renderReceiptBars(session.series);
     if (this.receipt.note) this.receipt.note.textContent = this.receiptNote(session);
     if (this.receipt.barcode) {
       this.receipt.barcode.replaceChildren(...this.barcodeBars(session.id));
@@ -596,6 +688,67 @@ export class Overlay {
     this.renderBars(series, thinking);
   }
 
+  private renderRail(): void {
+    if (!this.railLast) return;
+    const idle = idleReadout(this.history);
+    const read = (value: number | null) => (value && value > 0 ? formatWpm(value) : DASH);
+    this.railLast.textContent = read(idle.last);
+    this.railBest.textContent = read(idle.best);
+    this.railAvg.textContent = read(idle.avg);
+    this.railCount.textContent = this.history.totals.recorded
+      ? `${this.history.totals.recorded} READINGS`
+      : 'NO READINGS';
+    this.railBestFlow.textContent =
+      this.history.best.flowWpm > 0 ? formatWpm(this.history.best.flowWpm) : DASH;
+    this.railAvgFlow.textContent =
+      this.history.rolling.sessions > 0 ? formatWpm(this.history.rolling.flowWpm) : DASH;
+    this.railReadings.textContent = this.history.totals.recorded
+      ? `${this.history.totals.recorded} / ${this.history.totals.drafts}`
+      : DASH;
+
+    const buckets = dailyBuckets(this.sessions, 14);
+    const max = Math.max(20, ...buckets.map((bucket) => bucket.thinkWpm));
+    const today = dayKey(Date.now());
+    buckets.forEach((bucket, index) => {
+      const el = this.railBars[index];
+      if (!el) return;
+      const height = bucket.thinkWpm > 0 ? Math.max(2, Math.round((bucket.thinkWpm / max) * 54)) : 2;
+      el.style.height = `${height}px`;
+      el.style.opacity = bucket.thinkWpm > 0 ? (bucket.key === today ? '1' : '0.42') : '0.16';
+    });
+
+    const recent = this.sessions
+      .filter((session) => !session.resumed && session.pasteRatio < 0.5)
+      .slice(0, 4);
+    this.railRows.replaceChildren();
+    if (!recent.length) {
+      const empty = document.createElement('div');
+      empty.className = 'rail-empty';
+      empty.textContent = 'NO READINGS YET';
+      this.railRows.appendChild(empty);
+      return;
+    }
+    for (const session of recent) {
+      const row = document.createElement('div');
+      row.className = 'rail-row';
+      const serial = document.createElement('span');
+      serial.className = 'rail-row-serial';
+      serial.textContent = serialFromId(session.id);
+      const think = document.createElement('b');
+      think.textContent = formatWpm(session.wpm.think);
+      const unit = document.createElement('em');
+      unit.textContent = 'THINK';
+      const flow = document.createElement('span');
+      flow.className = 'rail-row-flow';
+      flow.textContent = `${formatWpm(session.wpm.flow)} FLOW`;
+      const when = document.createElement('span');
+      when.className = 'rail-row-when';
+      when.textContent = formatRelative(session.startedAt);
+      row.append(serial, think, unit, flow, when);
+      this.railRows.appendChild(row);
+    }
+  }
+
   private barcodeBars(id: string): HTMLElement[] {
     const seed = `${serialFromId(id)}${id}`;
     const bars: HTMLElement[] = [];
@@ -607,6 +760,20 @@ export class Overlay {
       bars.push(bar);
     }
     return bars;
+  }
+
+  private renderReceiptBars(series: number[]): void {
+    const values = series.slice(-48);
+    const max = Math.max(60, ...values);
+    const offset = 48 - values.length;
+    for (let i = 0; i < this.rBars.length; i++) {
+      const el = this.rBars[i]!;
+      const index = i - offset;
+      const value = index >= 0 ? (values[index] ?? 0) : 0;
+      const height = value > 0 ? Math.max(2, Math.round((value / max) * 54)) : 1;
+      el.style.height = `${height}px`;
+      el.style.opacity = value > 0 ? (i >= 40 ? '1' : '0.38') : '0.16';
+    }
   }
 
   private renderBars(series: number[], thinking: boolean): void {
@@ -668,7 +835,7 @@ export class Overlay {
     canvas.style.width = 'auto';
     canvas.style.height = 'auto';
     canvas.style.maxWidth = '100%';
-    canvas.style.maxHeight = '236px';
+    canvas.style.maxHeight = '100%';
     canvas.setAttribute('role', 'img');
     canvas.setAttribute(
       'aria-label',
@@ -712,10 +879,17 @@ export class Overlay {
   }
 
   /**
-   * A tall instrument, not a wide card. It lives in the empty gutter beside
-   * the conversation: right when that gutter fits it, otherwise left.
+   * The instrument lives in the true gutter between the sidebar and the
+   * conversation. The live panel takes the right gutter; when it fits, a
+   * baseline log takes the left gutter too. No gutter means the orb, never a
+   * panel over the sidebar or the messages.
    */
-  private dockMetrics(): { width: number; side: 'left' | 'right' } {
+  private dockMetrics(): {
+    width: number;
+    side: 'left' | 'right';
+    railWidth: number;
+    railVisible: boolean;
+  } {
     const composer = this.options.getComposerRect?.();
     const main = this.options.getMainRect?.();
     const viewportWidth = window.innerWidth;
@@ -724,44 +898,57 @@ export class Overlay {
       ? Math.max(0, composer.left - sidebarWidth)
       : viewportWidth - sidebarWidth;
     const rightGap = composer ? viewportWidth - composer.right : viewportWidth;
-    const target = 300;
+    const target = 360;
     const minWidth = 140;
 
     if (this.collapsed) {
-      if (rightGap >= 76) return { width: 60, side: 'right' };
-      if (leftGap >= 76) return { width: 60, side: 'left' };
-      return { width: 60, side: rightGap >= leftGap ? 'right' : 'left' };
+      return {
+        width: 60,
+        side: rightGap >= leftGap ? 'right' : 'left',
+        railWidth: 0,
+        railVisible: false,
+      };
     }
 
-    // Prefer the true gutter between the sidebar and the conversation. A slim
-    // vertical panel is better than covering the chat list.
     const side = rightGap >= leftGap ? 'right' : 'left';
     const gap = side === 'right' ? rightGap : leftGap;
     if (gap >= minWidth + 16) {
-      return { width: clamp(minWidth, gap - 24, target), side };
+      const width = clamp(minWidth, gap - 24, target);
+      const railVisible = !this.customPos && side === 'right' && leftGap >= 300;
+      const railWidth = railVisible ? clamp(240, leftGap - 24, 320) : 0;
+      return { width, side, railWidth, railVisible };
     }
 
-    // No gutter on either side: use the larger free area, which may be the
-    // sidebar. The panel still never covers the composer or the last message.
-    const fallbackRight = rightGap >= (composer?.left ?? 0);
-    const fallbackGap = fallbackRight ? rightGap : (composer?.left ?? viewportWidth);
+    // No usable gutter: keep the instrument out of the way as the orb.
     return {
-      width: clamp(240, fallbackGap - 16, target),
-      side: fallbackRight ? 'right' : 'left',
+      width: 60,
+      side: rightGap >= leftGap ? 'right' : 'left',
+      railWidth: 0,
+      railVisible: false,
     };
+  }
+
+  refreshPosition(): void {
+    this.applyPosition();
   }
 
   private applyPosition(): void {
     if (!this.hud.isConnected) return;
     const metrics = this.dockMetrics();
     const width = metrics.width;
-    this.hud.style.setProperty('--tt-w', `${width}px`);
-    this.hud.dataset.size = width >= 280 ? 'full' : width >= 210 ? 'medium' : 'slim';
-
-    const height = this.hud.offsetHeight || (this.collapsed ? 60 : 470);
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     const margin = 16;
+    const orbFit = width <= 60 && !this.collapsed;
+    const height = this.collapsed || orbFit ? 60 : Math.min(680, viewportHeight - 32);
+    this.hud.style.setProperty('--tt-w', `${width}px`);
+    this.hud.style.setProperty('--tt-h', `${height}px`);
+    this.hud.dataset.fit = orbFit ? 'orb' : 'panel';
+    this.hud.dataset.size =
+      width >= 300 ? 'full' : width >= 210 ? 'medium' : width > 80 ? 'slim' : 'orb';
+
+    const main = this.options.getMainRect?.();
+    const sidebarWidth = main && main.left > 1 ? main.left : 0;
     let x = margin;
     let y = viewportHeight - height - margin;
 
@@ -770,11 +957,15 @@ export class Overlay {
       y = this.customPos.y;
       this.hud.dataset.anchor = 'custom';
     } else if (this.collapsed) {
-      x = metrics.side === 'right' ? viewportWidth - width - margin : margin;
+      x = metrics.side === 'right' ? viewportWidth - width - margin : sidebarWidth + margin;
+      y = viewportHeight - height - margin;
+      this.hud.dataset.anchor = 'bottom';
+    } else if (metrics.side === 'right') {
+      x = viewportWidth - width - margin;
       y = viewportHeight - height - margin;
       this.hud.dataset.anchor = 'bottom';
     } else {
-      x = metrics.side === 'right' ? viewportWidth - width - margin : margin;
+      x = sidebarWidth + margin;
       y = viewportHeight - height - margin;
       this.hud.dataset.anchor = 'bottom';
     }
@@ -783,6 +974,18 @@ export class Overlay {
     y = clamp(y, 8, Math.max(8, viewportHeight - height - 8));
     this.hud.style.setProperty('--tt-x', `${Math.round(x)}px`);
     this.hud.style.setProperty('--tt-y', `${Math.round(y)}px`);
+
+    const composer = this.options.getComposerRect?.();
+    const showRail = metrics.railVisible && !!composer && !this.collapsed && !this.customPos;
+    if (showRail && composer) {
+      const railWidth = metrics.railWidth;
+      const railX = Math.max(sidebarWidth + 8, composer.left - railWidth - 16);
+      this.rail.style.setProperty('--tt-rail-w', `${railWidth}px`);
+      this.rail.style.setProperty('--tt-rail-x', `${Math.round(railX)}px`);
+      this.rail.style.setProperty('--tt-rail-y', `${Math.round(y)}px`);
+      this.rail.style.setProperty('--tt-h', `${height}px`);
+    }
+    this.rail.dataset.visible = String(showRail);
   }
 
   private resetDock(): void {

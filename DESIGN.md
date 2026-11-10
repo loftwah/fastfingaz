@@ -78,23 +78,29 @@ components:
     rounded: "{rounded.control}"
     padding: "8px 10px"
   hud:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.hud}"
-    padding: "10px 12px 11px"
-    width: "300px"
-  hud-display:
     backgroundColor: "{colors.ink}"
     textColor: "{colors.white}"
+    rounded: "{rounded.hud}"
+    padding: "10px 12px 12px"
+    width: "360px"
+  hud-display:
+    backgroundColor: "#050505"
+    textColor: "{colors.white}"
     rounded: "{rounded.panel}"
-    padding: "13px 14px 11px"
-    width: "276px"
+    padding: "16px 16px 13px"
+    width: "336px"
   hud-slim:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.white}"
     rounded: "{rounded.hud}"
     padding: "8px 8px 9px"
     width: "142px"
+  hud-rail:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.white}"
+    rounded: "{rounded.hud}"
+    padding: "10px 14px 12px"
+    width: "320px"
   receipt:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
@@ -126,11 +132,14 @@ card.
 
 **Key Characteristics:**
 
-- Paper documents and a black LCD window, never a dark page floating on a dark page.
+- An anodised black instrument with a black LCD, living in the gutter of the host page. Hairlines,
+  signal orange and the paper receipt carry the contrast; the live HUD is never a light card.
 - One signal orange used for live state, data and interaction — not decoration.
 - Mono numerals and technical labels; Sans prose; Pixel only as a mark.
-- Hairline rules, tight corners, flat colour, one soft shadow on the floating device.
-- The printed receipt is the brand artifact and the share action.
+- Hairline rules, tight corners, flat colour, one soft shadow on the floating instrument and its
+  baseline rail.
+- The printed receipt is the brand artifact and the share action. Documents are paper; instruments
+  are ink.
 
 ## Colors
 
@@ -159,8 +168,9 @@ A warm paper/ink neutral field with a single synthetic orange. The orange is a s
 ### Named Rules
 
 **The Paper/Device Rule.** Documents are paper with ink text; instruments are ink panels with paper
-text. Do not invert them for fashion, and do not place a paper card inside a paper card without a
-hairline.
+text. The live HUD and the baseline rail are instruments, so they are anodised black; the receipt,
+popup, options page and share cards are documents, so they are paper. Do not invert them for fashion,
+and do not place a paper card inside a paper card without a hairline.
 
 **The One Signal Rule.** Signal orange is reserved for live data, the meter, focus and primary
 interaction. It never becomes a background wash, a gradient, or a second decorative accent.
@@ -203,13 +213,14 @@ sheet: a 160px margin for the section heading and a 620px content column separat
 are divided by 1px hairlines, not cards.
 
 The popup is a 380×600 document: a black device panel for today, a baseline strip, a 14-day chart,
-then hairline session rows. The HUD is a tall paper instrument with a black LCD display, anchored to
-the bottom of the viewport and docked in the empty gutter beside the conversation. It has three
-widths — 300px full, 232px medium, 142px slim — and collapses to a 60px orb. It never covers the
-composer, send button or the last message. The share sheet and receipt live inside the same paper
-housing; the receipt is a 300px print with a serial, barcode and a small NEW BEST stamp. Share cards
-are designed at 1200×630, 1080×1080 and 1080×1920, with 64–84px margins and a cadence chart scaled
-to the format.
+then hairline session rows. The HUD is a tall anodised black instrument with a black LCD display,
+anchored to the bottom of the viewport and docked in the empty gutter beside the conversation. It
+has a fixed 680px frame and three widths — 360px full, 286px medium, 142px slim — and collapses to a
+60px orb when no gutter fits. It never covers the composer, send button or the last message. When the
+left gutter allows it, a companion baseline rail shows LAST / BEST / AVG, a 14-day chart and the
+recent readings. The share sheet lives inside the same dark frame; the receipt is a paper print
+inside it, with a serial, barcode and a small NEW BEST stamp. Share cards are designed at 1200×630,
+1080×1080 and 1080×1920, with 64–84px margins and a cadence chart scaled to the format.
 
 Spacing follows a 4/8/16/24/40 rhythm. More space above a heading than below it. Responsive:
 settings stack at 760px and 520px; the HUD clamps to the viewport; the popup scrolls inside its max
@@ -259,12 +270,20 @@ doing the work wrong. Radii stay under 12px except the orb.
 
 ### HUD
 
-A tall paper housing around a black LCD window, anchored to the bottom of the viewport. Header with
-orange square, `THINKTYPE`, `TT-02`, a dock/reset control, collapse and hide. The LCD holds an 80px
-mono live WPM (72px on medium, 60px on slim) with `WPM` and a state label, a four-cell meta row
-(TIME / WORDS / SIGNAL / STEADY), a 38-bar cadence meter and a three-cell FLOW / THINK / PEAK row.
-The paper strip below is the baseline: BEST THINK, AVG THINK / 20, BEST FLOW, AVG FLOW / 20,
-READINGS and DRAFTS. The footer carries the state and one short line.
+A tall anodised black instrument with a black LCD window, anchored to the bottom of the viewport in a
+fixed 680px frame. Header with orange square, `THINKTYPE`, `TT-02`, a dock/reset control, collapse and
+hide. The LCD holds a 120px mono live WPM (100px on medium, 72px on slim) with `WPM` and a state
+label, a four-cell meta row (TIME / WORDS / SIGNAL / STEADY), a 38-bar cadence meter and a three-cell
+FLOW / THINK / PEAK row. The dark baseline strip below shows BEST THINK, AVG THINK / 20, BEST FLOW,
+AVG FLOW / 20, READINGS and DRAFTS. The footer carries the state and one short line.
+
+When the left gutter is wide enough, a companion **baseline rail** docks opposite the HUD at the same
+height: LAST / BEST / AVG in 54px numerals, a 14-day think WPM chart, BEST FLOW / AVG FLOW /
+READINGS / DRAFTS, and the last four readings. It is a log tape, not a second dashboard.
+
+The frame never changes size between idle, draft, typing, thinking, receipt and share. The receipt is
+a paper card inside the dark frame; the share sheet is dark with a paper card preview. Only the
+content changes.
 
 States: `LIVE FLOW` while typing; `THINKING` with the live number held; `DRAFT / TYPE TO MEASURE`
 when text already exists; `PAUSED / NOT RECORDED` after a reload; idle `LAST SESSION` with
@@ -317,6 +336,8 @@ summary. Everything below it is a paper document.
 - **Do** use Signal Orange Ink for small orange text on paper and Display for large numerals.
 - **Do** keep the receipt's serial, barcode and dashed perforation; they are the signature.
 - **Do** anchor the HUD to the bottom and keep it in the conversation's side gutter.
+- **Do** keep the live HUD and baseline rail anodised black; paper is for receipts and documents.
+- **Do** keep the HUD frame one fixed size across idle, draft, typing, thinking, receipt and share.
 - **Do** hold the live number during THINKING and show LAST / BEST / AVG at idle.
 - **Do** design each share format separately; the landscape, square and story are different
   compositions, not one stretched canvas.
@@ -332,5 +353,7 @@ summary. Everything below it is a paper document.
 - **Don't** animate everything; the receipt print and the two-step thinking blink are the only authored
   motions.
 - **Don't** dock the HUD to the top-right, cover the composer or overlay the last message.
+- **Don't** make the live HUD a light paper card on a dark host page.
+- **Don't** resize the HUD frame between states.
 - **Don't** reset the live number to zero on a pause, or overwrite a personal best with a lower run.
 - **Don't** stretch a share card to a new aspect ratio; lay it out again.

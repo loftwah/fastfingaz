@@ -1,23 +1,25 @@
 # Art and captures
 
 Everything here is rendered from the built UI or the same HTML/CSS components with sample data. The
-values are examples, not user data and not a benchmark. The receipt renderer in
-`shared/share-card.ts` stays the source of truth for share cards; do not replace it with a static
-image.
+values are examples, not user data and not a benchmark. The live HUD and baseline rail are anodised
+black instruments in a fixed 680px frame; the receipt, popup, options page and share cards are paper
+documents. The receipt renderer in `shared/share-card.ts` stays the source of truth for share cards;
+do not replace it with a static image.
 
 | File | Size | Purpose | How it was made |
 | --- | --- | --- | --- |
-| `hud-2048.png` | 2048×1152 | Full 300px HUD, right gutter | `demo/gallery.html?state=typing&sidebar=0&wide=1` |
-| `hud-1728.png` | 1728×851 | Full 286px HUD, right gutter | `demo/gallery.html?state=typing&sidebar=1` |
+| `hud-2048.png` | 2048×1024 | Full 360px HUD + 320px baseline rail, both gutters | `demo/gallery.html?state=typing&sidebar=1&chatgpt=1` |
+| `hud-1728.png` | 1728×851 | Medium 286px HUD + 286px rail | `demo/gallery.html?state=typing&sidebar=1` |
 | `hud-1440.png` | 1440×900 | Slim 142px HUD, right gutter | `demo/gallery.html?state=typing&sidebar=1` |
 | `hud-1440-123.png` | 1440×900 | Three-digit slim stress | `demo/gallery.html?state=typing&sidebar=1&wpm=123` |
 | `hud-1280.png` | 1280×800 | Medium 232px HUD, right gutter | `demo/gallery.html?state=typing&sidebar=0` |
-| `hud-idle.png` | 2048×1152 | Idle LAST / BEST / AVG | `demo/gallery.html?state=idle` |
-| `hud-empty.png` | 2048×1152 | No-reading dashes | `demo/gallery.html?state=empty` |
-| `hud-draft.png` | 1440×900 | Draft state | `demo/gallery.html?state=draft` |
-| `hud-thinking.png` | 1440×900 | Held THINKING state | `demo/gallery.html?state=thinking` |
-| `hud-receipt.png` | 2048×1152 | Printed receipt + NEW BEST | `demo/gallery.html?state=receipt` |
-| `hud-share.png` | 2048×1152 | Share sheet | `demo/gallery.html?state=share` |
+| `hud-1280-open.png` | 1280×800 | Orb fallback when no gutter fits | `demo/gallery.html?state=typing&sidebar=1` |
+| `hud-idle.png` | 2048×1024 | Idle LAST / BEST / AVG | `demo/gallery.html?state=idle&sidebar=1&chatgpt=1` |
+| `hud-empty.png` | 2048×1024 | No-reading dashes | `demo/gallery.html?state=empty&sidebar=1&chatgpt=1` |
+| `hud-draft.png` | 2048×1024 | Draft state | `demo/gallery.html?state=draft&sidebar=1&chatgpt=1` |
+| `hud-thinking.png` | 2048×1024 | Held THINKING state | `demo/gallery.html?state=thinking&sidebar=1&chatgpt=1` |
+| `hud-receipt.png` | 2048×1024 | Printed receipt + NEW BEST | `demo/gallery.html?state=receipt&sidebar=1&chatgpt=1` |
+| `hud-share.png` | 2048×1024 | Share sheet | `demo/gallery.html?state=share&sidebar=1&chatgpt=1` |
 | `popup-main.png` | 380×600 | Popup history and baseline | `demo/popup-harness.html` |
 | `popup-detail.png` | 380×600 | Popup receipt detail + formats | `demo/popup-harness.html` |
 | `share/thinktype-landscape.png` | 1200×630 | Landscape receipt | `demo/cards.html?format=landscape` |
@@ -36,7 +38,7 @@ image.
 | `site-hero-1440.png` | 1440×900 | Site hero | live site at 1440×900 |
 | `site-formats-1440.png` | 1440×900 | Site receipt formats | live site at 1440×900 |
 | `site-mobile-390.png` | 390×844 | Site mobile | live site at 390×844 |
-| `source/hud-typing*.png` | 300×505 / 600×1010 | HUD source for the site | `demo/gallery.html`, element screenshot |
+| `source/hud-typing*.png` | 360×680 / 720×1360 | Dark HUD source for the site | `demo/gallery.html`, element screenshot |
 
 ## Regenerate
 
