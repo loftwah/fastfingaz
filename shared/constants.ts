@@ -17,7 +17,6 @@ export const DEFAULT_SETTINGS: Settings = {
   showHud: true,
   hudCollapsed: false,
   hudPos: null,
-  theme: 'auto',
   idleThresholdMs: 2000,
   minSessionChars: 32,
   storeText: false,

@@ -1,7 +1,7 @@
 import { ensureDocumentFonts, serialFromId } from '../shared/brand';
 import { formatClock, formatWpm, formatWords } from '../shared/format';
 import { copyCardImage } from '../shared/share-card';
-import type { LiveStats, SessionRecord, ThemeSetting } from '../shared/types';
+import type { LiveStats, SessionRecord } from '../shared/types';
 import css from './overlay.css?inline';
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
@@ -9,35 +9,13 @@ const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n
 const BAR_COUNT = 38;
 
 export interface OverlayOptions {
-  theme: ThemeSetting;
   collapsed: boolean;
   pos: { x: number; y: number } | null;
   fontFacesCss: string;
+  getComposerRect?: () => DOMRect | null;
   onMove: (pos: { x: number; y: number }) => void;
   onCollapse: (collapsed: boolean) => void;
   onHide: () => void;
-}
-
-function detectPageTheme(): 'dark' | 'light' {
-  const root = document.documentElement;
-  if (root.classList.contains('dark')) return 'dark';
-  const parse = (value: string): number | null => {
-    const match = value.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/);
-    if (!match) return null;
-    const alpha = match[4] === undefined ? 1 : Number(match[4]);
-    if (alpha === 0) return null;
-    const [r, g, b] = [Number(match[1]), Number(match[2]), Number(match[3])];
-    return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-  };
-  const bodyLum = parse(getComputedStyle(document.body).backgroundColor);
-  const rootLum = parse(getComputedStyle(root).backgroundColor);
-  const lum = bodyLum ?? rootLum;
-  if (lum !== null) return lum < 0.5 ? 'dark' : 'light';
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
-
-function resolveTheme(setting: ThemeSetting): 'dark' | 'light' {
-  return setting === 'auto' ? detectPageTheme() : setting;
 }
 
 const EMPTY: LiveStats = {
@@ -48,6 +26,7 @@ const EMPTY: LiveStats = {
   words: 0,
   ms: 0,
   status: 'idle',
+  draft: false,
   series: [],
 };
 
@@ -70,6 +49,7 @@ export class Overlay {
     serial: null as HTMLElement | null,
     meta: null as HTMLElement | null,
     barcode: null as HTMLElement | null,
+    kicker: null as HTMLElement | null,
   };
   private shareButton: HTMLButtonElement | null = null;
 
@@ -94,7 +74,7 @@ export class Overlay {
     const shadow = this.host.attachShadow({ mode: 'open' });
     shadow.innerHTML = `
       <style>${css}</style>
-      <div class="hud" data-theme="dark" data-state="idle" data-collapsed="false"
+      <div class="hud" data-state="idle" data-collapsed="false"
            role="region" aria-label="Thinktype typing stats">
         <div class="topline" aria-hidden="true"><span></span></div>
 
@@ -104,31 +84,33 @@ export class Overlay {
           <span class="serial">TT-01</span>
           <span class="spacer"></span>
           <button class="icon" data-act="collapse" aria-label="Collapse Thinktype" title="Collapse">
-            <svg viewBox="0 0 12 12" width="11" height="11" fill="none"
+            <svg viewBox="0 0 12 12" width="12" height="12" fill="none"
                  stroke="currentColor" stroke-width="1.2" stroke-linecap="square"
                  aria-hidden="true"><path d="M2 6h8"/></svg>
           </button>
           <button class="icon" data-act="hide" aria-label="Hide Thinktype" title="Hide (Alt+Shift+T)">
-            <svg viewBox="0 0 12 12" width="11" height="11" fill="none"
+            <svg viewBox="0 0 12 12" width="12" height="12" fill="none"
                  stroke="currentColor" stroke-width="1.2" stroke-linecap="square"
                  aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg>
           </button>
         </div>
 
-        <div class="readout">
-          <div class="primary">
-            <span class="num" data-wpm>0</span><span class="unit">WPM</span>
-            <span class="mode" data-mode>READY</span>
+        <div class="display">
+          <div class="readout">
+            <div class="primary">
+              <span class="num" data-wpm>0</span><span class="unit">WPM</span>
+              <span class="mode" data-mode>READY</span>
+            </div>
+            <div class="meta">
+              <div><dd data-time>0:00</dd><dt>TIME</dt></div>
+              <div><dd data-words>0</dd><dt>WORDS</dt></div>
+            </div>
           </div>
-          <div class="meta">
-            <div><dd data-time>0:00</dd><dt>TIME</dt></div>
-            <div><dd data-words>0</dd><dt>WORDS</dt></div>
-          </div>
-        </div>
 
-        <div class="meter">
-          <div class="meter-head"><span>CADENCE</span><span>5 SEC</span></div>
-          <div class="bars" data-bars aria-hidden="true"></div>
+          <div class="meter">
+            <div class="meter-head"><span>CADENCE</span><span>5 SEC</span></div>
+            <div class="bars" data-bars aria-hidden="true"></div>
+          </div>
         </div>
 
         <div class="foot">
@@ -138,7 +120,7 @@ export class Overlay {
 
         <section class="receipt" aria-label="Session receipt">
           <div class="r-head">
-            <span class="kicker">SESSION PRINTED</span>
+            <span class="kicker" data-r-kicker>SESSION PRINTED</span>
             <span class="r-serial" data-r-serial>NO. 0000</span>
           </div>
           <div class="r-nums">
@@ -182,6 +164,7 @@ export class Overlay {
       serial: pick<HTMLElement>('[data-r-serial]'),
       meta: pick<HTMLElement>('[data-r-meta]'),
       barcode: pick<HTMLElement>('[data-r-barcode]'),
+      kicker: pick<HTMLElement>('[data-r-kicker]'),
     };
     this.shareButton = pick<HTMLButtonElement>('[data-act="share"]');
 
@@ -193,7 +176,6 @@ export class Overlay {
     }
 
     this.pos = options.pos ?? this.defaultPosition();
-    this.applyTheme(options.theme);
     this.setCollapsed(options.collapsed, false);
     this.bind();
     this.applyPosition(this.pos, false);
@@ -214,10 +196,6 @@ export class Overlay {
     this.host.style.display = visible ? 'block' : 'none';
   }
 
-  setTheme(setting: ThemeSetting): void {
-    this.applyTheme(setting);
-  }
-
   setPosition(pos: { x: number; y: number } | null): void {
     this.applyPosition(pos ?? this.defaultPosition(), false);
   }
@@ -235,29 +213,31 @@ export class Overlay {
       this.clearReceipt();
     }
 
-    const state = live.active ? live.status : 'idle';
+    const state = live.active ? live.status : live.draft ? 'draft' : 'idle';
     this.hud.dataset.state = state;
 
     this.num.textContent = formatWpm(live.active ? live.wpm : 0);
     this.orbNum.textContent = formatWpm(live.active ? live.wpm : 0);
     this.time.textContent = formatClock(live.active ? live.ms : 0);
-    this.words.textContent = formatWords(live.active ? live.words : 0);
+    this.words.textContent = formatWords(live.words);
 
-    if (live.status === 'thinking' && live.active) {
+    if (live.draft && !live.active) {
+      this.mode.textContent = 'DRAFT';
+      this.status.textContent = 'TYPE TO MEASURE';
+      this.pair.textContent = 'THINK — / FLOW —';
+    } else if (live.status === 'thinking' && live.active) {
       this.mode.textContent = 'THINKING';
       this.status.textContent = 'THINKING';
+      this.pair.textContent = `THINK ${formatWpm(live.thinkWpm)} / FLOW ${formatWpm(live.flowWpm)}`;
     } else if (live.status === 'typing' && live.active) {
       this.mode.textContent = 'LIVE FLOW';
       this.status.textContent = 'TYPING';
+      this.pair.textContent = `THINK ${formatWpm(live.thinkWpm)} / FLOW ${formatWpm(live.flowWpm)}`;
     } else {
       this.mode.textContent = 'READY';
       this.status.textContent = 'WAITING';
+      this.pair.textContent = 'THINK — / FLOW —';
     }
-
-    this.pair.textContent =
-      live.active && live.words > 0 && live.ms > 1200
-        ? `THINK ${formatWpm(live.thinkWpm)} / FLOW ${formatWpm(live.flowWpm)}`
-        : 'THINK — / FLOW —';
 
     this.renderBars(live.active ? live.series : [], live.status === 'thinking');
   }
@@ -265,6 +245,9 @@ export class Overlay {
   showReceipt(session: SessionRecord): void {
     this.lastSession = session;
     const serial = serialFromId(session.id);
+    if (this.receipt.kicker) {
+      this.receipt.kicker.textContent = session.resumed ? 'DRAFT PRINTED' : 'SESSION PRINTED';
+    }
     if (this.receipt.think) this.receipt.think.textContent = formatWpm(session.wpm.think);
     if (this.receipt.flow) this.receipt.flow.textContent = formatWpm(session.wpm.flow);
     if (this.receipt.words) this.receipt.words.textContent = formatWords(session.words);
@@ -320,7 +303,7 @@ export class Overlay {
       const el = this.bars[i]!;
       const index = i - (BAR_COUNT - values.length);
       const value = index >= 0 ? (values[index] ?? 0) : 0;
-      const height = value > 0 ? Math.max(2, Math.round((value / max) * 26)) : 1;
+      const height = value > 0 ? Math.max(2, Math.round((value / max) * 38)) : 1;
       el.style.height = `${height}px`;
       const front = index >= values.length - 9 && value > 0;
       const opacity = value > 0 ? (front ? 1 : 0.55) : 0.18;
@@ -329,22 +312,38 @@ export class Overlay {
   }
 
   private defaultPosition(): { x: number; y: number } {
-    const width = this.collapsed ? 56 : 320;
+    const width = this.collapsed ? 60 : 420;
+    const height = this.collapsed ? 60 : 270;
+    const gap = 16;
+    const composer = this.options.getComposerRect?.();
+    if (composer) {
+      if (window.innerWidth - composer.right >= width + gap) {
+        return {
+          x: window.innerWidth - width - gap,
+          y: clamp(
+            Math.min(window.innerHeight - height - gap, composer.bottom - height),
+            gap,
+            window.innerHeight - height - gap,
+          ),
+        };
+      }
+      if (composer.top >= height + gap) {
+        return {
+          x: clamp(composer.right - width, gap, window.innerWidth - width - gap),
+          y: composer.top - height - gap,
+        };
+      }
+    }
     return {
-      x: Math.max(12, window.innerWidth - width - 24),
-      y: 84,
+      x: Math.max(gap, window.innerWidth - width - 24),
+      y: Math.max(gap, window.innerHeight - height - 24),
     };
-  }
-
-  private applyTheme(setting: ThemeSetting): void {
-    const resolved = resolveTheme(setting);
-    if (this.hud.dataset.theme !== resolved) this.hud.dataset.theme = resolved;
   }
 
   private applyPosition(pos: { x: number; y: number }, persist: boolean): void {
     const collapsed = this.hud.dataset.collapsed === 'true';
-    const width = collapsed ? 56 : this.hud.offsetWidth || 320;
-    const height = collapsed ? 56 : this.hud.offsetHeight || 180;
+    const width = collapsed ? 60 : this.hud.offsetWidth || 420;
+    const height = collapsed ? 60 : this.hud.offsetHeight || 270;
     const x = clamp(pos.x, 8, Math.max(8, window.innerWidth - width - 8));
     const y = clamp(pos.y, 8, Math.max(8, window.innerHeight - height - 8));
     this.pos = { x, y };

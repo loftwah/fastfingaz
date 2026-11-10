@@ -2,6 +2,7 @@ node_modules/
 dist/
 .output/
 unpacked/
+.agents/
 .wxt/
 demo/dist/
 *.zip

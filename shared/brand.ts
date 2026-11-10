@@ -7,8 +7,6 @@
 
 export const BRAND = {
   ink: '#0b0b0a',
-  panel: '#111110',
-  panelRaised: '#171715',
   paper: '#f2efe6',
   paperDeep: '#e8e3d7',
   orange: '#ff4d00',

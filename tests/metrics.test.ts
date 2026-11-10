@@ -21,6 +21,7 @@ function raw(overrides: Partial<RawSession> = {}): RawSession {
     deletedChars: 0,
     pastedChars: 0,
     finalText: 'a'.repeat(100),
+    prefilledChars: 0,
     ime: false,
     undoCount: 0,
     replacementCount: 0,
@@ -127,6 +128,24 @@ describe('computeStats', () => {
     expect(messy.confidence).toBeLessThan(clean.confidence);
   });
 
+  it('measures only the typed portion when resuming a draft', () => {
+    const stats = computeStats(
+      raw({
+        startedAt: 0,
+        endedAt: 30_000,
+        keyTimes: [0, 1000, 2000],
+        prefilledChars: 100,
+        finalText: 'a'.repeat(150),
+        insertedChars: 50,
+      }),
+    );
+    expect(stats.resumed).toBe(true);
+    expect(stats.chars).toBe(150);
+    // 50 characters over 30 seconds = 20 WPM.
+    expect(stats.wpm.think).toBeCloseTo(20, 5);
+    expect(stats.confidence).toBeLessThan(0.95);
+  });
+
   it('builds a bounded, non-negative series', () => {
     const keys = Array.from({ length: 200 }, (_, index) => index * 300);
     const stats = computeStats(raw({ startedAt: 0, endedAt: 60_000, keyTimes: keys }));
@@ -155,6 +174,20 @@ describe('aggregate', () => {
     expect(stats.flowWpm).toBeCloseTo(60, 5);
     expect(stats.words).toBe(20);
     expect(stats.consistency).toBe(80);
+  });
+
+  it('uses the typed portion for resumed drafts in aggregates', () => {
+    const resumed = record({
+      chars: 150,
+      insertedChars: 50,
+      resumed: true,
+      wallMs: 30_000,
+      activeMs: 30_000,
+      words: 25,
+      wpm: { think: 20, flow: 10, peak: 20 },
+    });
+    const stats = aggregate([resumed]);
+    expect(stats.thinkWpm).toBeCloseTo(20, 5);
   });
 
   it('returns zeros with no sessions', () => {

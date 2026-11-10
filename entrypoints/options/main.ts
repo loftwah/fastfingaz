@@ -30,7 +30,6 @@ function paint(next: Settings): void {
   ($('minchars') as HTMLInputElement).value = String(next.minSessionChars);
   ($('show-hud') as HTMLInputElement).checked = next.showHud;
   ($('store-text') as HTMLInputElement).checked = next.storeText;
-  ($('theme') as HTMLSelectElement).value = next.theme;
 }
 
 async function persist(patch: Partial<Settings>): Promise<void> {
@@ -71,11 +70,6 @@ function bind(): void {
       return;
     }
     void persist({ storeText: input.checked });
-  });
-
-  ($('theme') as HTMLSelectElement).addEventListener('change', (event) => {
-    const value = (event.target as HTMLSelectElement).value as Settings['theme'];
-    void persist({ theme: value });
   });
 
   $('reset-pos').addEventListener('click', () => {

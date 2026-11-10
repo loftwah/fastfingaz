@@ -7,8 +7,6 @@
 
 export const SCHEMA_VERSION = 1;
 
-export type ThemeSetting = 'auto' | 'dark' | 'light';
-
 export interface Settings {
   /** Show the floating HUD on ChatGPT. Tracking continues when hidden. */
   showHud: boolean;
@@ -16,7 +14,6 @@ export interface Settings {
   hudCollapsed: boolean;
   /** Last dragged position, in CSS pixels from the viewport's top-left. */
   hudPos: { x: number; y: number } | null;
-  theme: ThemeSetting;
   /** Gaps longer than this are treated as thinking, not typing. */
   idleThresholdMs: number;
   /** Sessions shorter than this are discarded. */
@@ -59,6 +56,8 @@ export interface SessionStats {
   pasteRatio: number;
   /** 0-1 estimate of how much of the final text is attributable to observed keys. */
   confidence: number;
+  /** True when the session resumed text that already existed in the composer. */
+  resumed: boolean;
   ime: boolean;
   /** Rolling WPM samples for sparklines. Downsampled. */
   series: number[];
@@ -85,6 +84,8 @@ export interface RawSession {
   deletedChars: number;
   pastedChars: number;
   finalText: string;
+  /** Text already in the composer when tracking began (a resumed draft). */
+  prefilledChars: number;
   ime: boolean;
   undoCount: number;
   replacementCount: number;
@@ -122,5 +123,7 @@ export interface LiveStats {
   words: number;
   ms: number;
   status: LiveStatus;
+  /** A draft exists but tracking has not started yet. */
+  draft: boolean;
   series: number[];
 }

@@ -87,15 +87,15 @@ toggles hidden folders in Finder.
 Prefer a packaged download? Grab the
 [latest release](https://github.com/loftwah/thinktype/releases/latest), unzip it, and load the folder.
 
-Open [chatgpt.com](https://chatgpt.com), start a new chat, and type a real prompt. The HUD appears in
-the top-right. Send the message to get a receipt; **Copy receipt** puts the card on your clipboard.
+Open [chatgpt.com](https://chatgpt.com), start a new chat, and type a real prompt. The HUD docks
+beside the composer — right of it when there is room, above it when there isn't. Send the message to get a receipt; **Copy receipt** puts the card on your clipboard.
 
 Toggle the HUD any time with <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd>.
 
 ## Screenshots
 
 <p align="center">
-  <img src="docs/art/hud.png" alt="Thinktype HUD over ChatGPT" width="420" />
+  <img src="docs/art/hud.png" alt="Thinktype HUD beside the composer" width="420" />
 </p>
 
 <p align="center">
@@ -104,7 +104,6 @@ Toggle the HUD any time with <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd>.
 
 <p align="center">
   <img src="docs/art/popup.png" alt="Thinktype history popup" width="300" />
-  <img src="docs/art/options.png" alt="Thinktype settings sheet" width="480" />
 </p>
 
 More placeholder captures live in [docs/art](docs/art), including the session detail view.
@@ -154,7 +153,7 @@ public/
   fonts/                 Geist Sans / Mono / Pixel + OFL
   icon/                  16/32/48/128 pixel-T icons
 demo/                    Vite visual preview without installing the extension
-tests/                   24 unit tests for the state machine and metrics
+tests/                   27 unit tests for the state machine and metrics
 wxt.config.ts            manifest and permissions
 ```
 
@@ -183,7 +182,7 @@ wxt.config.ts            manifest and permissions
   attachment until the selector list is updated.
 - IME input (Chinese, Japanese, etc.) is flagged and lowers the signal score; keystroke counts are
   approximate there.
-- Typing into an existing draft is not counted. Start from an empty composer.
+- An existing draft is measured from the next keystroke. The draft text itself is not retroactively counted; the HUD shows `DRAFT` until you start typing. Clear and retype if you want the whole message measured.
 - Autocorrect, undo and paste lower confidence rather than pretending to be precise.
 - Chrome only for now. The measurement core is host-agnostic; WXT makes Firefox a realistic next
   target.

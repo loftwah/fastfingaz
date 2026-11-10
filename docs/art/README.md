@@ -7,11 +7,12 @@ Everything here is a real capture of the built UI with sample data. It is placeh
 | File | Size | Purpose | How it was made |
 | --- | --- | --- | --- |
 | `hero.png` | 1280×960 | README hero | `demo/preview.html` at 1280×960 |
-| `hud.png` | 640×354 | HUD close-up | real extension on ChatGPT, 2× capture |
+| `hud.png` | 420×230 | HUD close-up | local composer fixture on a dark field |
 | `share-card.png` | 1200×630 | Share receipt | `demo/card.html`, `#card-stage` |
+| `store-1280x800.png` | 1280×800 | Chrome Web Store screenshot 1 | crop of `hero.png` |
 | `popup.png` | 380×600 | History popup | built extension, seeded sample data |
 | `popup-detail.png` | 380×600 | Session detail | built extension, seeded sample data |
-| `options.png` | 900×1202 | Settings sheet | built extension |
+| `options.png` | 900×1202 | Settings sheet | 🟡 Needs update — the Theme field was removed |
 | `social-preview.png` | 1280×640 | GitHub social preview | **To supply** (see below) |
 | `icon.svg` | 128 | Source mark | hand-authored pixel T |
 
@@ -29,8 +30,8 @@ Then open these pages:
 
 Sample data lives in `demo/preview.ts`. Change it there, not in the images.
 
-The HUD close-up in this folder was captured from the real extension on ChatGPT, so it shows a real
-typing burst. If you regenerate it from `demo/hud.html`, keep the dark device on a plain background.
+The HUD close-up in this folder was captured from the local composer fixture on a dark field. Replace
+it with a real ChatGPT capture when convenient; keep the paper housing and black LCD intact.
 
 ## GitHub social preview
 

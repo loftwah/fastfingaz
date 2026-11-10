@@ -62,7 +62,7 @@ network calls.
 
 ## Evidence on Hand
 
-- Working v0.1 code, 24 unit tests, green CI, real screenshots and sample data in `demo/`.
+- Working v0.1 code, 27 unit tests, green CI, real screenshots and sample data in `demo/`.
 - Live composer attachment verified against ChatGPT's ProseMirror editor.
 - No real sessions, testimonials, press or store reviews. Do not invent them.
 
@@ -76,5 +76,5 @@ network calls.
 
 ## Accessibility & Inclusion
 
-Keyboard toggle for the HUD, focus-visible controls, reduced-motion support, and readable contrast in
-both themes. No specific WCAG level has been confirmed.
+Keyboard toggle for the HUD, focus-visible controls, reduced-motion support, and readable contrast on
+paper surfaces. No specific WCAG level has been confirmed.

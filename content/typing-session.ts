@@ -9,6 +9,7 @@ export type InsertSource = 'type' | 'paste' | 'replacement';
  */
 export class TypingSession {
   readonly startedAt: number;
+  readonly prefilledChars: number;
   private keys: number[] = [];
   private insertedChars = 0;
   private deletedChars = 0;
@@ -18,8 +19,9 @@ export class TypingSession {
   private replacementCount = 0;
   private ended = false;
 
-  constructor(startedAt: number) {
+  constructor(startedAt: number, prefilledChars = 0) {
     this.startedAt = startedAt;
+    this.prefilledChars = Math.max(0, prefilledChars);
   }
 
   get isEnded(): boolean {
@@ -79,6 +81,7 @@ export class TypingSession {
       deletedChars: this.deletedChars,
       pastedChars: this.pastedChars,
       finalText,
+      prefilledChars: this.prefilledChars,
       ime: this.ime,
       undoCount: this.undoCount,
       replacementCount: this.replacementCount,

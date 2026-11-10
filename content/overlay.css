@@ -10,29 +10,31 @@
 
 .hud {
   --ink: #0b0b0a;
-  --panel: #111110;
-  --panel-2: #171715;
   --paper: #f2efe6;
+  --paper-deep: #e8e3d7;
   --orange: #ff4d00;
   --orange-ink: #b83600;
-  --text: #f7f5ef;
-  --muted: #9a9488;
-  --line: #2a2824;
-  --line-strong: #3a3732;
+  --muted: #6d675c;
+  --line: #d5cfc1;
+  --line-strong: #bdb6a7;
+  --lcd: #0b0b0a;
+  --lcd-line: #2a2824;
+  --lcd-text: #f7f5ef;
+  --lcd-muted: #9a9488;
 
   position: fixed;
   left: var(--tt-x, 24px);
   top: var(--tt-y, 84px);
   z-index: 2147483647;
-  width: 320px;
-  padding: 10px 14px 12px;
+  width: 420px;
+  padding: 10px 12px 12px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: var(--panel);
+  background: var(--paper);
   box-shadow:
-    0 18px 44px -24px rgba(0, 0, 0, 0.9),
-    0 1px 0 rgba(255, 255, 255, 0.045) inset;
-  color: var(--text);
+    0 24px 54px -28px rgba(20, 16, 8, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.65) inset;
+  color: var(--ink);
   font-family:
     'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   font-size: 13px;
@@ -44,20 +46,7 @@
   overflow: hidden;
   transition:
     width 140ms linear,
-    background 140ms linear,
-    border-color 140ms linear;
-}
-
-.hud[data-theme='light'] {
-  --panel: #f2efe6;
-  --panel-2: #e8e3d7;
-  --text: #0b0b0a;
-  --muted: #6d675c;
-  --line: #d5cfc1;
-  --line-strong: #bdb6a7;
-  --orange: #b83600;
-  box-shadow:
-    0 18px 44px -26px rgba(30, 25, 15, 0.35), 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+    height 140ms linear;
 }
 
 .hud.dragging {
@@ -70,23 +59,23 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 3px;
   background: var(--line);
 }
 
 .topline span {
   display: block;
-  width: 42px;
-  height: 2px;
+  width: 60px;
+  height: 3px;
   background: var(--orange);
 }
 
 .bar {
   display: flex;
   align-items: center;
-  gap: 7px;
-  height: 18px;
-  margin: 3px 0 7px;
+  gap: 8px;
+  height: 20px;
+  margin: 2px 0 6px;
   cursor: grab;
 }
 
@@ -95,8 +84,8 @@
 }
 
 .mark {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   flex: none;
   background: var(--orange);
 }
@@ -104,19 +93,18 @@
 .brand {
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.2em;
-  color: var(--text);
+  color: var(--ink);
 }
 
 .serial {
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 8px;
+  font-size: 9px;
   letter-spacing: 0.08em;
   color: var(--muted);
-  opacity: 0.8;
 }
 
 .spacer {
@@ -127,11 +115,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   padding: 0;
   border: 0;
-  border-radius: 3px;
+  border-radius: 2px;
   background: transparent;
   color: var(--muted);
   cursor: pointer;
@@ -141,13 +129,23 @@
 }
 
 .icon:hover {
-  background: var(--panel-2);
-  color: var(--text);
+  background: var(--paper-deep);
+  color: var(--ink);
 }
 
 .icon:focus-visible {
-  outline: 1px solid var(--orange);
+  outline: 1px solid var(--orange-ink);
   outline-offset: 1px;
+}
+
+/* Black LCD window ------------------------------------------------------- */
+
+.display {
+  margin-top: 4px;
+  padding: 12px 14px 10px;
+  border-radius: 6px;
+  background: var(--lcd);
+  color: var(--lcd-text);
 }
 
 .readout {
@@ -155,7 +153,7 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 12px;
-  min-height: 58px;
+  min-height: 68px;
 }
 
 .primary {
@@ -166,47 +164,39 @@
   display: inline-block;
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 50px;
+  font-size: 64px;
   font-weight: 500;
-  line-height: 0.82;
+  line-height: 0.8;
   letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
-  color: var(--text);
+  color: var(--lcd-text);
   transition: opacity 90ms linear;
 }
 
 .unit {
-  margin-left: 5px;
+  margin-left: 6px;
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.14em;
-  color: var(--muted);
+  color: var(--lcd-muted);
 }
 
 .mode {
   display: block;
-  margin-top: 5px;
+  margin-top: 6px;
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.16em;
-  color: var(--muted);
-}
-
-.hud[data-state='typing'] .mode {
-  color: var(--orange);
-}
-
-.hud[data-state='idle'] .num {
-  color: var(--muted);
+  color: var(--lcd-muted);
 }
 
 .meta {
   display: flex;
-  gap: 14px;
+  gap: 18px;
   padding-bottom: 2px;
   text-align: right;
 }
@@ -222,44 +212,44 @@
   margin: 0;
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 14px;
+  font-size: 16px;
   font-variant-numeric: tabular-nums;
-  color: var(--text);
+  color: var(--lcd-text);
 }
 
 .meta dt {
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 500;
   letter-spacing: 0.12em;
-  color: var(--muted);
+  color: var(--lcd-muted);
 }
 
 .meter {
-  margin: 9px 0 5px;
+  margin-top: 10px;
 }
 
 .meter-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 500;
   letter-spacing: 0.12em;
-  color: var(--muted);
+  color: var(--lcd-muted);
 }
 
 .bars {
   display: flex;
   align-items: flex-end;
   gap: 2px;
-  height: 28px;
+  height: 40px;
   padding-bottom: 1px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--lcd-line);
 }
 
 .bars span {
@@ -267,17 +257,20 @@
   min-width: 1px;
   height: 1px;
   background: var(--orange);
-  opacity: 0.12;
+  opacity: 0.18;
 }
+
+/* Paper footer ----------------------------------------------------------- */
 
 .foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  margin-top: 9px;
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 500;
   letter-spacing: 0.1em;
   color: var(--muted);
@@ -285,19 +278,33 @@
 }
 
 .foot [data-status] {
-  color: var(--text);
+  color: var(--ink);
 }
 
+.hud[data-state='typing'] .mode,
 .hud[data-state='typing'] .foot [data-status] {
-  color: var(--orange);
+  color: var(--orange-ink);
+}
+
+.hud[data-state='draft'] .mode,
+.hud[data-state='draft'] .foot [data-status] {
+  color: var(--orange-ink);
+}
+
+.hud[data-state='draft'] .num {
+  opacity: 0.7;
 }
 
 .hud[data-state='thinking'] .num {
-  opacity: 0.4;
+  opacity: 0.38;
+}
+
+.hud[data-state='thinking'] .mode,
+.hud[data-state='thinking'] .foot [data-status] {
+  color: var(--orange-ink);
 }
 
 .hud[data-state='thinking'] .foot [data-status] {
-  color: var(--orange);
   animation: tt-blink 1s steps(2, start) infinite;
 }
 
@@ -312,48 +319,16 @@
   }
 }
 
-/* Receipt ---------------------------------------------------------------- */
+/* Printed receipt -------------------------------------------------------- */
 
 .receipt {
   display: none;
-  margin-top: 7px;
-  padding-top: 9px;
+  margin-top: 8px;
+  padding-top: 10px;
   border-top: 1px dashed var(--line-strong);
 }
 
-.hud[data-state='receipt'] {
-  --text: #0b0b0a;
-  --muted: #6d675c;
-  --orange: #b83600;
-  --line: #d5cfc1;
-  --line-strong: #bdb6a7;
-  background: #f2efe6;
-  border-color: #d5cfc1;
-  box-shadow:
-    0 22px 50px -26px rgba(0, 0, 0, 0.55),
-    0 1px 0 rgba(255, 255, 255, 0.65) inset;
-}
-
-.hud[data-state='receipt'] .mark {
-  background: var(--orange-ink);
-}
-
-.hud[data-state='receipt'] .brand {
-  color: var(--text);
-}
-
-.hud[data-state='receipt'] .serial,
-.hud[data-state='receipt'] .icon {
-  color: var(--muted);
-}
-
-.hud[data-state='receipt'] .icon:hover {
-  background: #e8e3d7;
-  color: var(--text);
-}
-
-.hud[data-state='receipt'] .readout,
-.hud[data-state='receipt'] .meter,
+.hud[data-state='receipt'] .display,
 .hud[data-state='receipt'] .foot {
   display: none;
 }
@@ -379,7 +354,7 @@
   gap: 10px;
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.14em;
 }
@@ -395,8 +370,8 @@
 .r-nums {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 10px;
+  gap: 12px;
+  margin-top: 12px;
 }
 
 .r-nums div {
@@ -409,12 +384,12 @@
 .r-nums b {
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 31px;
+  font-size: 40px;
   font-weight: 500;
   line-height: 0.9;
   letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
-  color: var(--text);
+  color: var(--ink);
 }
 
 .r-nums div:nth-child(2) b {
@@ -424,17 +399,17 @@
 .r-nums span {
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 500;
   letter-spacing: 0.12em;
   color: var(--muted);
 }
 
 .r-meta {
-  margin-top: 9px;
+  margin-top: 10px;
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.04em;
   color: var(--muted);
 }
@@ -444,14 +419,14 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 11px;
+  margin-top: 12px;
 }
 
 .barcode {
   display: flex;
   align-items: flex-end;
   gap: 1px;
-  height: 20px;
+  height: 22px;
   opacity: 0.85;
 }
 
@@ -459,19 +434,19 @@
   display: block;
   width: 1px;
   height: 100%;
-  background: var(--text);
+  background: var(--ink);
 }
 
 .share {
   flex: none;
-  padding: 8px 10px;
-  border: 1px solid var(--text);
-  border-radius: 3px;
-  background: var(--text);
-  color: #f2efe6;
+  padding: 9px 11px;
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  background: var(--ink);
+  color: var(--paper);
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.1em;
   cursor: pointer;
@@ -484,11 +459,11 @@
 .share:hover {
   background: var(--orange);
   border-color: var(--orange);
-  color: #0b0b0a;
+  color: var(--ink);
 }
 
 .share:focus-visible {
-  outline: 1px solid var(--orange);
+  outline: 1px solid var(--orange-ink);
   outline-offset: 2px;
 }
 
@@ -501,8 +476,8 @@
 
 .orb {
   display: none;
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -510,9 +485,10 @@
   padding: 0;
   border: 1px solid var(--orange);
   border-radius: 50%;
-  background: var(--panel);
-  color: var(--orange);
+  background: var(--paper);
+  color: var(--ink);
   cursor: pointer;
+  box-shadow: 0 16px 34px -22px rgba(20, 16, 8, 0.45);
   transition:
     background 90ms linear,
     color 90ms linear;
@@ -520,18 +496,18 @@
 
 .orb:hover {
   background: var(--orange);
-  color: #0b0b0a;
+  color: var(--ink);
 }
 
 .orb:focus-visible {
-  outline: 1px solid var(--orange);
+  outline: 1px solid var(--orange-ink);
   outline-offset: 3px;
 }
 
 .orb-num {
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.03em;
@@ -541,13 +517,14 @@
 .orb-unit {
   font-family:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 7px;
+  font-size: 8px;
   font-weight: 600;
   letter-spacing: 0.14em;
+  color: var(--muted);
 }
 
 .hud[data-collapsed='true'] {
-  width: 56px;
+  width: 60px;
   padding: 0;
   border-color: transparent;
   background: transparent;
@@ -557,8 +534,7 @@
 
 .hud[data-collapsed='true'] .topline,
 .hud[data-collapsed='true'] .bar,
-.hud[data-collapsed='true'] .readout,
-.hud[data-collapsed='true'] .meter,
+.hud[data-collapsed='true'] .display,
 .hud[data-collapsed='true'] .foot,
 .hud[data-collapsed='true'] .receipt {
   display: none;

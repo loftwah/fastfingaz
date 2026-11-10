@@ -158,13 +158,19 @@ export function computeStats(raw: RawSession, idleThresholdMs = 2000): SessionSt
   const insertedChars = Math.max(0, raw.insertedChars);
   const deletedChars = Math.max(0, raw.deletedChars);
   const pastedChars = clamp(raw.pastedChars, 0, insertedChars);
+  const prefilledChars = clamp(raw.prefilledChars ?? 0, 0, chars);
+  const resumed = prefilledChars > 0;
+  // A resumed draft's wall clock only covers the text typed after tracking began.
+  const charsForWpm = resumed ? insertedChars : chars;
 
   const correctionRate =
     insertedChars + deletedChars > 0 ? (deletedChars / (insertedChars + deletedChars)) * 100 : 0;
 
   // How much of the final text can we honestly attribute to keys we saw?
   const netTyped = Math.max(0, insertedChars - deletedChars - pastedChars);
-  let confidence = chars > 0 ? clamp(netTyped / chars, 0, 1) : 0;
+  const attributableChars = Math.max(1, chars - prefilledChars);
+  let confidence = chars > 0 ? clamp(netTyped / attributableChars, 0, 1) : 0;
+  if (resumed) confidence *= 0.8;
   if (pastedChars > 0) confidence *= 0.55;
   if (raw.ime) confidence *= 0.75;
   if (raw.undoCount > 0) confidence *= 0.92;
@@ -176,7 +182,7 @@ export function computeStats(raw: RawSession, idleThresholdMs = 2000): SessionSt
     chars,
     words,
     wpm: {
-      think: wpmFrom(chars, wallMs),
+      think: wpmFrom(charsForWpm, wallMs),
       flow: wpmFrom(insertedChars, activeMs),
       peak: peakWpm(keys),
     },
@@ -188,6 +194,7 @@ export function computeStats(raw: RawSession, idleThresholdMs = 2000): SessionSt
     pastedChars,
     pasteRatio: pastedChars / Math.max(1, chars),
     confidence: Math.round(clamp(confidence, 0.05, 1) * 100) / 100,
+    resumed,
     ime: raw.ime,
     series: buildSeries(keys, raw.startedAt, raw.endedAt),
   };
@@ -213,6 +220,7 @@ export function aggregate(sessions: SessionRecord[]): Aggregate {
 
   const sum = (pick: (s: SessionRecord) => number) => eligible.reduce((a, s) => a + pick(s), 0);
   const chars = sum((s) => s.chars);
+  const thinkChars = sum((s) => (s.resumed ? s.insertedChars : s.chars));
   const inserted = sum((s) => s.insertedChars);
   const wall = sum((s) => s.wallMs);
   const active = sum((s) => s.activeMs);
@@ -227,7 +235,7 @@ export function aggregate(sessions: SessionRecord[]): Aggregate {
     words: sum((s) => s.words),
     chars,
     activeMs: active,
-    thinkWpm: wpmFrom(chars, wall),
+    thinkWpm: wpmFrom(thinkChars, wall),
     flowWpm: wpmFrom(inserted, active),
     consistency: Math.round(consistency * 10) / 10,
   };

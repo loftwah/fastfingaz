@@ -66,6 +66,12 @@ describe('TypingSession', () => {
     expect(raw.insertedChars).toBe(0);
   });
 
+  it('records the prefilled draft length', () => {
+    const session = new TypingSession(0, 42);
+    const raw = session.finish(1000, 'a'.repeat(50));
+    expect(raw.prefilledChars).toBe(42);
+  });
+
   it('computes active time with the idle threshold', () => {
     const session = new TypingSession(0);
     session.noteKey(0);

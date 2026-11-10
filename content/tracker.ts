@@ -19,6 +19,7 @@ export const EMPTY_LIVE: LiveStats = {
   words: 0,
   ms: 0,
   status: 'idle',
+  draft: false,
   series: [],
 };
 
@@ -63,7 +64,14 @@ export class ComposerTracker {
   }
 
   liveStats(): LiveStats {
-    if (!this.session || this.session.isEnded) return EMPTY_LIVE;
+    if (!this.session || this.session.isEnded) {
+      const text = this.text();
+      return {
+        ...EMPTY_LIVE,
+        draft: text.trim().length > 0,
+        words: countWords(text),
+      };
+    }
 
     const now = performance.now();
     const text = getComposerText(this.el);
@@ -75,7 +83,10 @@ export class ComposerTracker {
       this.session.insertedCount,
       Math.max(1, this.session.activeMs(now, this.settings.idleThresholdMs)),
     );
-    const think = wpmFrom(text.length, Math.max(1, ms));
+    // A resumed draft measures the characters typed after tracking began.
+    const thinkSource =
+      this.session.prefilledChars > 0 ? this.session.insertedCount : text.length;
+    const think = wpmFrom(thinkSource, Math.max(1, ms));
 
     return {
       active: true,
@@ -85,6 +96,7 @@ export class ComposerTracker {
       words: countWords(text),
       ms,
       status: active ? 'typing' : 'thinking',
+      draft: false,
       series: buildSeries(keys, this.session.startedAt, now),
     };
   }
@@ -145,10 +157,10 @@ export class ComposerTracker {
   /** Only start on a genuinely empty composer: editing a saved draft is not a run. */
   private begin(now: number): boolean {
     if (this.session) return true;
-    if (!this.isEmpty()) return false;
-    this.session = new TypingSession(now);
+    const text = this.text();
+    this.session = new TypingSession(now, text.length);
     this.ime = false;
-    this.lastNonEmpty = '';
+    this.lastNonEmpty = text.trim() ? text : '';
     this.lastKeyAt = now;
     return true;
   }

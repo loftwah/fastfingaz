@@ -3,7 +3,6 @@ name: Thinktype
 description: A typing instrument for thoughts — a field instrument for measuring composition speed in ChatGPT.
 colors:
   ink: "#0b0b0a"
-  panel: "#111110"
   paper: "#f2efe6"
   paper-deep: "#e8e3d7"
   signal-orange: "#ff4d00"
@@ -79,17 +78,23 @@ components:
     rounded: "{rounded.control}"
     padding: "8px 10px"
   hud:
-    backgroundColor: "{colors.panel}"
-    textColor: "{colors.white}"
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.hud}"
-    padding: "10px 14px 12px"
-    width: "320px"
+    padding: "10px 12px 12px"
+    width: "420px"
+  hud-display:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.white}"
+    rounded: "{rounded.panel}"
+    padding: "12px 14px 10px"
+    width: "396px"
   receipt:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     rounded: "{rounded.panel}"
-    padding: "10px 14px 12px"
-    width: "320px"
+    padding: "10px 12px 12px"
+    width: "420px"
   device-panel:
     backgroundColor: "{colors.ink}"
     textColor: "{colors.white}"
@@ -115,7 +120,7 @@ card.
 
 **Key Characteristics:**
 
-- Paper documents and anodised device panels, never the same surface twice.
+- Paper documents and a black LCD window, never a dark page floating on a dark page.
 - One signal orange used for live state, data and interaction — not decoration.
 - Mono numerals and technical labels; Sans prose; Pixel only as a mark.
 - Hairline rules, tight corners, flat colour, one soft shadow on the floating device.
@@ -137,7 +142,6 @@ A warm paper/ink neutral field with a single synthetic orange. The orange is a s
 ### Neutral
 
 - **Ink** (`ink`, #0b0b0a): device ground, primary text on paper.
-- **Panel** (`panel`, #111110): the floating HUD body.
 - **Paper** (`paper`, #f2efe6): documents, receipts, popup/options ground.
 - **Paper Deep** (`paper-deep`, #e8e3d7): paper hover and inset fields.
 - **White** (`white`, #f7f5ef): primary text on ink.
@@ -171,7 +175,7 @@ display face.
 
 ### Hierarchy
 
-- **Display** (500, 196px on the receipt / 50px in the HUD, 0.82–0.86 line-height, −0.04em):
+- **Display** (500, 196px on the receipt / 64px in the HUD, 0.8–0.86 line-height, −0.04em):
   WPM numerals and receipt headlines. Always tabular.
 - **Headline** (600, 54px, 1.03, −0.035em): the demo hero only; never inside the product chrome.
 - **Title** (500, 52px popup / 42px detail, 0.84–0.86, −0.04em): today's and session readouts.
@@ -193,8 +197,8 @@ sheet: a 160px margin for the section heading and a 620px content column separat
 are divided by 1px hairlines, not cards.
 
 The popup is a 380×600 document: a black device panel for today, then a 14-day chart, then hairline
-session rows. The HUD is a fixed 320px device, draggable from its header and collapsible to a 56px
-orb. The share receipt is 1200×630 with 64px margins, a 576px cadence chart, and a right column of
+session rows. The HUD is a fixed 420px paper instrument with a black LCD display, docked beside the
+composer (right of it when there is room, above it otherwise) and collapsible to a 60px orb. The share receipt is 1200×630 with 64px margins, a 576px cadence chart, and a right column of
 flow/peak plus a three-row spec table.
 
 Spacing follows a 4/8/16/24/40 rhythm. More space above a heading than below it. Responsive:
@@ -245,11 +249,12 @@ doing the work wrong. Radii stay under 12px except the orb.
 
 ### HUD
 
-320px paper/ink device. Header with orange square, `THINKTYPE`, `TT-01`, collapse and hide. 50px mono
-live WPM with `WPM` and a state label. A 38-bar, 5-second cadence meter: 55% history opacity, newest
-nine at full. Footer state plus `THINK 63 / FLOW 78`. The receipt state turns the whole panel paper,
-prints down in five steps, and shows think/flow/words, serial, time/signal, barcode and **COPY
-RECEIPT**.
+420px paper housing around a black LCD window. Header with orange square, `THINKTYPE`, `TT-01`,
+collapse and hide. 64px mono live WPM in the LCD with `WPM` and a state label, plus timer and words.
+A 38-bar, 40px cadence meter: 55% history opacity, newest nine at full. Footer on paper with the state
+and `THINK 63 / FLOW 78`. When a draft already exists, the LCD says `DRAFT / TYPE TO MEASURE` and
+starts measuring on the next keystroke. The receipt state removes the LCD, prints down in five steps,
+and shows think/flow/words, serial, time/signal, barcode and **COPY RECEIPT**.
 
 ### Receipt and share card
 

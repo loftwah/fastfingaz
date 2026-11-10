@@ -29,6 +29,7 @@ const SAMPLE: SessionRecord = {
   pastedChars: 0,
   pasteRatio: 0,
   confidence: 0.94,
+  resumed: false,
   ime: false,
   series: SERIES,
 };
@@ -41,12 +42,12 @@ const LIVE: LiveStats = {
   words: 96,
   ms: 112_000,
   status: 'typing',
+  draft: false,
   series: SERIES.slice(0, 44),
 };
 
 function setupOverlay(pos: { x: number; y: number }): Overlay {
   const overlay = new Overlay({
-    theme: 'dark',
     collapsed: false,
     pos,
     fontFacesCss: FONT_FACE_CSS,

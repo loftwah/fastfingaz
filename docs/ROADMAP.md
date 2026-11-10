@@ -7,11 +7,13 @@
 - [x] Think WPM / Flow WPM / Peak / Consistency / Corrections / Pauses / Signal
 - [x] Paste, autocorrect, undo and IME awareness
 - [x] Floating HUD, collapsed orb, printed receipt, keyboard toggle
+- [x] 420px paper HUD with a black LCD and smart docking beside the composer
+- [x] Draft-aware sessions: DRAFT state, then measure from the next keystroke
 - [x] Local storage and 14-day history
 - [x] Share receipt (copy PNG or download) and text summary
-- [x] Options: threshold, minimum length, theme, privacy, export, clear
+- [x] Options: threshold, minimum length, privacy, export, clear
 - [x] Instrument brand system: Teenage Engineering reference, Geist Sans/Mono/Pixel, paper + signal orange
-- [x] 24 unit tests for the measurement core
+- [x] 27 unit tests for the measurement core
 - [x] Placeholder brand art and a no-install visual demo
 
 ## v0.2 — trustworthy numbers

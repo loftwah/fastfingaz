@@ -106,7 +106,12 @@ function renderSessions(): void {
 
   list.innerHTML = recent
     .map((session) => {
-      const badge = session.pasteRatio >= 0.5 ? '<span class="badge">PASTED</span>' : '';
+      const badge =
+        session.pasteRatio >= 0.5
+          ? '<span class="badge">PASTED</span>'
+          : session.resumed
+            ? '<span class="badge">DRAFT</span>'
+            : '';
       return `
         <li>
           <button class="row" data-id="${session.id}">
@@ -157,6 +162,9 @@ function statRows(session: SessionRecord): Array<[string, string]> {
 }
 
 function detailNote(session: SessionRecord): string {
+  if (session.resumed) {
+    return 'This reading resumed a draft that was already in the composer. WPM counts the characters typed after tracking began.';
+  }
   if (session.pasteRatio >= 0.5) {
     return 'Most of this message was pasted. It is saved for completeness but excluded from your averages.';
   }

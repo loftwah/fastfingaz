@@ -152,16 +152,21 @@ export function renderCard(session: SessionRecord): HTMLCanvasElement {
 
   // Insight block: a black field on the paper.
   const pasteDominant = session.pasteRatio >= 0.5;
+  const resumed = session.resumed;
   const chipLabel = pasteDominant
     ? 'PASTED / LOW SIGNAL'
-    : flow > 0
-      ? 'THINKING OVERHEAD'
-      : 'LOCAL MEASUREMENT';
+    : resumed
+      ? 'DRAFT RESUME'
+      : flow > 0
+        ? 'THINKING OVERHEAD'
+        : 'LOCAL MEASUREMENT';
   const chipValue = pasteDominant
     ? `${signal}% SIGNAL`
-    : flow > 0
-      ? `${Math.min(99, Math.max(0, overhead))}%`
-      : 'NO SERVER';
+    : resumed
+      ? `${signal}% SIGNAL`
+      : flow > 0
+        ? `${Math.min(99, Math.max(0, overhead))}%`
+        : 'NO SERVER';
 
   ctx.font = `500 10px ${MONO}`;
   const labelWidth = ctx.measureText(chipLabel).width + chipLabel.length * 1.1;
@@ -316,6 +321,6 @@ export function cardSummary(session: SessionRecord): string {
     `${formatClock(session.wallMs)} / ${Math.round(session.confidence * 100)}% signal / ${Math.max(
       0,
       overhead,
-    )}% thinking overhead`,
+    )}% thinking overhead${session.resumed ? ' / draft resume' : ''}`,
   ].join('\n');
 }

@@ -30,11 +30,14 @@ export default defineContentScript({
 async function boot(): Promise<void> {
   let settings: Settings = await loadSettings();
 
+  let currentEl: HTMLElement | null = null;
+  let tracker: ComposerTracker | null = null;
+
   const overlay = new Overlay({
-    theme: settings.theme,
     collapsed: settings.hudCollapsed,
     pos: settings.hudPos,
     fontFacesCss: CONTENT_FONT_FACES,
+    getComposerRect: () => currentEl?.getBoundingClientRect() ?? null,
     onMove: (pos) => {
       settings = { ...settings, hudPos: pos };
       void saveSettings({ hudPos: pos });
@@ -49,9 +52,6 @@ async function boot(): Promise<void> {
     },
   });
   overlay.mount();
-
-  let currentEl: HTMLElement | null = null;
-  let tracker: ComposerTracker | null = null;
 
   const syncVisibility = (): void => {
     overlay.setVisible(settings.showHud && !!currentEl?.isConnected);
@@ -82,6 +82,7 @@ async function boot(): Promise<void> {
     tracker?.destroy();
     currentEl = el;
     tracker = new ComposerTracker(el, settings, { onSession: handleSession });
+    if (!settings.hudPos) overlay.setPosition(null);
     syncVisibility();
   };
 
@@ -90,7 +91,6 @@ async function boot(): Promise<void> {
   const scanTimer = window.setInterval(ensureComposer, 1200);
   const uiTimer = window.setInterval(() => {
     overlay.update(tracker ? tracker.liveStats() : EMPTY_LIVE);
-    overlay.setTheme(settings.theme);
   }, 250);
 
   let lastUrl = location.href;
@@ -104,7 +104,6 @@ async function boot(): Promise<void> {
   const unsubscribe = onSettingsChanged((next) => {
     settings = next;
     tracker?.updateSettings(next);
-    overlay.setTheme(next.theme);
     overlay.setCollapsed(next.hudCollapsed, false);
     overlay.setPosition(next.hudPos);
     syncVisibility();
