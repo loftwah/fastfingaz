@@ -10,6 +10,7 @@ image.
 | `hud-2048.png` | 2048×1152 | Full 300px HUD, right gutter | `demo/gallery.html?state=typing&sidebar=0&wide=1` |
 | `hud-1728.png` | 1728×851 | Full 286px HUD, right gutter | `demo/gallery.html?state=typing&sidebar=1` |
 | `hud-1440.png` | 1440×900 | Slim 142px HUD, right gutter | `demo/gallery.html?state=typing&sidebar=1` |
+| `hud-1440-123.png` | 1440×900 | Three-digit slim stress | `demo/gallery.html?state=typing&sidebar=1&wpm=123` |
 | `hud-1280.png` | 1280×800 | Medium 232px HUD, right gutter | `demo/gallery.html?state=typing&sidebar=0` |
 | `hud-idle.png` | 2048×1152 | Idle LAST / BEST / AVG | `demo/gallery.html?state=idle` |
 | `hud-empty.png` | 2048×1152 | No-reading dashes | `demo/gallery.html?state=empty` |
