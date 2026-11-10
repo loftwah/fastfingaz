@@ -156,14 +156,22 @@ export function pauseStats(
   startedAt: number,
   endedAt: number,
   idleThresholdMs: number,
+  manualPauses: Array<{ start: number; end: number }> = [],
 ): { count: number; medianMs: number; longestMs: number } {
   const gaps: number[] = [];
+  const addGap = (from: number, to: number) => {
+    if (to - from <= idleThresholdMs) return;
+    // A declared manual pause is not a thinking pause; it is reported
+    // separately as manualPauseMs.
+    const manual = manualPauses.some((pause) => pause.end > from && pause.start < to);
+    if (!manual) gaps.push(to - from);
+  };
   let prev = startedAt;
   for (const t of keys) {
-    if (t - prev > idleThresholdMs) gaps.push(t - prev);
+    addGap(prev, t);
     prev = t;
   }
-  if (endedAt - prev > idleThresholdMs) gaps.push(endedAt - prev);
+  addGap(prev, endedAt);
   return {
     count: gaps.length,
     medianMs: Math.round(median(gaps)),
@@ -224,7 +232,7 @@ export function computeStats(raw: RawSession, idleThresholdMs = 2000): SessionSt
     },
     consistency: consistencyScore(keys, idleThresholdMs),
     correctionRate: Math.round(correctionRate * 10) / 10,
-    pauses: pauseStats(keys, raw.startedAt, raw.endedAt, idleThresholdMs),
+    pauses: pauseStats(keys, raw.startedAt, raw.endedAt, idleThresholdMs, pauseIntervals),
     insertedChars,
     deletedChars,
     pastedChars,
