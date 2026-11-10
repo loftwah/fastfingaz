@@ -1,6 +1,13 @@
 {
   "version": 1,
   "skills": {
+    "cf-cli": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/cf-cli/SKILL.md",
+      "computedHash": "439ebbec66d43c5bf28dea7468625c118c136cb810e09a8ef8dcc33184a990b3",
+      "installMode": "copy"
+    },
     "chrome-extensions": {
       "source": "GoogleChrome/modern-web-guidance",
       "sourceType": "github",
@@ -8,11 +15,39 @@
       "computedHash": "1e8525bb49647008dcd3a6b7e5d3c3207345f086e7a64d7e6d5bcc67dbba7a71",
       "installMode": "copy"
     },
+    "cloudflare": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/cloudflare/SKILL.md",
+      "computedHash": "1cce94a0fea413a5d5f9dd18d2a72cd90e925017c791eb6554be14f5bb777576",
+      "installMode": "copy"
+    },
     "modern-web-guidance": {
       "source": "GoogleChrome/modern-web-guidance",
       "sourceType": "github",
       "skillPath": "skills/modern-web-guidance/SKILL.md",
       "computedHash": "8ea2818acb8fc266fd58123427700e9fe424e03f9913089ee4f3d1b041d72841"
+    },
+    "web-perf": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/web-perf/SKILL.md",
+      "computedHash": "fa0a7b78991034a3840eac6d5f07c72eacc73fd68898e0238fbb83b7b4d4d884",
+      "installMode": "copy"
+    },
+    "workers-best-practices": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/workers-best-practices/SKILL.md",
+      "computedHash": "afc1b560659bcbbf043741e04a865b99e7d5b094bf62573d6188a8b26de235ab",
+      "installMode": "copy"
+    },
+    "wrangler": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/wrangler/SKILL.md",
+      "computedHash": "6e431b3ca4d91547e3d1a224bfd5e725e54843cff3537aca48ea455a81bf7e88",
+      "installMode": "copy"
     }
   }
 }

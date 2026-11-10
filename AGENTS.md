@@ -11,7 +11,9 @@ sections, permission justifications and store limits. Every entry in `manifest` 
 
 ## Non-negotiables
 
-- **No network code.** No fetch, remote fonts, analytics or telemetry.
+- **No network code in the extension.** No fetch, remote fonts, analytics or telemetry. The marketing
+  site may use static assets only; do not add a backend unless a task explicitly requires it.
+- **Secrets stay in `.env`.** Never print, commit or paste `.env`; use `.env.example` for names only.
 - **Prompt text is opt-in.** Never store or log composer text unless `settings.storeText` is true.
 - **No new permissions** without a justification in `CHROMEWEBSTORE.md`.
 - **Never intercept typing.** Listeners are passive; never `preventDefault` or replay keystrokes.
