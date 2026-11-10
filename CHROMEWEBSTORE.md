@@ -57,7 +57,7 @@ English
 | --- | --- | --- | --- |
 | Store Icon [REQUIRED] | 128×128 PNG | ✅ Ready | `public/icon/128.png` |
 | Screenshot 1 [REQUIRED] | 1280×800 | ✅ Ready (sample composition) | `docs/art/store-1280x800.png` |
-| Screenshot 2 [RECOMMENDED] | 1280×800 | ⬜ Not created | |
+| Screenshot 2 [RECOMMENDED] | 1280×800 | ✅ Ready (sample composition) | `docs/art/store-popup-1280x800.png` |
 | Screenshot 3 [RECOMMENDED] | 1280×800 | ⬜ Not created | |
 | Screenshot 4 | 1280×800 | ⬜ Not created | |
 | Screenshot 5 | 1280×800 | ⬜ Not created | |
@@ -67,8 +67,8 @@ English
 ### Screenshot Notes
 
 - **Screenshot 1:** the vertical HUD beside a sample ChatGPT conversation, with the live reading, cadence meter and baseline. This is a designed sample composition, not a capture of a real user session.
-- **Screenshot 2:** the printed receipt close-up with think/flow/peak, words/time/signal, serial and barcode. Needed before submission.
-- **Screenshot 3:** the popup showing today's numbers, the 14-day chart, the baseline and recent sessions. Needed before submission.
+- **Screenshot 2:** the popup showing today's numbers, the baseline, the 14-day chart and recent sessions. A designed sample composition, not a real account.
+- **Screenshot 3:** the printed receipt close-up with think/flow/peak, words/time/signal, serial and barcode. Needed before submission.
 - **Screenshot 4:** the three share formats side by side (1200×630, 1080×1080, 1080×1920) with the file-size row. Needed before submission.
 - **Screenshot 5:** the draft state (`DRAFT / TYPE TO MEASURE`) and the settings threshold. Needed before submission.
 

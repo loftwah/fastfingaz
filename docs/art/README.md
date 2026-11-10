@@ -28,6 +28,7 @@ image.
 | `social/instagram-1080x1080.png` | 1080×1080 | Instagram | `demo/artboards.html?board=instagram` |
 | `social/story-1080x1920.png` | 1080×1920 | Story / Reels | `demo/artboards.html?board=story` |
 | `store-1280x800.png` | 1280×800 | Chrome Web Store screenshot 1 | `demo/gallery.html?state=typing&sidebar=0&label=0` |
+| `store-popup-1280x800.png` | 1280×800 | Chrome Web Store screenshot 2 | `demo/store-popup.html` |
 | `promo-440x280.png` | 440×280 | Store promo tile | `demo/artboards.html?board=promo` |
 | `site-hero-1440.png` | 1440×900 | Site hero | live site at 1440×900 |
 | `site-formats-1440.png` | 1440×900 | Site receipt formats | live site at 1440×900 |

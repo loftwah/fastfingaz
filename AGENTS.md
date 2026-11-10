@@ -48,6 +48,7 @@ npm run site:deploy  # build and deploy to Cloudflare Pages
   the exact asset sizes.
 - `demo/cards.html?format=landscape|square|story` renders the share cards; add `stress=1` or
   `empty=1` to check long values and missing baselines.
+- `demo/store-popup.html` composes the popup capture for the store listing at 1280×800.
 - Save final art in `docs/art/social`, `docs/art/share` and `docs/art/`; note the source and the
   sample-data status in `docs/art/social/PROMPTS.md`.
 
