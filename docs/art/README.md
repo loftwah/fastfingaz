@@ -23,6 +23,8 @@ image.
 | `share/thinktype-landscape.png` | 1200×630 | Landscape receipt | `demo/cards.html?format=landscape` |
 | `share/thinktype-square.png` | 1080×1080 | Square receipt | `demo/cards.html?format=square` |
 | `share/thinktype-story.png` | 1080×1920 | Story receipt | `demo/cards.html?format=story` |
+| `cards-stress.png` | contact sheet | Three-digit WPM / four-digit words | `demo/cards.html?stress=1` |
+| `cards-empty.png` | contact sheet | Dashes before a baseline | `demo/cards.html?empty=1` |
 | `social/og-1200x630.png` | 1200×630 | Site OG image | `demo/artboards.html?board=og` |
 | `social/x-1200x675.png` | 1200×675 | X / wide social | `demo/artboards.html?board=x` |
 | `social/github-1280x640.png` | 1280×640 | GitHub social preview | `demo/artboards.html?board=github` |
