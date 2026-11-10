@@ -57,7 +57,7 @@ baseline live in the popup; settings in the options page. No account, no server,
 - Paste, autocorrect, undo and IMEs are flagged and lower signal rather than being hidden.
 - No real user sessions yet; the measurement defaults still need calibration.
 - Marketing site live at https://thinktype.loftwah.com on Cloudflare Pages.
-- Current version: 0.2.1.
+- Current version: 0.2.2.
 
 ## Brand Commitments
 

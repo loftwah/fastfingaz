@@ -96,14 +96,21 @@ async function boot(): Promise<void> {
     }
   };
 
+  let lastSidebarWidth = document.querySelector('main')?.getBoundingClientRect().left ?? 0;
   const ensureComposer = (): void => {
+    const mainLeft = document.querySelector('main')?.getBoundingClientRect().left ?? 0;
+    if (Math.abs(mainLeft - lastSidebarWidth) > 2) {
+      // The sidebar opened or closed. Re-dock, but do not chase the composer
+      // as it grows with text; that would make the instrument jump mid-sentence.
+      lastSidebarWidth = mainLeft;
+      overlay.refreshPosition();
+    }
     const el = findComposer();
     if (!el) {
       syncVisibility();
       return;
     }
     if (el === currentEl && tracker && el.isConnected) {
-      overlay.refreshPosition();
       syncVisibility();
       return;
     }

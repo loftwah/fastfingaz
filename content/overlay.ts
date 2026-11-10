@@ -912,10 +912,10 @@ export class Overlay {
 
     const side = rightGap >= leftGap ? 'right' : 'left';
     const gap = side === 'right' ? rightGap : leftGap;
-    if (gap >= minWidth + 16) {
-      const width = clamp(minWidth, gap - 24, target);
+    if (gap >= minWidth + 20) {
+      const width = clamp(minWidth, gap - 32, target);
       const railVisible = !this.customPos && side === 'right' && leftGap >= 300;
-      const railWidth = railVisible ? clamp(240, leftGap - 24, 320) : 0;
+      const railWidth = railVisible ? clamp(240, leftGap - 40, 320) : 0;
       return { width, side, railWidth, railVisible };
     }
 
@@ -957,11 +957,11 @@ export class Overlay {
       y = this.customPos.y;
       this.hud.dataset.anchor = 'custom';
     } else if (this.collapsed) {
-      x = metrics.side === 'right' ? viewportWidth - width - margin : sidebarWidth + margin;
+      x = metrics.side === 'right' ? viewportWidth - width - 24 : sidebarWidth + margin;
       y = viewportHeight - height - margin;
       this.hud.dataset.anchor = 'bottom';
     } else if (metrics.side === 'right') {
-      x = viewportWidth - width - margin;
+      x = viewportWidth - width - 24;
       y = viewportHeight - height - margin;
       this.hud.dataset.anchor = 'bottom';
     } else {
@@ -979,7 +979,7 @@ export class Overlay {
     const showRail = metrics.railVisible && !!composer && !this.collapsed && !this.customPos;
     if (showRail && composer) {
       const railWidth = metrics.railWidth;
-      const railX = Math.max(sidebarWidth + 8, composer.left - railWidth - 16);
+      const railX = Math.max(sidebarWidth + 8, composer.left - railWidth - 32);
       this.rail.style.setProperty('--tt-rail-w', `${railWidth}px`);
       this.rail.style.setProperty('--tt-rail-x', `${Math.round(railX)}px`);
       this.rail.style.setProperty('--tt-rail-y', `${Math.round(y)}px`);
