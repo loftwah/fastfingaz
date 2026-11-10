@@ -23,6 +23,7 @@
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox",
     "postinstall": "wxt prepare",
+    "unpacked": "node scripts/copy-unpacked.mjs",
     "demo": "vite --config demo/vite.config.ts",
     "icons": "node scripts/icons.mjs",
     "typecheck": "tsc --noEmit",

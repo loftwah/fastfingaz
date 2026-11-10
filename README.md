@@ -69,8 +69,20 @@ npm run dev
 ```
 
 `npm run dev` starts WXT and opens Chrome with the extension loaded. If you prefer a production
-build, run `npm run build`, then open `chrome://extensions`, enable Developer mode, choose **Load
-unpacked**, and select `.output/chrome-mv3`.
+build, run:
+
+```bash
+npm run build
+npm run unpacked
+```
+
+Then open `chrome://extensions`, enable Developer mode, choose **Load unpacked**, and select the
+visible `unpacked/` folder.
+
+The raw build lives in `.output/`, which macOS hides because it starts with a dot. If you want to
+load it directly, press <kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>G</kbd> in the file picker and paste
+`/Users/YOU/gits/thinktype/.output/chrome-mv3`; <kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>.</kbd>
+toggles hidden folders in Finder.
 
 Prefer a packaged download? Grab the
 [latest release](https://github.com/loftwah/thinktype/releases/latest), unzip it, and load the folder.
@@ -154,6 +166,7 @@ wxt.config.ts            manifest and permissions
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm test` | Run the Vitest suite |
 | `npm run build` | Production build in `.output/chrome-mv3` |
+| `npm run unpacked` | Copy the build to the visible `unpacked/` folder |
 | `npm run zip` | Store-ready zip in `.output/` |
 | `npm run demo` | Visual preview at `localhost:4173` |
 | `npm run icons` | Regenerate `public/icon` from `assets/icon.svg` |

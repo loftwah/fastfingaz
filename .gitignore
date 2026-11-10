@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .output/
+unpacked/
 .wxt/
 demo/dist/
 *.zip
