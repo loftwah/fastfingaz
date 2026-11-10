@@ -1,0 +1,27 @@
+{
+  "name": "thinktype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A Chrome extension that measures your real typing speed while you think out loud with ChatGPT.",
+  "scripts": {
+    "dev": "node build.mjs --watch",
+    "build": "node build.mjs",
+    "demo": "node build.mjs --demo && node demo/serve.mjs",
+    "icons": "node scripts/icons.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "check": "npm run typecheck && npm run test && npm run build",
+    "zip": "npm run build && node scripts/zip.mjs"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.332",
+    "esbuild": "^0.28.2",
+    "prettier": "^3.6.2",
+    "sharp": "^0.35.5",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  }
+}

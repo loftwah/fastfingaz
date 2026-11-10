@@ -1,0 +1,61 @@
+---
+name: Bug report
+description: Something measured wrong, the HUD did not attach, or the UI broke.
+title: '[bug] '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please do **not** paste the text of your prompts. Metrics and DOM shapes are enough.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Include the expected number or behaviour.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open a new ChatGPT chat
+        2. Type ~50 characters
+        3. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - HUD did not appear
+        - Live WPM looks wrong
+        - Session did not save after send
+        - Share card
+        - Popup
+        - Options
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Thinktype version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: chrome
+    attributes:
+      label: Chrome version and OS
+      placeholder: Chrome 142 / macOS 15
+    validations:
+      required: true
+  - type: textarea
+    id: composer
+    attributes:
+      label: Composer DOM (only if the HUD did not attach)
+      description: DevTools → inspect the composer → copy the outer HTML of the editable element, redacted.
+      render: html

@@ -1,0 +1,289 @@
+import type {
+  Aggregate,
+  DailyBucket,
+  RawSession,
+  SessionRecord,
+  SessionStats,
+} from './types';
+
+/** The standard "word" used by typing tools: five characters, spaces included. */
+export const CHARS_PER_WORD = 5;
+
+const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
+
+export function wpmFrom(chars: number, ms: number): number {
+  if (!Number.isFinite(chars) || !Number.isFinite(ms) || ms <= 0) return 0;
+  return chars / CHARS_PER_WORD / (ms / 60_000);
+}
+
+export function countWords(text: string): number {
+  const trimmed = text.trim();
+  return trimmed ? trimmed.split(/\s+/).length : 0;
+}
+
+export function median(values: number[]): number {
+  if (!values.length) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  if (sorted.length % 2 === 0) return (sorted[mid - 1]! + sorted[mid]!) / 2;
+  return sorted[mid]!;
+}
+
+/**
+ * Wall time, minus the thinking gaps. Each gap is capped rather than dropped so
+ * a long pause still costs something without swallowing the session.
+ */
+export function computeActiveMs(
+  keys: number[],
+  startedAt: number,
+  endedAt: number,
+  idleThresholdMs: number,
+): number {
+  let active = 0;
+  let prev = startedAt;
+  for (const t of keys) {
+    if (t > prev) active += Math.min(t - prev, idleThresholdMs);
+    prev = Math.max(prev, t);
+  }
+  if (endedAt > prev) active += Math.min(endedAt - prev, idleThresholdMs);
+  return active;
+}
+
+/** Best N-second burst, measured against the real span of the window. */
+export function peakWpm(keys: number[], windowMs = 5000, minSpanMs = 1500): number {
+  if (keys.length < 2) return 0;
+  let best = 0;
+  let j = 1;
+  for (let i = 0; i < keys.length; i++) {
+    j = Math.max(j, i + 1);
+    while (j < keys.length && keys[j]! - keys[i]! <= windowMs) j++;
+    const span = keys[j - 1]! - keys[i]!;
+    const count = j - i;
+    if (span >= minSpanMs && count >= 5) best = Math.max(best, wpmFrom(count, span));
+  }
+  return best;
+}
+
+/** Rolling WPM over the last `windowMs`, for the live HUD. */
+export function rollingWpm(keys: number[], now: number, windowMs = 5000): number {
+  let count = 0;
+  for (let i = keys.length - 1; i >= 0; i--) {
+    if (keys[i]! < now - windowMs) break;
+    count++;
+  }
+  return wpmFrom(count, windowMs);
+}
+
+/**
+ * A downsample-friendly WPM series. Each sample is a rolling 4-bucket window,
+ * so the sparkline reads as "how fast was I moving here", not raw char counts.
+ */
+export function buildSeries(
+  keys: number[],
+  startedAt: number,
+  endedAt: number,
+  maxPoints = 64,
+): number[] {
+  const duration = endedAt - startedAt;
+  if (!keys.length || duration <= 0) return [];
+  const bucketMs = Math.max(250, Math.min(1000, duration / maxPoints));
+  const n = Math.min(maxPoints, Math.max(1, Math.ceil(duration / bucketMs)));
+  const counts = new Array<number>(n).fill(0);
+
+  for (const t of keys) {
+    if (t < startedAt || t > endedAt) continue;
+    const idx = Math.min(n - 1, Math.floor((t - startedAt) / bucketMs));
+    counts[idx]! += 1;
+  }
+
+  const windowBuckets = 4;
+  const series: number[] = [];
+  for (let i = 0; i < n; i++) {
+    let sum = 0;
+    let buckets = 0;
+    for (let j = Math.max(0, i - windowBuckets + 1); j <= i; j++) {
+      sum += counts[j]!;
+      buckets++;
+    }
+    series.push(Math.round(wpmFrom(sum, buckets * bucketMs) * 10) / 10);
+  }
+  return series;
+}
+
+/** Monkeytype-ish consistency: 100 minus the coefficient of variation. */
+export function consistencyScore(keys: number[], idleThresholdMs: number): number {
+  if (keys.length < 5) return 0;
+  const intervals: number[] = [];
+  for (let i = 1; i < keys.length; i++) {
+    const dt = keys[i]! - keys[i - 1]!;
+    if (dt > 0 && dt <= idleThresholdMs) intervals.push(dt);
+  }
+  if (intervals.length < 4) return 0;
+  const mean = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+  if (mean <= 0) return 0;
+  const variance =
+    intervals.reduce((sum, value) => sum + (value - mean) ** 2, 0) / intervals.length;
+  const cv = Math.sqrt(variance) / mean;
+  return Math.round(clamp(100 * (1 - cv), 0, 100) * 10) / 10;
+}
+
+export function pauseStats(
+  keys: number[],
+  startedAt: number,
+  endedAt: number,
+  idleThresholdMs: number,
+): { count: number; medianMs: number; longestMs: number } {
+  const gaps: number[] = [];
+  let prev = startedAt;
+  for (const t of keys) {
+    if (t - prev > idleThresholdMs) gaps.push(t - prev);
+    prev = t;
+  }
+  if (endedAt - prev > idleThresholdMs) gaps.push(endedAt - prev);
+  return {
+    count: gaps.length,
+    medianMs: Math.round(median(gaps)),
+    longestMs: Math.round(gaps.length ? Math.max(...gaps) : 0),
+  };
+}
+
+export function computeStats(raw: RawSession, idleThresholdMs = 2000): SessionStats {
+  const keys = raw.keyTimes.filter(Number.isFinite).sort((a, b) => a - b);
+  const wallMs = Math.max(0, raw.endedAt - raw.startedAt);
+  const activeMs = computeActiveMs(keys, raw.startedAt, raw.endedAt, idleThresholdMs);
+  const finalText = raw.finalText ?? '';
+  const chars = finalText.length;
+  const words = countWords(finalText);
+
+  const insertedChars = Math.max(0, raw.insertedChars);
+  const deletedChars = Math.max(0, raw.deletedChars);
+  const pastedChars = clamp(raw.pastedChars, 0, insertedChars);
+
+  const correctionRate =
+    insertedChars + deletedChars > 0 ? (deletedChars / (insertedChars + deletedChars)) * 100 : 0;
+
+  // How much of the final text can we honestly attribute to keys we saw?
+  const netTyped = Math.max(0, insertedChars - deletedChars - pastedChars);
+  let confidence = chars > 0 ? clamp(netTyped / chars, 0, 1) : 0;
+  if (pastedChars > 0) confidence *= 0.55;
+  if (raw.ime) confidence *= 0.75;
+  if (raw.undoCount > 0) confidence *= 0.92;
+  if (raw.replacementCount > 0) confidence *= 0.97;
+
+  return {
+    wallMs,
+    activeMs,
+    chars,
+    words,
+    wpm: {
+      think: wpmFrom(chars, wallMs),
+      flow: wpmFrom(insertedChars, activeMs),
+      peak: peakWpm(keys),
+    },
+    consistency: consistencyScore(keys, idleThresholdMs),
+    correctionRate: Math.round(correctionRate * 10) / 10,
+    pauses: pauseStats(keys, raw.startedAt, raw.endedAt, idleThresholdMs),
+    insertedChars,
+    deletedChars,
+    pastedChars,
+    pasteRatio: pastedChars / Math.max(1, chars),
+    confidence: Math.round(clamp(confidence, 0.05, 1) * 100) / 100,
+    ime: raw.ime,
+    series: buildSeries(keys, raw.startedAt, raw.endedAt),
+  };
+}
+
+export function isEligible(session: SessionRecord): boolean {
+  return session.pasteRatio < 0.5 && session.words > 0;
+}
+
+export function aggregate(sessions: SessionRecord[]): Aggregate {
+  const eligible = sessions.filter(isEligible);
+  if (!eligible.length) {
+    return {
+      sessions: 0,
+      words: 0,
+      chars: 0,
+      activeMs: 0,
+      thinkWpm: 0,
+      flowWpm: 0,
+      consistency: 0,
+    };
+  }
+
+  const sum = (pick: (s: SessionRecord) => number) => eligible.reduce((a, s) => a + pick(s), 0);
+  const chars = sum((s) => s.chars);
+  const inserted = sum((s) => s.insertedChars);
+  const wall = sum((s) => s.wallMs);
+  const active = sum((s) => s.activeMs);
+
+  const withConsistency = eligible.filter((s) => s.consistency > 0);
+  const consistency = withConsistency.length
+    ? withConsistency.reduce((a, s) => a + s.consistency, 0) / withConsistency.length
+    : 0;
+
+  return {
+    sessions: eligible.length,
+    words: sum((s) => s.words),
+    chars,
+    activeMs: active,
+    thinkWpm: wpmFrom(chars, wall),
+    flowWpm: wpmFrom(inserted, active),
+    consistency: Math.round(consistency * 10) / 10,
+  };
+}
+
+export function dayKey(timestamp: number): string {
+  const d = new Date(timestamp);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+    d.getDate(),
+  ).padStart(2, '0')}`;
+}
+
+export function startOfLocalDay(timestamp: number): number {
+  const d = new Date(timestamp);
+  d.setHours(0, 0, 0, 0);
+  return d.getTime();
+}
+
+/** Last `days` calendar days, oldest first, including empty days. */
+export function dailyBuckets(
+  sessions: SessionRecord[],
+  days: number,
+  now = Date.now(),
+): DailyBucket[] {
+  const byDay = new Map<string, SessionRecord[]>();
+  for (const s of sessions) {
+    const key = dayKey(s.startedAt);
+    const list = byDay.get(key);
+    if (list) list.push(s);
+    else byDay.set(key, [s]);
+  }
+
+  const today = new Date(now);
+  today.setHours(0, 0, 0, 0);
+  const buckets: DailyBucket[] = [];
+
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const key = dayKey(d.getTime());
+    const agg = aggregate(byDay.get(key) ?? []);
+    buckets.push({
+      key,
+      date: d.getTime(),
+      sessions: agg.sessions,
+      words: agg.words,
+      thinkWpm: agg.thinkWpm,
+      flowWpm: agg.flowWpm,
+      activeMs: agg.activeMs,
+    });
+  }
+  return buckets;
+}
+
+/** Share of raw flow speed that survived actual thinking. 0-1. */
+export function thinkRatio(flowWpm: number, thinkWpm: number): number {
+  if (flowWpm <= 0) return 0;
+  return clamp(thinkWpm / flowWpm, 0, 1);
+}

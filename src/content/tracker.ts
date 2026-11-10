@@ -1,0 +1,322 @@
+import { MIN_SESSION_MS } from '../shared/constants';
+import {
+  buildSeries,
+  computeStats,
+  countWords,
+  rollingWpm,
+  wpmFrom,
+} from '../shared/metrics';
+import type { LiveStats, SessionRecord, Settings } from '../shared/types';
+import { SCHEMA_VERSION } from '../shared/types';
+import { getComposerText, isSendControl, selectionLength } from './composer';
+import { TypingSession } from './typing-session';
+
+export const EMPTY_LIVE: LiveStats = {
+  active: false,
+  wpm: 0,
+  thinkWpm: 0,
+  flowWpm: 0,
+  words: 0,
+  ms: 0,
+  status: 'idle',
+  series: [],
+};
+
+function makeId(): string {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) return crypto.randomUUID();
+  return `tt_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+}
+
+export interface TrackerEvents {
+  onSession: (session: SessionRecord) => void;
+}
+
+/**
+ * DOM adapter around TypingSession. It only listens; it never intercepts or
+ * modifies keystrokes.
+ */
+export class ComposerTracker {
+  private session: TypingSession | null = null;
+  private pendingSend: { at: number; text: string } | null = null;
+  private settings: Settings;
+  private ime = false;
+  private lastKeyAt = 0;
+  private lastNonEmpty = '';
+  private pollTimer: number | null = null;
+  private clearTimer: number | null = null;
+  private listeners: Array<() => void> = [];
+  private observer: MutationObserver;
+  private destroyed = false;
+
+  constructor(
+    private readonly el: HTMLElement,
+    settings: Settings,
+    private readonly events: TrackerEvents,
+  ) {
+    this.settings = settings;
+    this.observer = new MutationObserver(() => this.handleDomChange());
+    this.attach();
+  }
+
+  updateSettings(settings: Settings): void {
+    this.settings = settings;
+  }
+
+  liveStats(): LiveStats {
+    if (!this.session || this.session.isEnded) return EMPTY_LIVE;
+
+    const now = performance.now();
+    const text = getComposerText(this.el);
+    const keys = [...this.session.keyTimes];
+    const ms = Math.max(0, now - this.session.startedAt);
+    const sinceKey = now - this.lastKeyAt;
+    const active = sinceKey <= Math.max(1200, this.settings.idleThresholdMs);
+    const flow = wpmFrom(
+      this.session.insertedCount,
+      Math.max(1, this.session.activeMs(now, this.settings.idleThresholdMs)),
+    );
+    const think = wpmFrom(text.length, Math.max(1, ms));
+
+    return {
+      active: true,
+      wpm: active ? rollingWpm(keys, now) : 0,
+      thinkWpm: think,
+      flowWpm: flow,
+      words: countWords(text),
+      ms,
+      status: active ? 'typing' : 'thinking',
+      series: buildSeries(keys, this.session.startedAt, now),
+    };
+  }
+
+  destroy(): void {
+    this.destroyed = true;
+    this.observer.disconnect();
+    this.clearTimers();
+    for (const remove of this.listeners) remove();
+    this.listeners = [];
+  }
+
+  private attach(): void {
+    const keydown = (event: Event) => this.handleKeyDown(event as KeyboardEvent);
+    const beforeinput = (event: Event) => this.handleBeforeInput(event as InputEvent);
+    const paste = (event: Event) => this.handlePaste(event as ClipboardEvent);
+    const input = () => this.handleDomChange();
+    const compositionStart = () => {
+      this.ime = true;
+      this.session?.noteComposition();
+    };
+    const compositionEnd = () => {
+      this.ime = false;
+    };
+    const sendClick = (event: Event) => {
+      if (isSendControl(event.target)) this.armSend(performance.now());
+    };
+
+    this.el.addEventListener('keydown', keydown, true);
+    this.el.addEventListener('beforeinput', beforeinput, true);
+    this.el.addEventListener('paste', paste, true);
+    this.el.addEventListener('input', input, true);
+    this.el.addEventListener('compositionstart', compositionStart, true);
+    this.el.addEventListener('compositionend', compositionEnd, true);
+    document.addEventListener('click', sendClick, true);
+
+    this.listeners.push(
+      () => this.el.removeEventListener('keydown', keydown, true),
+      () => this.el.removeEventListener('beforeinput', beforeinput, true),
+      () => this.el.removeEventListener('paste', paste, true),
+      () => this.el.removeEventListener('input', input, true),
+      () => this.el.removeEventListener('compositionstart', compositionStart, true),
+      () => this.el.removeEventListener('compositionend', compositionEnd, true),
+      () => document.removeEventListener('click', sendClick, true),
+    );
+
+    this.observer.observe(this.el, { subtree: true, childList: true, characterData: true });
+  }
+
+  private text(): string {
+    return getComposerText(this.el);
+  }
+
+  private isEmpty(): boolean {
+    return this.text().trim() === '';
+  }
+
+  /** Only start on a genuinely empty composer: editing a saved draft is not a run. */
+  private begin(now: number): boolean {
+    if (this.session) return true;
+    if (!this.isEmpty()) return false;
+    this.session = new TypingSession(now);
+    this.ime = false;
+    this.lastNonEmpty = '';
+    this.lastKeyAt = now;
+    return true;
+  }
+
+  private handleKeyDown(event: KeyboardEvent): void {
+    if (this.destroyed || event.isComposing || this.ime) return;
+
+    const now = performance.now();
+    const key = event.key;
+    const printable =
+      key.length === 1 && !event.metaKey && !event.ctrlKey && !event.altKey && !event.isComposing;
+    const editing = printable || key === 'Backspace' || key === 'Delete';
+
+    if (editing) {
+      if (!this.session && !this.begin(now)) return;
+      this.session?.noteKey(now);
+      this.lastKeyAt = now;
+    }
+
+    if (key === 'Enter' && !event.shiftKey && !event.altKey && !event.metaKey && !event.ctrlKey) {
+      this.armSend(now);
+    }
+  }
+
+  private handleBeforeInput(event: InputEvent): void {
+    if (this.destroyed) return;
+    const type = event.inputType || '';
+    const now = performance.now();
+    const data = event.data ?? '';
+
+    if (type.startsWith('insert') && !type.startsWith('insertFrom')) {
+      if (!this.session && !this.begin(now)) return;
+      if (type === 'insertCompositionText') {
+        this.session?.noteComposition();
+      }
+      const chars = data.length || 1;
+      this.session?.noteInsert(
+        now,
+        chars,
+        type === 'insertReplacementText' ? 'replacement' : 'type',
+      );
+      this.lastKeyAt = now;
+      return;
+    }
+
+    if (type === 'insertFromDrop' || type === 'insertFromYank') {
+      if (!this.session && !this.begin(now)) return;
+      this.session?.noteInsert(now, data.length || 1, 'paste');
+      this.lastKeyAt = now;
+      return;
+    }
+
+    if (type.startsWith('delete')) {
+      if (!this.session) return;
+      this.session.noteDelete(now, Math.max(1, selectionLength(this.el)));
+      this.lastKeyAt = now;
+      return;
+    }
+
+    if (type === 'historyUndo' || type === 'historyRedo') {
+      this.session?.noteUndo();
+    }
+  }
+
+  private handlePaste(event: ClipboardEvent): void {
+    if (this.destroyed) return;
+    const text = event.clipboardData?.getData('text') ?? '';
+    if (!text) return;
+    const now = performance.now();
+    if (!this.session && !this.begin(now)) return;
+    this.session?.noteInsert(now, text.length, 'paste');
+    this.lastKeyAt = now;
+  }
+
+  private handleDomChange(): void {
+    if (this.destroyed) return;
+    const text = this.text();
+    if (text.trim()) {
+      this.lastNonEmpty = text;
+      if (this.clearTimer) {
+        window.clearTimeout(this.clearTimer);
+        this.clearTimer = null;
+      }
+    }
+
+    if (this.pendingSend && !text.trim()) {
+      this.finalize();
+      return;
+    }
+
+    if (!text.trim() && this.session && !this.pendingSend) {
+      if (this.clearTimer) window.clearTimeout(this.clearTimer);
+      this.clearTimer = window.setTimeout(() => {
+        if (!this.pendingSend && this.isEmpty()) this.reset();
+      }, 1200);
+    }
+  }
+
+  private armSend(at: number): void {
+    if (!this.session) return;
+    const live = this.text();
+    const text = live.trim() ? live : this.lastNonEmpty;
+    if (!text.trim()) return;
+    this.pendingSend = { at, text };
+    this.pollForSend(at);
+  }
+
+  private pollForSend(armedAt: number): void {
+    if (this.pollTimer) window.clearTimeout(this.pollTimer);
+    const tick = () => {
+      const pending = this.pendingSend;
+      if (!pending || pending.at !== armedAt) return;
+      if (!this.text().trim()) {
+        this.finalize();
+        return;
+      }
+      if (performance.now() - armedAt > 4000) {
+        this.pendingSend = null;
+        return;
+      }
+      this.pollTimer = window.setTimeout(tick, 50);
+    };
+    this.pollTimer = window.setTimeout(tick, 50);
+  }
+
+  private finalize(): void {
+    const session = this.session;
+    const pending = this.pendingSend;
+    if (!session || !pending) return;
+
+    const raw = session.finish(pending.at, pending.text);
+    this.session = null;
+    this.pendingSend = null;
+    this.lastNonEmpty = '';
+    this.clearTimers();
+
+    const stats = computeStats(raw, this.settings.idleThresholdMs);
+    if (stats.wallMs < MIN_SESSION_MS || stats.chars < this.settings.minSessionChars) return;
+
+    const endedAt = Date.now();
+    const record: SessionRecord = {
+      ...stats,
+      id: makeId(),
+      v: SCHEMA_VERSION,
+      startedAt: endedAt - stats.wallMs,
+      endedAt,
+      host: location.host,
+      ...(this.settings.storeText ? { text: pending.text } : {}),
+    };
+
+    this.events.onSession(record);
+  }
+
+  private reset(): void {
+    this.session = null;
+    this.pendingSend = null;
+    this.lastNonEmpty = '';
+    this.clearTimers();
+  }
+
+  private clearTimers(): void {
+    if (this.pollTimer) {
+      window.clearTimeout(this.pollTimer);
+      this.pollTimer = null;
+    }
+    if (this.clearTimer) {
+      window.clearTimeout(this.clearTimer);
+      this.clearTimer = null;
+    }
+  }
+}

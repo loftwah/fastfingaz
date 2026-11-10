@@ -1,0 +1,9 @@
+node_modules/
+dist/
+demo/dist/
+*.zip
+.DS_Store
+.vscode/
+.idea/
+coverage/
+*.log

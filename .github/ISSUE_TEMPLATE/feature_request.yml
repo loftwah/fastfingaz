@@ -1,0 +1,38 @@
+---
+name: Feature request
+description: A metric, a view, a host, or a piece of polish.
+title: '[idea] '
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to learn or do?
+      description: Describe the question, not only the feature.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Measurement / metrics
+        - HUD
+        - Share card
+        - Popup / history
+        - Options / privacy
+        - Another chat host
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints
+      options:
+        - label: This can stay fully local (no server, no account).
+          required: true
