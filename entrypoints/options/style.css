@@ -14,21 +14,7 @@
   color-scheme: light;
 }
 
-:root[data-theme='dark'] {
-  --bg: #0b0b0a;
-  --text: #f7f5ef;
-  --muted: #9a9488;
-  --faint: #9a9488;
-  --line: #2a2824;
-  --line-strong: #3a3732;
-  --orange: #ff4d00;
-  --orange-bright: #ff4d00;
-  --solid-bg: #f2efe6;
-  --solid-text: #0b0b0a;
-  --danger: #ff6a3d;
-  --danger-ink: #0b0b0a;
-  color-scheme: dark;
-}
+
 
 * {
   box-sizing: border-box;

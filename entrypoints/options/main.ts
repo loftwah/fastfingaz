@@ -7,17 +7,9 @@ const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
   return el as T;
 };
 
-const media = window.matchMedia('(prefers-color-scheme: dark)');
-
 let settings: Settings | null = null;
 let toastTimer: number | null = null;
 let sliderTimer: number | null = null;
-
-function applyTheme(): void {
-  const setting = settings?.theme ?? 'auto';
-  const resolved = setting === 'auto' ? (media.matches ? 'dark' : 'light') : setting;
-  document.documentElement.dataset.theme = resolved;
-}
 
 function toast(message: string): void {
   const el = $('toast');
@@ -43,7 +35,6 @@ function paint(next: Settings): void {
 
 async function persist(patch: Partial<Settings>): Promise<void> {
   settings = await saveSettings(patch);
-  applyTheme();
 }
 
 function bind(): void {
@@ -116,14 +107,11 @@ function bind(): void {
     toast('ALL SESSIONS CLEARED');
   });
 
-  media.addEventListener('change', applyTheme);
-
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== 'local') return;
     if (!Object.keys(changes).some((key) => key.startsWith('tt:'))) return;
     void loadSettings().then((next) => {
       paint(next);
-      applyTheme();
     });
   });
 }
@@ -131,7 +119,6 @@ function bind(): void {
 async function init(): Promise<void> {
   settings = await loadSettings();
   paint(settings);
-  applyTheme();
   const version = chrome.runtime.getManifest().version;
   $('version').textContent = version;
   $('version-line').textContent = version;

@@ -17,8 +17,8 @@ import {
   ensureCardFonts,
   renderCard,
 } from '../../shared/share-card';
-import { loadSessions, loadSettings } from '../../shared/storage';
-import type { SessionRecord, Settings } from '../../shared/types';
+import { loadSessions } from '../../shared/storage';
+import type { SessionRecord } from '../../shared/types';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
   const el = document.getElementById(id);
@@ -26,9 +26,6 @@ const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
   return el as T;
 };
 
-const media = window.matchMedia('(prefers-color-scheme: dark)');
-
-let settings: Settings | null = null;
 let sessions: SessionRecord[] = [];
 let selectedId: string | null = null;
 let toastTimer: number | null = null;
@@ -39,12 +36,6 @@ function escapeHtml(value: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
-}
-
-function applyTheme(): void {
-  const setting = settings?.theme ?? 'auto';
-  const resolved = setting === 'auto' ? (media.matches ? 'dark' : 'light') : setting;
-  document.documentElement.dataset.theme = resolved;
 }
 
 function pluralSessions(count: number): string {
@@ -287,8 +278,6 @@ function bind(): void {
     }
   });
 
-  media.addEventListener('change', applyTheme);
-
   chrome.storage.onChanged.addListener((_changes, area) => {
     if (area !== 'local') return;
     void refresh();
@@ -296,9 +285,7 @@ function bind(): void {
 }
 
 async function refresh(): Promise<void> {
-  settings = await loadSettings();
   sessions = await loadSessions();
-  applyTheme();
   if (selectedId) {
     if (sessions.some((session) => session.id === selectedId)) void openDetail(selectedId);
     else showMain();
@@ -308,9 +295,7 @@ async function refresh(): Promise<void> {
 }
 
 async function init(): Promise<void> {
-  settings = await loadSettings();
   sessions = await loadSessions();
-  applyTheme();
   $('version').textContent = `V${chrome.runtime.getManifest().version}`;
   bind();
   renderMain();
