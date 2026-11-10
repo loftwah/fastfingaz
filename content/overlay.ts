@@ -565,6 +565,7 @@ export class Overlay {
     }
 
     this.num.textContent = primary;
+    this.num.dataset.digits = String(primary.replace(/\D/g, '').length || 1);
     this.num.classList.toggle('is-empty', primary === DASH);
     this.unit.hidden = primary === DASH;
     this.orbNum.textContent =

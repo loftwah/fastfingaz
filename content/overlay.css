@@ -973,7 +973,20 @@
 }
 
 .hud[data-size='slim'] .num {
-  font-size: 60px;
+  font-size: 72px;
+}
+
+.hud[data-size='slim'] .num[data-digits='3'] {
+  font-size: 62px;
+}
+
+.hud[data-size='slim'] .num[data-digits='4'] {
+  font-size: 52px;
+}
+
+.hud[data-size='slim'] .num[data-digits='3'] ~ .unit,
+.hud[data-size='slim'] .num[data-digits='4'] ~ .unit {
+  display: none;
 }
 
 .hud[data-size='slim'] .num.is-empty {

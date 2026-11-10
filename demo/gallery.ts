@@ -178,7 +178,10 @@ async function boot(): Promise<void> {
       host?.shadowRoot?.querySelector<HTMLButtonElement>('[data-act="share"]')?.click();
     }
   } else {
-    overlay.update(liveFor(state));
+    const live = liveFor(state);
+    const wpm = Number(params.get('wpm'));
+    if (live.active && Number.isFinite(wpm) && wpm > 0) live.wpm = wpm;
+    overlay.update(live);
   }
 
   document.documentElement.dataset.ready = 'true';
