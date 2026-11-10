@@ -80,6 +80,9 @@ Treat it as a relative signal across your own sessions, not an absolute grade.
 
 Sessions with fewer than 5 intervals report 0 rather than a misleading score.
 
+Peak and consistency are computed from editing-key timings, which include Backspace/Delete. A burst
+of corrections can therefore nudge peak up slightly; the character-based WPM numbers are unaffected.
+
 ## Correction rate
 
 ```text
