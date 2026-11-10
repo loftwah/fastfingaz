@@ -24,36 +24,54 @@ export interface LiveSnapshot {
 
 export async function loadSettings(): Promise<Settings> {
   if (!hasStorage()) return { ...DEFAULT_SETTINGS };
-  const stored = await chrome.storage.local.get(STORAGE_KEYS.settings);
-  const value = stored[STORAGE_KEYS.settings] as Partial<Settings> | undefined;
-  return { ...DEFAULT_SETTINGS, ...(value ?? {}) };
+  try {
+    const stored = await chrome.storage.local.get(STORAGE_KEYS.settings);
+    const value = stored[STORAGE_KEYS.settings] as Partial<Settings> | undefined;
+    return { ...DEFAULT_SETTINGS, ...(value ?? {}) };
+  } catch {
+    // Some content-script contexts can be denied storage. Keep the instrument
+    // usable in-session with defaults rather than failing to mount.
+    return { ...DEFAULT_SETTINGS };
+  }
 }
 
 export async function saveSettings(patch: Partial<Settings>): Promise<Settings> {
   const next = { ...(await loadSettings()), ...patch };
   if (hasStorage()) {
-    await chrome.storage.local.set({ [STORAGE_KEYS.settings]: next });
+    try {
+      await chrome.storage.local.set({ [STORAGE_KEYS.settings]: next });
+    } catch {
+      // In-session settings still work; persistence is best-effort.
+    }
   }
   return next;
 }
 
 export async function loadSessions(): Promise<SessionRecord[]> {
   if (!hasStorage()) return [];
-  const stored = await chrome.storage.local.get(STORAGE_KEYS.sessions);
-  const value = stored[STORAGE_KEYS.sessions];
-  return Array.isArray(value) ? (value as SessionRecord[]) : [];
+  try {
+    const stored = await chrome.storage.local.get(STORAGE_KEYS.sessions);
+    const value = stored[STORAGE_KEYS.sessions];
+    return Array.isArray(value) ? (value as SessionRecord[]) : [];
+  } catch {
+    return [];
+  }
 }
 
 export async function loadHistory(): Promise<HistorySummary> {
   if (!hasStorage()) return emptyHistory();
-  const stored = await chrome.storage.local.get(STORAGE_KEYS.history);
-  const value = stored[STORAGE_KEYS.history] as HistorySummary | undefined;
-  if (!value || value.v !== 1) {
-    // First run after upgrading from 0.1: derive a baseline from whatever
-    // sessions are already on disk.
-    return buildHistory(await loadSessions());
+  try {
+    const stored = await chrome.storage.local.get(STORAGE_KEYS.history);
+    const value = stored[STORAGE_KEYS.history] as HistorySummary | undefined;
+    if (!value || value.v !== 1) {
+      // First run after upgrading from 0.1: derive a baseline from whatever
+      // sessions are already on disk.
+      return buildHistory(await loadSessions());
+    }
+    return value;
+  } catch {
+    return emptyHistory();
   }
-  return value;
 }
 
 let writeQueue: Promise<unknown> = Promise.resolve();
@@ -69,36 +87,51 @@ function serialize<T>(job: () => Promise<T>): Promise<T> {
 
 export function appendSession(record: SessionRecord): Promise<void> {
   return serialize(async () => {
-    const sessions = await loadSessions();
-    sessions.unshift(record);
-    sessions.sort((a, b) => b.endedAt - a.endedAt);
-    const kept = sessions.slice(0, MAX_SESSIONS);
-    // Merge with the previous summary so a best that falls out of the retained
-    // list is still remembered.
-    const previous = await loadHistory();
-    await chrome.storage.local.set({
-      [STORAGE_KEYS.sessions]: kept,
-      [STORAGE_KEYS.history]: buildHistory(kept, previous),
-    });
+    if (!hasStorage()) return;
+    try {
+      const sessions = await loadSessions();
+      sessions.unshift(record);
+      sessions.sort((a, b) => b.endedAt - a.endedAt);
+      const kept = sessions.slice(0, MAX_SESSIONS);
+      // Merge with the previous summary so a best that falls out of the retained
+      // list is still remembered.
+      const previous = await loadHistory();
+      await chrome.storage.local.set({
+        [STORAGE_KEYS.sessions]: kept,
+        [STORAGE_KEYS.history]: buildHistory(kept, previous),
+      });
+    } catch {
+      // The receipt still prints; persistence is best-effort.
+    }
   });
 }
 
 export function deleteSession(id: string): Promise<void> {
   return serialize(async () => {
-    const sessions = (await loadSessions()).filter((session) => session.id !== id);
-    await chrome.storage.local.set({
-      [STORAGE_KEYS.sessions]: sessions,
-      [STORAGE_KEYS.history]: buildHistory(sessions),
-    });
+    if (!hasStorage()) return;
+    try {
+      const sessions = (await loadSessions()).filter((session) => session.id !== id);
+      await chrome.storage.local.set({
+        [STORAGE_KEYS.sessions]: sessions,
+        [STORAGE_KEYS.history]: buildHistory(sessions),
+      });
+    } catch {
+      // Best-effort.
+    }
   });
 }
 
 export async function clearSessions(): Promise<void> {
   await serialize(async () => {
-    await chrome.storage.local.set({
-      [STORAGE_KEYS.sessions]: [],
-      [STORAGE_KEYS.history]: emptyHistory(),
-    });
+    if (!hasStorage()) return;
+    try {
+      await chrome.storage.local.set({
+        [STORAGE_KEYS.sessions]: [],
+        [STORAGE_KEYS.history]: emptyHistory(),
+      });
+    } catch {
+      // Best-effort.
+    }
     await clearLiveSnapshot();
   });
 }
@@ -112,22 +145,34 @@ export async function resetEverything(): Promise<void> {
 /** In-progress metrics live in session storage: no prompt text, cleared on reload. */
 export async function saveLiveSnapshot(snapshot: LiveSnapshot): Promise<void> {
   if (!hasSessionStorage()) return;
-  await chrome.storage.session.set({ [STORAGE_KEYS.live]: snapshot });
+  try {
+    await chrome.storage.session.set({ [STORAGE_KEYS.live]: snapshot });
+  } catch {
+    // Session storage is optional.
+  }
 }
 
 export async function loadLiveSnapshot(): Promise<LiveSnapshot | null> {
   if (!hasSessionStorage()) return null;
-  const stored = await chrome.storage.session.get(STORAGE_KEYS.live);
-  const value = stored[STORAGE_KEYS.live] as LiveSnapshot | undefined;
-  if (!value || !Number.isFinite(value.endedAt)) return null;
-  // A snapshot older than 30 minutes is a different session, not a pause.
-  if (Date.now() - value.endedAt > 30 * 60_000) return null;
-  return value;
+  try {
+    const stored = await chrome.storage.session.get(STORAGE_KEYS.live);
+    const value = stored[STORAGE_KEYS.live] as LiveSnapshot | undefined;
+    if (!value || !Number.isFinite(value.endedAt)) return null;
+    // A snapshot older than 30 minutes is a different session, not a pause.
+    if (Date.now() - value.endedAt > 30 * 60_000) return null;
+    return value;
+  } catch {
+    return null;
+  }
 }
 
 export async function clearLiveSnapshot(): Promise<void> {
   if (!hasSessionStorage()) return;
-  await chrome.storage.session.remove(STORAGE_KEYS.live);
+  try {
+    await chrome.storage.session.remove(STORAGE_KEYS.live);
+  } catch {
+    // Session storage is optional.
+  }
 }
 
 export async function exportAll(): Promise<string> {
