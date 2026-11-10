@@ -3,6 +3,9 @@
 The short version: standard WPM measures transcription. Thinktype measures composition. That requires
 two clocks, an explicit idle model, and an honest signal score.
 
+> v0.2 adds durable history and eligibility rules. The formulas below are the ones the extension
+> actually runs; `shared/metrics.ts` is the source of truth and `tests/metrics.test.ts` covers them.
+
 ## Two clocks
 
 Every sent prompt produces one session with two WPM numbers.
@@ -50,8 +53,15 @@ Why clamp rather than drop? Dropping makes a session with many pauses artificial
 pauses vanish from the denominator. Clamping treats a pause as a short reset — you still pay for it,
 but it does not swallow the whole session.
 
-The threshold is also used to define "thinking" for the live HUD. If no key has arrived for
-`max(1200ms, threshold)`, the HUD switches to `thinking` and the live number drops to zero.
+### A pause is not a reset
+
+The threshold also defines "thinking" for the live HUD. If no key has arrived for
+`max(1200ms, threshold)`, the HUD switches to **THINKING**. The live WPM reading is held at its last
+non-zero value; it does not drop to zero. The run is still alive, the timer and word count keep
+moving, and the final sent prompt is measured as one run.
+
+The idle HUD (no active run) shows the last eligible session, the best think WPM and the rolling
+average. Before the first reading it shows dashes, never zero.
 
 ## Peak
 
@@ -110,8 +120,45 @@ if replacements > 0:  base *= 0.97
 signal = clamp(base, 0.05, 1)
 ```
 
-A pasted draft, a heavily autocorrected message, or an IME-composed message is still saved, but it is
-shown with low signal and excluded from averages when more than half the text was pasted.
+A pasted draft, a heavily autocorrected message, or an IME-composed message is not hidden. But a
+session needs at least **50% signal** to be recorded at all, and paste-dominated runs are rejected
+before they reach history.
+
+## History and eligibility
+
+Only sent prompts are measured. Drafts and abandoned runs are never written to history.
+
+A run must clear every gate before it is recorded:
+
+| Gate | Rule |
+| --- | --- |
+| Sent prompt | The composer cleared after Enter or the send button. |
+| Minimum wall time | 3 seconds. |
+| Minimum characters | Your setting, with a hard floor of 16. |
+| Signal | At least 50%. |
+| Paste | Less than 50% of the final text. |
+| Resumed draft | Recorded in the draft bucket; excluded from best and averages. |
+| IME | Counts toward averages above 50% signal; excluded from best below 85%. |
+
+The durable summary lives in `chrome.storage.local`:
+
+- **best think, best flow, best peak** — merged by maximum, so a lower run can never overwrite a
+  higher best. A best that falls out of the retained session list is still remembered.
+- **last** — the most recent eligible sent prompt, small enough to show in the idle HUD.
+- **rolling** — the last 20 eligible sessions, weighted.
+- **all time** — every eligible session retained locally (up to 500).
+- **totals** — recorded sessions and the draft bucket.
+
+A resumed draft (text already in the composer when tracking began) is kept for the record and shown
+with a `DRAFT` badge, but its wall clock only covers the tail of the message, so it cannot move the
+baseline.
+
+### In-progress snapshots
+
+The content script writes a text-free snapshot of the current run to `chrome.storage.session` about
+once per second. If the tab reloads, the HUD shows those numbers as **PAUSED / NOT RECORDED** until
+you start typing again. The snapshot contains WPM, words, time and the cadence series — never prompt
+text — and it is never saved as history.
 
 ## Pauses
 
@@ -128,14 +175,15 @@ averageThinkWpm = sum(finalChars) / 5 / (sum(wallMs) / 60000)
 averageFlowWpm  = sum(insertedChars) / 5 / (sum(activeMs) / 60000)
 ```
 
-Sessions with `pasteRatio >= 0.5` or zero words are excluded. This prevents a one-line "thanks" from
-moving the average.
+The rolling average uses the last 20 eligible sessions. The all-time average uses every eligible
+session retained locally. Drafts, paste-dominated runs and low-signal runs are excluded. This
+prevents a one-line "thanks" from moving the average.
 
 ## What is deliberately not measured
 
 - **Accuracy vs a target.** There is no target. Correction rate is the substitute.
-- **Typing while editing an existing draft.** A session starts only when the composer was empty at
-  the first keystroke. Editing a saved draft is a different activity.
+- **Typing while editing an existing draft as a normal run.** A resumed draft is recorded in the
+  draft bucket and excluded from best and averages.
 - **Thinking before the first keystroke.** The wall clock starts at the first key, not when the page
   loaded. Think of it as "how fast does a thought become text once you start writing it".
 - **Speech, dictation, AI autocomplete.** Not typing; paste/dictation paths lower signal.

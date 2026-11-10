@@ -5,6 +5,7 @@ unpacked/
 .agents/
 .wxt/
 demo/dist/
+site/dist/
 *.zip
 .DS_Store
 .vscode/

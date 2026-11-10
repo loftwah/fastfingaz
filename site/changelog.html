@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Changelog — Thinktype</title>
+    <meta
+      name="description"
+      content="Thinktype release notes: the v0.2.0 vertical instrument, honest best and average history, three share card formats, and the static site."
+    />
+    <link rel="canonical" href="https://thinktype.loftwah.com/changelog" />
+    <meta name="theme-color" content="#f2efe6" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icon-128.png" type="image/png" sizes="128x128" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/GeistMono-Variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/assets/site.css" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Thinktype" />
+    <meta property="og:title" content="Thinktype changelog" />
+    <meta
+      property="og:description"
+      content="The vertical instrument, honest best and average history, three share formats, and the static site."
+    />
+    <meta property="og:url" content="https://thinktype.loftwah.com/changelog" />
+    <meta property="og:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Thinktype changelog" />
+    <meta
+      name="twitter:description"
+      content="The vertical instrument, honest best and average history, three share formats, and the static site."
+    />
+    <meta name="twitter:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
+  </head>
+  <body>
+    <a class="skip" href="#main">SKIP TO CONTENT</a>
+    <div class="top-rule" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="/" aria-label="Thinktype home">
+          <svg viewBox="0 0 40 40" aria-hidden="true">
+            <g fill="#ff4d00">
+              <rect x="0" y="0" width="6" height="6" /><rect x="8" y="0" width="6" height="6" />
+              <rect x="16" y="0" width="6" height="6" /><rect x="24" y="0" width="6" height="6" />
+              <rect x="32" y="0" width="6" height="6" /><rect x="16" y="8" width="6" height="6" />
+              <rect x="16" y="16" width="6" height="6" /><rect x="16" y="24" width="6" height="6" />
+            </g>
+          </svg>
+          <span class="wordmark">THINKTYPE</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="/#how">How it works</a>
+          <a href="/metrics">The method</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/changelog" aria-current="page">Changelog</a>
+        </nav>
+        <div class="header-actions">
+          <a class="button ghost" href="https://github.com/loftwah/thinktype">GitHub ↗</a>
+          <a class="button" href="https://github.com/loftwah/thinktype/releases/latest"
+            >Get the extension <span class="arrow">↓</span></a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <article class="wrap doc">
+        <header class="doc-head">
+          <span class="margin-label">Changelog</span>
+          <div>
+            <h1>Build notes, not marketing beats.</h1>
+            <p class="meta">
+              CURRENTLY v0.2.0 / 11 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
+            </p>
+          </div>
+        </header>
+
+        <div class="doc-body">
+          <nav class="doc-toc" aria-label="Releases">
+            <a href="#v020">v0.2.0</a>
+            <a href="#v011">v0.1.1</a>
+            <a href="#v010">v0.1.0</a>
+            <a href="https://github.com/loftwah/thinktype/releases">All releases ↗</a>
+          </nav>
+
+          <div>
+            <section class="release" id="v020">
+              <div>
+                <span class="version">v0.2.0 <span class="tag">CURRENT</span></span>
+                <span class="date">11 NOV 2026</span>
+              </div>
+              <div>
+                <h2>The vertical instrument.</h2>
+                <ul>
+                  <li>
+                    New vertical HUD, anchored to the bottom of the viewport. It lives in the empty
+                    gutter beside the conversation: full 300 px at 1728/2048, a slim 140 px strip at
+                    1440, and a 232 px medium panel at 1280 with the sidebar hidden.
+                  </li>
+                  <li>
+                    Think WPM, flow WPM, peak, best, rolling average, readings, drafts and steady
+                    rhythm are visible at once. The primary reading is 72–80 px.
+                  </li>
+                  <li>
+                    A pause now holds the run in THINKING; the live number does not drop to zero.
+                    Idle shows LAST / BEST / AVG, with dashes before the first reading.
+                  </li>
+                  <li>
+                    Durable history in <code>chrome.storage.local</code>: best think, flow and peak,
+                    last eligible session, a weighted 20-session rolling average and an all-time
+                    average. A lower run never overwrites a best.
+                  </li>
+                  <li>
+                    Eligibility gates: sent prompts only, minimum characters and wall time, signal
+                    above 50%, paste-dominated runs rejected, resumed drafts kept in a draft bucket
+                    and excluded from best/average, IME runs excluded from best below 85% signal.
+                  </li>
+                  <li>
+                    An in-progress snapshot is kept in <code>chrome.storage.session</code> without
+                    text and shown as PAUSED / NOT RECORDED after a reload.
+                  </li>
+                  <li>
+                    Share cards at 1200×630, 1080×1080 and 1080×1920. Each format is designed
+                    separately; the receipt keeps the serial, barcode, cadence bars and baseline.
+                  </li>
+                  <li>
+                    A share sheet in the HUD receipt and the popup: format tabs, live preview, file
+                    name and PNG size, copy and download.
+                  </li>
+                  <li>
+                    New static marketing site at thinktype.loftwah.com, deployed on Cloudflare Pages.
+                    No new extension permissions.
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="release" id="v011">
+              <div>
+                <span class="version">v0.1.1</span>
+                <span class="date">11 NOV 2026</span>
+              </div>
+              <div>
+                <h2>Draft-aware sessions, larger paper HUD.</h2>
+                <ul>
+                  <li>Draft state: an existing composer text shows DRAFT / TYPE TO MEASURE.</li>
+                  <li>420 px paper housing with a black LCD and a 38-bar cadence meter.</li>
+                  <li>Smart docking beside the composer, with an above-composer fallback.</li>
+                  <li>Removed the theme setting; the report is always paper.</li>
+                  <li>27 unit tests for the measurement core.</li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="release" id="v010">
+              <div>
+                <span class="version">v0.1.0</span>
+                <span class="date">10 NOV 2026</span>
+              </div>
+              <div>
+                <h2>Initial local-first instrument.</h2>
+                <ul>
+                  <li>
+                    Chrome MV3 extension built with WXT, TypeScript and vanilla DOM/CSS.
+                  </li>
+                  <li>
+                    Think WPM, flow WPM, peak, consistency, correction rate, pauses and signal
+                    quality.
+                  </li>
+                  <li>Floating HUD, collapsed orb, printed receipt, keyboard toggle.</li>
+                  <li>14-day history in the popup; export and clear in settings.</li>
+                  <li>Original share receipt at 1200×630, rendered locally on canvas.</li>
+                </ul>
+              </div>
+            </section>
+
+            <p class="formats-note">
+              Full commit history and release assets:
+              <a href="https://github.com/loftwah/thinktype/releases">github.com/loftwah/thinktype/releases</a>.
+              The Chrome Web Store listing is being prepared; nothing has been submitted for review.
+            </p>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <span class="wordmark">THINKTYPE</span>
+            <p>
+              A typing instrument for thoughts. Measure the composition, not the transcription.
+              Local-only by construction.
+            </p>
+          </div>
+          <nav class="footer-nav" aria-label="Footer">
+            <a href="/metrics">The method</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/changelog">Changelog</a>
+            <a href="https://github.com/loftwah/thinktype">GitHub</a>
+            <a href="https://github.com/loftwah/thinktype/issues">Issues</a>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <span>THINKTYPE.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.2.0</span></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

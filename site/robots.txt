@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://thinktype.loftwah.com/sitemap.xml

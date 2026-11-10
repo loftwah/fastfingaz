@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy — Thinktype</title>
+    <meta
+      name="description"
+      content="Thinktype has no server, no account and no analytics. Prompt text is not stored by default. Read the full privacy policy."
+    />
+    <link rel="canonical" href="https://thinktype.loftwah.com/privacy" />
+    <meta name="theme-color" content="#f2efe6" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icon-128.png" type="image/png" sizes="128x128" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/GeistMono-Variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/assets/site.css" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Thinktype" />
+    <meta property="og:title" content="Thinktype privacy policy" />
+    <meta
+      property="og:description"
+      content="No server, no account, no analytics. Prompt text is not stored by default."
+    />
+    <meta property="og:url" content="https://thinktype.loftwah.com/privacy" />
+    <meta property="og:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Thinktype privacy policy" />
+    <meta
+      name="twitter:description"
+      content="No server, no account, no analytics. Prompt text is not stored by default."
+    />
+    <meta name="twitter:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
+  </head>
+  <body>
+    <a class="skip" href="#main">SKIP TO CONTENT</a>
+    <div class="top-rule" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="/" aria-label="Thinktype home">
+          <svg viewBox="0 0 40 40" aria-hidden="true">
+            <g fill="#ff4d00">
+              <rect x="0" y="0" width="6" height="6" /><rect x="8" y="0" width="6" height="6" />
+              <rect x="16" y="0" width="6" height="6" /><rect x="24" y="0" width="6" height="6" />
+              <rect x="32" y="0" width="6" height="6" /><rect x="16" y="8" width="6" height="6" />
+              <rect x="16" y="16" width="6" height="6" /><rect x="16" y="24" width="6" height="6" />
+            </g>
+          </svg>
+          <span class="wordmark">THINKTYPE</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="/#how">How it works</a>
+          <a href="/metrics">The method</a>
+          <a href="/privacy" aria-current="page">Privacy</a>
+          <a href="/changelog">Changelog</a>
+        </nav>
+        <div class="header-actions">
+          <a class="button ghost" href="https://github.com/loftwah/thinktype">GitHub ↗</a>
+          <a class="button" href="https://github.com/loftwah/thinktype/releases/latest"
+            >Get the extension <span class="arrow">↓</span></a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <article class="wrap doc">
+        <header class="doc-head">
+          <span class="margin-label">Privacy</span>
+          <div>
+            <h1>Everything stays in your browser.</h1>
+            <p class="meta">
+              EFFECTIVE 11 NOVEMBER 2026 / THINKTYPE v0.2.0 / CHROME MV3 / LOCAL ONLY
+            </p>
+          </div>
+        </header>
+
+        <div class="doc-body">
+          <nav class="doc-toc" aria-label="On this page">
+            <a href="#processes">What it processes</a>
+            <a href="#not-does">What it does not do</a>
+            <a href="#permissions">Permissions</a>
+            <a href="#retention">Retention and deletion</a>
+            <a href="#security">Security</a>
+            <a href="#children">Children</a>
+            <a href="#changes">Changes</a>
+            <a href="#contact">Contact</a>
+          </nav>
+
+          <div class="doc-copy">
+            <h2 id="processes">What Thinktype processes</h2>
+            <ul>
+              <li>
+                <strong>Composer text.</strong> On <code>chatgpt.com</code> and
+                <code>chat.openai.com</code>, Thinktype reads the text in the ChatGPT composer so it
+                can calculate word counts, WPM, pauses and signal quality. This happens locally on
+                your machine.
+              </li>
+              <li>
+                <strong>Typing metrics.</strong> It records timings, WPM, word counts, corrections
+                and related stats for prompts you send. These are stored in
+                <code>chrome.storage.local</code> in your browser.
+              </li>
+              <li>
+                <strong>Your settings.</strong> Your threshold, minimum length, HUD position and
+                privacy choices are stored in the same local extension storage.
+              </li>
+            </ul>
+            <p>
+              By default, Thinktype does <strong>not</strong> store the text of your prompts. If you
+              turn on <strong>Store the text of sent prompts</strong>, that text is stored locally
+              with the session and included in your export.
+            </p>
+
+            <h2 id="not-does">What Thinktype does not do</h2>
+            <ul>
+              <li>No server, account, analytics, telemetry or remote logging.</li>
+              <li>
+                No prompt text, metrics or settings are transmitted off your device. There is no
+                network code in the extension.
+              </li>
+              <li>No data is sold, rented or shared with third parties.</li>
+              <li>No advertising or tracking code.</li>
+              <li>
+                No reading of tabs or sites other than the ChatGPT domains listed in the extension
+                manifest.
+              </li>
+            </ul>
+
+            <h2 id="permissions">Permissions</h2>
+            <div class="spec-table">
+              <div class="spec-row"><span><code>storage</code></span><b>Save your settings and local session history.</b></div>
+              <div class="spec-row">
+                <span><code>clipboardWrite</code></span>
+                <b>Copy the locally rendered share card to your clipboard when you click Copy image.</b>
+              </div>
+              <div class="spec-row">
+                <span><code>https://chatgpt.com/*</code></span>
+                <b>Attach the HUD and read the ChatGPT composer so typing can be measured.</b>
+              </div>
+              <div class="spec-row">
+                <span><code>https://chat.openai.com/*</code></span>
+                <b>Legacy ChatGPT domain, which redirects to chatgpt.com.</b>
+              </div>
+            </div>
+            <p>
+              Thinktype does not request the <code>tabs</code>, <code>scripting</code>,
+              <code>webRequest</code> or <code>&lt;all_urls&gt;</code> permissions.
+            </p>
+
+            <h2 id="retention">Retention and deletion</h2>
+            <p>
+              Your data stays in Chrome's local extension storage until you remove it. Open
+              Thinktype's settings and choose <strong>Clear all sessions</strong> to delete your
+              history, or <strong>Export data</strong> to take a copy first. Uninstalling the
+              extension removes its local storage.
+            </p>
+
+            <h2 id="security">Security</h2>
+            <p>
+              Thinktype has no backend to secure. The extension runs inside Chrome's extension
+              sandbox and only requests the permissions listed above. The optional stored text is
+              protected by Chrome's extension storage, not by a separate encryption layer.
+            </p>
+
+            <h2 id="children">Children</h2>
+            <p>
+              Thinktype is a general-purpose productivity tool and is not directed at children under
+              13. It does not knowingly collect personal information from anyone.
+            </p>
+
+            <h2 id="changes">Changes</h2>
+            <p>
+              If this policy changes, the effective date above will be updated and the change will
+              be visible in the public repository. Continued use after a change means you accept
+              the updated policy.
+            </p>
+
+            <h2 id="contact">Contact</h2>
+            <p>
+              Questions or concerns: open an issue at
+              <a href="https://github.com/loftwah/thinktype/issues">github.com/loftwah/thinktype/issues</a>
+              or email <a href="mailto:dean@deanlofts.xyz">dean@deanlofts.xyz</a>.
+            </p>
+            <blockquote>
+              This page is the canonical privacy policy linked from the Chrome Web Store listing and
+              from the extension's settings page.
+            </blockquote>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <span class="wordmark">THINKTYPE</span>
+            <p>
+              A typing instrument for thoughts. Measure the composition, not the transcription.
+              Local-only by construction.
+            </p>
+          </div>
+          <nav class="footer-nav" aria-label="Footer">
+            <a href="/metrics">The method</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/changelog">Changelog</a>
+            <a href="https://github.com/loftwah/thinktype">GitHub</a>
+            <a href="https://github.com/loftwah/thinktype/issues">Issues</a>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <span>THINKTYPE.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.2.0</span></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

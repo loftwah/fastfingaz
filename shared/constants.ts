@@ -1,10 +1,15 @@
 import type { Settings } from './types';
 
 export const GITHUB_URL = 'https://github.com/loftwah/thinktype';
+export const RELEASES_URL = `${GITHUB_URL}/releases/latest`;
+export const SITE_HOST = 'thinktype.loftwah.com';
+export const SITE_URL = `https://${SITE_HOST}`;
 
 export const STORAGE_KEYS = {
   settings: 'tt:settings:v1',
   sessions: 'tt:sessions:v1',
+  history: 'tt:history:v1',
+  live: 'tt:live:v1',
 } as const;
 
 /** Keep the local history bounded. 500 prompts is months of normal use. */

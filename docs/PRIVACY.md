@@ -2,6 +2,8 @@
 
 **Effective date:** 11 November 2026
 
+**Published at:** https://thinktype.loftwah.com/privacy
+
 Thinktype is a Chrome extension that measures how fast you compose text in ChatGPT. This policy
 explains what it does with your data. The short version: everything stays in your browser.
 
@@ -12,6 +14,9 @@ explains what it does with your data. The short version: everything stays in you
   locally on your machine.
 - **Typing metrics.** It records timings, WPM, word counts, corrections and related stats for prompts
   you send. These are stored in `chrome.storage.local` in your browser.
+- **In-progress snapshots.** While a run is active, a short-lived, text-free snapshot of its numbers
+  is kept in `chrome.storage.session`. It lets a reload show `PAUSED / NOT RECORDED` instead of
+  pretending the run survived. It is cleared when the run ends and is never saved as history.
 - **Your settings.** Your threshold, minimum length, HUD position and privacy choices are stored in
   the same local extension storage.
 

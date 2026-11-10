@@ -1,11 +1,17 @@
 import { defineContentScript } from 'wxt/utils/define-content-script';
+import { STORAGE_KEYS } from '../shared/constants';
+import { isNewBest } from '../shared/metrics';
 import {
   appendSession,
+  clearLiveSnapshot,
+  loadHistory,
+  loadLiveSnapshot,
   loadSettings,
   onSettingsChanged,
+  saveLiveSnapshot,
   saveSettings,
 } from '../shared/storage';
-import type { SessionRecord, Settings } from '../shared/types';
+import type { HistorySummary, SessionRecord, Settings } from '../shared/types';
 import { findComposer } from '../content/composer';
 import { CONTENT_FONT_FACES } from '../content/font-faces';
 import { Overlay } from '../content/overlay';
@@ -29,6 +35,7 @@ export default defineContentScript({
 
 async function boot(): Promise<void> {
   let settings: Settings = await loadSettings();
+  let history: HistorySummary = await loadHistory();
 
   let currentEl: HTMLElement | null = null;
   let tracker: ComposerTracker | null = null;
@@ -38,10 +45,12 @@ async function boot(): Promise<void> {
     pos: settings.hudPos,
     fontFacesCss: CONTENT_FONT_FACES,
     getComposerRect: () => currentEl?.getBoundingClientRect() ?? null,
+    getMainRect: () => document.querySelector('main')?.getBoundingClientRect() ?? null,
     onMove: (pos) => {
       settings = { ...settings, hudPos: pos };
       void saveSettings({ hudPos: pos });
     },
+
     onCollapse: (collapsed) => {
       settings = { ...settings, hudCollapsed: collapsed };
       void saveSettings({ hudCollapsed: collapsed });
@@ -52,16 +61,29 @@ async function boot(): Promise<void> {
     },
   });
   overlay.mount();
+  overlay.setHistory(history);
 
   const syncVisibility = (): void => {
     overlay.setVisible(settings.showHud && !!currentEl?.isConnected);
   };
 
-  const handleSession = (record: SessionRecord): void => {
-    void appendSession(record).catch((error) => {
+  const handleSession = async (record: SessionRecord): Promise<void> => {
+    const previous = history;
+    const newBest = isNewBest(record, previous.best);
+    const firstReading = previous.totals.recorded === 0;
+
+    try {
+      await appendSession(record);
+      history = await loadHistory();
+      overlay.setHistory(history);
+      overlay.showReceipt(record, { newBest, firstReading, history });
+      await clearLiveSnapshot();
+    } catch (error) {
       console.warn('[thinktype] could not save session', error);
-    });
-    overlay.showReceipt(record);
+      // Still show the receipt: the number is real even when storage fails.
+      overlay.showReceipt(record, { newBest, firstReading, history: previous });
+    }
+
     try {
       void chrome.runtime.sendMessage({ type: 'session-saved' }).catch(() => undefined);
     } catch {
@@ -88,9 +110,30 @@ async function boot(): Promise<void> {
 
   ensureComposer();
 
+  // A tab reload cannot restore the in-progress keystroke clock. Show the last
+  // snapshot from chrome.storage.session, clearly marked as paused and never
+  // recorded, so a stale number is not passed off as a live run.
+  const paused = await loadLiveSnapshot();
+  if (paused) overlay.setPaused(paused);
+
+  let lastSnapshotAt = 0;
+  let hadLiveSnapshot = false;
   const scanTimer = window.setInterval(ensureComposer, 1200);
   const uiTimer = window.setInterval(() => {
-    overlay.update(tracker ? tracker.liveStats() : EMPTY_LIVE);
+    const live = tracker ? tracker.liveStats() : EMPTY_LIVE;
+    overlay.update(live);
+    if (live.active) {
+      hadLiveSnapshot = true;
+      if (Date.now() - lastSnapshotAt < 1000) return;
+      const snapshot = tracker?.snapshot();
+      if (snapshot) {
+        lastSnapshotAt = Date.now();
+        void saveLiveSnapshot(snapshot);
+      }
+    } else if (hadLiveSnapshot) {
+      hadLiveSnapshot = false;
+      void clearLiveSnapshot();
+    }
   }, 250);
 
   let lastUrl = location.href;
@@ -109,6 +152,18 @@ async function boot(): Promise<void> {
     syncVisibility();
   });
 
+  const onStorage = (
+    changes: Record<string, chrome.storage.StorageChange>,
+    area: string,
+  ): void => {
+    if (area !== 'local' || !changes[STORAGE_KEYS.history]) return;
+    void loadHistory().then((next) => {
+      history = next;
+      overlay.setHistory(next);
+    });
+  };
+  chrome.storage.onChanged.addListener(onStorage);
+
   chrome.runtime.onMessage.addListener((message: unknown) => {
     if (
       typeof message === 'object' &&
@@ -124,6 +179,7 @@ async function boot(): Promise<void> {
     window.clearInterval(uiTimer);
     window.clearInterval(urlTimer);
     unsubscribe();
+    chrome.storage.onChanged.removeListener(onStorage);
     tracker?.destroy();
     overlay.destroy();
     window.__thinktype = false;

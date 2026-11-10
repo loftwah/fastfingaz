@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thinktype popup harness</title>
+    <link rel="stylesheet" href="/fonts.css" />
+    <link rel="stylesheet" href="./popup-harness.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="top">
+        <div class="brand">
+          <span class="wordmark">THINKTYPE</span>
+          <span class="serial">TT-02</span>
+        </div>
+        <div class="top-actions">
+          <button id="open-chatgpt" class="tiny">CHATGPT ↗</button>
+          <button id="open-options" class="icon-btn" aria-label="Settings" title="Settings">
+            <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+              <circle cx="8" cy="8" r="2.1" />
+              <path d="M8 1.8v1.6M8 12.6v1.6M1.8 8h1.6M12.6 8h1.6M3.6 3.6l1.1 1.1M11.3 11.3l1.1 1.1M12.4 3.6l-1.1 1.1M4.7 11.3l-1.1 1.1" stroke-linecap="square" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main id="view-main">
+        <section class="device" aria-label="Today's readings">
+          <div class="device-head">
+            <span>TODAY</span>
+            <span id="today-count" class="orange">NO SESSIONS</span>
+          </div>
+          <div class="device-readout">
+            <div class="reading">
+              <span class="reading-value" id="today-think">—</span>
+              <span class="reading-label">THINK WPM</span>
+            </div>
+            <div class="reading">
+              <span class="reading-value flow" id="today-flow">—</span>
+              <span class="reading-label">FLOW WPM</span>
+            </div>
+          </div>
+          <p class="device-note" id="today-summary">No readings yet today.</p>
+        </section>
+
+        <section class="baseline" aria-label="Personal baseline">
+          <div class="baseline-head">
+            <h2>BASELINE</h2>
+            <span id="baseline-count">NO READINGS</span>
+          </div>
+          <div class="baseline-grid">
+            <div><b id="base-last">—</b><span>LAST</span></div>
+            <div><b id="base-best">—</b><span>BEST</span></div>
+            <div><b id="base-avg">—</b><span>AVG / 20</span></div>
+          </div>
+        </section>
+
+        <section class="block">
+          <div class="block-head">
+            <h2>LAST 14 DAYS</h2>
+            <span id="chart-note"></span>
+          </div>
+          <div class="chart" id="chart"></div>
+          <div class="chart-axis"><span>14 DAYS AGO</span><span>TODAY</span></div>
+        </section>
+
+        <section class="block">
+          <div class="block-head">
+            <h2>RECENT</h2>
+            <span id="recent-count"></span>
+          </div>
+          <ul class="sessions" id="sessions"></ul>
+          <div class="empty" id="empty" hidden>
+            <p class="empty-title">NO READINGS YET</p>
+            <p class="empty-copy">The first session is the baseline.</p>
+            <button id="empty-cta" class="primary">OPEN CHATGPT</button>
+          </div>
+        </section>
+      </main>
+
+      <main id="view-detail" hidden>
+        <button id="back" class="back">← BACK</button>
+        <div class="detail-head">
+          <div class="detail-meta">
+            <span id="detail-serial">NO. 0000</span>
+            <span id="detail-best" class="detail-best" hidden>NEW BEST</span>
+            <span id="detail-date"></span>
+          </div>
+          <div class="detail-nums">
+            <div><b id="detail-think">0</b><span>THINK WPM</span></div>
+            <div><b id="detail-flow">0</b><span>FLOW WPM</span></div>
+          </div>
+        </div>
+
+        <div class="share-tabs" role="tablist" aria-label="Card format">
+          <button data-format="landscape" aria-selected="true">OG 1200×630</button>
+          <button data-format="square" aria-selected="false">SQUARE 1080</button>
+          <button data-format="story" aria-selected="false">STORY 1080×1920</button>
+        </div>
+        <div class="receipt-preview" id="card-preview"></div>
+        <div class="share-meta">
+          <span id="card-file">thinktype.png</span>
+          <span id="card-size">RENDERING…</span>
+        </div>
+
+        <div class="spec" id="detail-stats"></div>
+        <div class="detail-actions">
+          <button id="copy-image" class="primary">COPY IMAGE</button>
+          <button id="download-image" class="ghost">DOWNLOAD PNG</button>
+          <button id="copy-text" class="ghost">COPY TEXT</button>
+        </div>
+        <p class="signal" id="detail-note"></p>
+        <p class="share-note">Each format is laid out separately. Rendered on this machine; nothing is uploaded.</p>
+      </main>
+
+      <footer class="foot">
+        <span>LOCAL ONLY / NO SERVER</span>
+        <span class="foot-right">
+          <span id="version"></span>
+          <a id="github" href="https://github.com/loftwah/thinktype" target="_blank" rel="noreferrer">GITHUB</a>
+        </span>
+      </footer>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+
+    <script>
+      // A local harness for the popup UI. It stubs the extension APIs with sample
+      // data so the real popup module can render without a loaded extension.
+      const day = 86_400_000;
+      const now = Date.now();
+      const makeSession = (id, offset, think, flow, peak, words, wallMs, confidence, extra) => ({
+        id,
+        v: 1,
+        startedAt: now - offset,
+        endedAt: now - offset + wallMs,
+        host: 'chatgpt.com',
+        wallMs,
+        activeMs: Math.round(wallMs * 0.78),
+        chars: words * 6,
+        words,
+        wpm: { think, flow, peak },
+        consistency: 82,
+        correctionRate: 4.2,
+        pauses: { count: 3, medianMs: 4200, longestMs: 11_000 },
+        insertedChars: words * 6 + 40,
+        deletedChars: 48,
+        pastedChars: 0,
+        pasteRatio: 0,
+        confidence,
+        resumed: false,
+        ime: false,
+        series: [52, 58, 64, 71, 76, 82, 88, 91, 86, 79, 72, 68, 74, 81, 87, 92, 95, 90, 84, 78],
+        ...extra,
+      });
+      const sessions = [
+        makeSession('sample-best', 1 * day, 74, 88, 112, 228, 230_000, 0.97),
+        makeSession('sample-run', 0, 62, 78, 96, 212, 252_000, 0.94),
+        makeSession('sample-draft', 2 * day, 44, 61, 78, 104, 120_000, 0.72, { resumed: true }),
+        makeSession('sample-older', 3 * day, 58, 74, 90, 194, 198_000, 0.91),
+      ];
+      const history = {
+        v: 1,
+        updatedAt: now,
+        best: { thinkWpm: 74, flowWpm: 88, peakWpm: 112, sessionId: 'sample-best', at: now - 2 * day },
+        last: {
+          id: 'sample-run',
+          thinkWpm: 62,
+          flowWpm: 78,
+          peakWpm: 96,
+          words: 212,
+          wallMs: 252_000,
+          confidence: 0.94,
+          consistency: 84,
+          startedAt: now - day,
+          endedAt: now - day + 252_000,
+        },
+        rolling: { sessions: 3, chars: 4200, wallMs: 680_000, activeMs: 530_000, thinkWpm: 61, flowWpm: 78 },
+        allTime: { sessions: 4, chars: 5400, wallMs: 900_000, activeMs: 700_000, thinkWpm: 60, flowWpm: 77 },
+        totals: { recorded: 4, drafts: 1 },
+      };
+      window.chrome = {
+        runtime: {
+          getManifest: () => ({ version: '0.2.0' }),
+          openOptionsPage: () => {},
+          sendMessage: () => Promise.resolve(),
+        },
+        tabs: { create: () => {} },
+        storage: {
+          local: {
+            get: async (key) => {
+              if (key === 'tt:sessions:v1') {
+                return {
+                  'tt:sessions:v1': [...sessions].sort((a, b) => b.endedAt - a.endedAt),
+                };
+              }
+              if (key === 'tt:history:v1') return { 'tt:history:v1': history };
+              if (key === 'tt:settings:v1') return { 'tt:settings:v1': { storeText: false } };
+              return {};
+            },
+            set: async () => {},
+            remove: async () => {},
+            clear: async () => {},
+          },
+          session: { get: async () => ({}), set: async () => {}, remove: async () => {} },
+          onChanged: { addListener: () => {}, removeListener: () => {} },
+        },
+      };
+    </script>
+    <script type="module" src="./popup-entry.ts"></script>
+  </body>
+</html>

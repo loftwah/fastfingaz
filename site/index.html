@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thinktype — measure the speed of a thought in ChatGPT</title>
+    <meta
+      name="description"
+      content="Thinktype is a local-only Chrome extension that measures how fast you turn a thought into text in ChatGPT. Think WPM, flow WPM and a printed receipt."
+    />
+    <link rel="canonical" href="https://thinktype.loftwah.com/" />
+    <meta name="theme-color" content="#f2efe6" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icon-128.png" type="image/png" sizes="128x128" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/GeistMono-Variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/GeistPixel-Square.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/assets/site.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Thinktype" />
+    <meta property="og:title" content="Thinktype — measure the speed of a thought" />
+    <meta
+      property="og:description"
+      content="Two clocks for original composition in ChatGPT: think WPM and flow WPM. Printed as a receipt. Local-only."
+    />
+    <meta property="og:url" content="https://thinktype.loftwah.com/" />
+    <meta property="og:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Thinktype instrument and the headline: measure the speed of a thought." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Thinktype — measure the speed of a thought" />
+    <meta
+      name="twitter:description"
+      content="Two clocks for original composition in ChatGPT: think WPM and flow WPM. Printed as a receipt. Local-only."
+    />
+    <meta name="twitter:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Thinktype",
+        "applicationCategory": "ProductivityApplication",
+        "applicationSubCategory": "Writing",
+        "operatingSystem": "Chrome",
+        "softwareVersion": "0.2.0",
+        "description": "A local-only Chrome extension that measures how fast you turn a thought into text in ChatGPT. Think WPM, flow WPM and a printed receipt.",
+        "url": "https://thinktype.loftwah.com/",
+        "downloadUrl": "https://github.com/loftwah/thinktype/releases/latest",
+        "codeRepository": "https://github.com/loftwah/thinktype",
+        "privacyPolicy": "https://thinktype.loftwah.com/privacy",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "Think WPM and flow WPM",
+          "Local-only storage",
+          "Share cards in landscape, square and story formats",
+          "No account, server or analytics"
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">SKIP TO CONTENT</a>
+    <div class="top-rule" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="/" aria-label="Thinktype home">
+          <svg viewBox="0 0 40 40" aria-hidden="true">
+            <g fill="#ff4d00">
+              <rect x="0" y="0" width="6" height="6" /><rect x="8" y="0" width="6" height="6" />
+              <rect x="16" y="0" width="6" height="6" /><rect x="24" y="0" width="6" height="6" />
+              <rect x="32" y="0" width="6" height="6" /><rect x="16" y="8" width="6" height="6" />
+              <rect x="16" y="16" width="6" height="6" /><rect x="16" y="24" width="6" height="6" />
+            </g>
+          </svg>
+          <span class="wordmark">THINKTYPE</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="#how">How it works</a>
+          <a href="/metrics">The method</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/changelog">Changelog</a>
+        </nav>
+        <div class="header-actions">
+          <a class="button ghost" href="https://github.com/loftwah/thinktype">GitHub ↗</a>
+          <a class="button" href="https://github.com/loftwah/thinktype/releases/latest"
+            >Get the extension <span class="arrow">↓</span></a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="wrap hero" aria-labelledby="hero-title">
+        <div class="hero-grid">
+          <div>
+            <h1 id="hero-title">Measure the speed of a thought.</h1>
+            <p class="lede">
+              Thinktype times how fast you turn a thought into text inside ChatGPT. Two clocks —
+              think WPM and flow WPM — printed as a receipt. Every number stays on your machine.
+            </p>
+            <div class="status-line">
+              <span class="dot" aria-hidden="true"></span>
+              <span>CHROME MV3</span>
+              <span>v0.2.0</span>
+              <span>EARLY BUILD</span>
+              <span>LOCAL ONLY</span>
+            </div>
+            <div class="actions">
+              <a class="button" href="https://github.com/loftwah/thinktype/releases/latest"
+                >Download the extension <span class="arrow">↓</span></a
+              >
+              <a class="button ghost" href="/metrics">Read the method <span class="arrow">→</span></a>
+            </div>
+          </div>
+          <div class="hero-art">
+            <div class="stage">
+              <picture>
+                <source
+                  srcset="/assets/hud-typing.webp 1x, /assets/hud-typing@2x.webp 2x"
+                  type="image/webp"
+                />
+                <img
+                  src="/assets/hud-typing.png"
+                  srcset="/assets/hud-typing.png 1x, /assets/hud-typing@2x.png 2x"
+                  sizes="300px"
+                  width="300"
+                  height="505"
+                  alt="Thinktype HUD showing 78 live WPM, think 63, flow 78, peak 96 and a personal best of 74."
+                  fetchpriority="high"
+                />
+              </picture>
+              <div class="stage-caption"><span class="live">LIVE FLOW</span><span>SAMPLE / 78 WPM</span></div>
+            </div>
+            <p class="hero-note">Sample reading. Your numbers will differ. Nothing here is a benchmark.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="wrap section" aria-labelledby="model-title">
+        <div class="section-head">
+          <span class="margin-label">The model</span>
+          <div>
+            <h2 id="model-title">Two numbers, one finished thought.</h2>
+            <p class="intro">
+              A typing test measures transcription: the sentence already exists. Thinktype has no
+              target text, so it measures the composition — and keeps the pause in the reading.
+            </p>
+          </div>
+        </div>
+        <div class="clocks">
+          <div class="clocks-head">
+            <span>THE TWO CLOCKS</span>
+            <span class="sample">SAMPLE READING</span>
+          </div>
+          <div class="clock-grid">
+            <div class="clock">
+              <div class="value">62 <span>WPM</span></div>
+              <span class="name">THINK WPM</span>
+              <p class="desc">
+                The whole message, from the first keystroke to send. Every re-read and every “what
+                am I actually trying to say” is included.
+              </p>
+            </div>
+            <div class="clock flow">
+              <div class="value">78 <span>WPM</span></div>
+              <span class="name">FLOW WPM</span>
+              <p class="desc">
+                Your hands-only cadence. Long gaps are clamped, not erased: a pause still costs
+                something without swallowing the session.
+              </p>
+            </div>
+          </div>
+          <div class="clocks-foot">THE GAP IS THE READING. <span>21% THINKING OVERHEAD</span></div>
+        </div>
+      </section>
+
+      <section class="wrap section" id="how" aria-labelledby="how-title">
+        <div class="section-head">
+          <span class="margin-label">Procedure</span>
+          <div>
+            <h2 id="how-title">Install it, write something real, send it.</h2>
+            <p class="intro">
+              There is no test paragraph and no target sentence. The first honest baseline is your
+              own next prompt.
+            </p>
+          </div>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <span class="n">01 / INSTALL</span>
+            <h3>Load the unpacked extension.</h3>
+            <p>
+              Download the latest release, unzip it, and load the folder from
+              <code>chrome://extensions</code>. No account, no server.
+            </p>
+          </div>
+          <div class="step">
+            <span class="n">02 / TYPE</span>
+            <h3>Write in the ChatGPT composer.</h3>
+            <p>
+              The HUD docks in the empty gutter beside the conversation. It shows the live reading,
+              the cadence meter and your baseline.
+            </p>
+          </div>
+          <div class="step">
+            <span class="n">03 / SEND</span>
+            <h3>Print the receipt.</h3>
+            <p>
+              The sent prompt becomes a paper receipt: think, flow, peak, words, time and signal.
+              Copy or download it in three social formats.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="wrap section" aria-labelledby="receipt-title">
+        <div class="section-head">
+          <span class="margin-label">Artifact</span>
+          <div>
+            <h2 id="receipt-title">The receipt is the share card.</h2>
+            <p class="intro">
+              A completed prompt is printed, not graded. The card carries the serial, the barcode,
+              the cadence bars and the baseline — and it is drawn on your machine.
+            </p>
+          </div>
+        </div>
+        <div class="formats">
+          <div class="format landscape">
+            <img
+              src="/assets/cards/landscape.png"
+              width="1200"
+              height="630"
+              loading="lazy"
+              alt="Landscape share receipt: 62 think WPM, 78 flow WPM, 96 peak, 74 best and 68 average."
+            />
+            <div class="caption"><b>OG / LANDSCAPE</b><span>1200 × 630</span></div>
+          </div>
+          <div class="format square">
+            <img
+              src="/assets/cards/square.png"
+              width="1080"
+              height="1080"
+              loading="lazy"
+              alt="Square share receipt with the same sample reading and a full-width cadence chart."
+            />
+            <div class="caption"><b>SQUARE</b><span>1080 × 1080</span></div>
+          </div>
+          <div class="format story">
+            <img
+              src="/assets/cards/story.png"
+              width="1080"
+              height="1920"
+              loading="lazy"
+              alt="Story share receipt with the sample reading, a black instrument block and the baseline."
+            />
+            <div class="caption"><b>STORY</b><span>1080 × 1920</span></div>
+          </div>
+        </div>
+        <p class="formats-note">
+          SAMPLE CARDS. Each format is laid out separately, not stretched. The serial is derived
+          from the session id; the barcode is decorative, not a tracking code.
+        </p>
+      </section>
+
+      <section class="wrap section" aria-labelledby="privacy-title">
+        <div class="section-head">
+          <span class="margin-label">Privacy</span>
+          <div>
+            <h2 id="privacy-title">Local by construction.</h2>
+            <p class="intro">
+              The extension has no server to send anything to. It asks Chrome for two permissions
+              and only touches the ChatGPT composer.
+            </p>
+          </div>
+        </div>
+        <div class="privacy-grid">
+          <div class="privacy-panel">
+            <h3>WHAT LEAVES THIS MACHINE</h3>
+            <ul>
+              <li><b>NO SERVER</b>No account, no sync, no backend to secure.</li>
+              <li><b>NO ANALYTICS</b>No telemetry, no remote logging, no third-party scripts.</li>
+              <li><b>TEXT OPT-IN</b>Prompt text is not stored unless you explicitly enable it.</li>
+              <li><b>YOUR EXPORT</b>Metrics live in Chrome's local extension storage; you can export or clear them.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="spec-table">
+              <div class="spec-row"><span>PROMPT TEXT</span><b>NOT STORED BY DEFAULT</b></div>
+              <div class="spec-row"><span>METRICS</span><b>CHROME.STORAGE.LOCAL</b></div>
+              <div class="spec-row"><span>NETWORK CALLS</span><b class="orange">NONE</b></div>
+              <div class="spec-row"><span>PERMISSIONS</span><b>STORAGE / CLIPBOARDWRITE</b></div>
+              <div class="spec-row"><span>HOSTS</span><b>CHATGPT.COM / CHAT.OPENAI.COM</b></div>
+              <div class="spec-row"><span>EXPORT</span><b>JSON, ON DEMAND</b></div>
+            </div>
+            <p class="formats-note">
+              Read the full <a href="/privacy">privacy policy</a> or the
+              <a href="https://github.com/loftwah/thinktype/blob/main/docs/METRICS.md">measurement notes</a>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="wrap section" aria-labelledby="install-title">
+        <div class="section-head">
+          <span class="margin-label">Install</span>
+          <div>
+            <h2 id="install-title">An early build, measured honestly.</h2>
+            <p class="intro">
+              v0.2.0 is an early build. Load it unpacked from the release zip; the Chrome Web Store
+              listing is being prepared. There are no testimonials or benchmarks on this page
+              because there are no users to quote yet.
+            </p>
+          </div>
+        </div>
+        <div class="install">
+          <div>
+            <h3>Chrome MV3. WXT. TypeScript. Canvas.</h3>
+            <p>
+              The HUD, the receipt and all three card formats are drawn locally. The extension has
+              no network code and no new permissions.
+            </p>
+          </div>
+          <div class="actions">
+            <a class="button" href="https://github.com/loftwah/thinktype/releases/latest"
+              >Download v0.2.0 <span class="arrow">↓</span></a
+            >
+            <a class="button ghost" href="/changelog">Changelog <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <p class="install-note">
+          Requires Chrome 116 or newer. Source: github.com/loftwah/thinktype. MIT licensed. Geist is
+          bundled under the SIL Open Font License.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <span class="wordmark">THINKTYPE</span>
+            <p>
+              A typing instrument for thoughts. Measure the composition, not the transcription.
+              Local-only by construction.
+            </p>
+          </div>
+          <nav class="footer-nav" aria-label="Footer">
+            <a href="/metrics">The method</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/changelog">Changelog</a>
+            <a href="https://github.com/loftwah/thinktype">GitHub</a>
+            <a href="https://github.com/loftwah/thinktype/issues">Issues</a>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <span>THINKTYPE.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.2.0</span></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

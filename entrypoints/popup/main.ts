@@ -9,16 +9,21 @@ import {
   formatWords,
   pluralize,
 } from '../../shared/format';
-import { aggregate, dailyBuckets, dayKey } from '../../shared/metrics';
+import { aggregate, dailyBuckets, dayKey, emptyHistory, idleReadout } from '../../shared/metrics';
 import {
+  CARD_FORMATS,
+  cardBlob,
+  cardFileName,
   cardSummary,
   copyCardImage,
   downloadCard,
   ensureCardFonts,
   renderCard,
+  type CardContext,
+  type CardFormat,
 } from '../../shared/share-card';
-import { loadSessions } from '../../shared/storage';
-import type { SessionRecord } from '../../shared/types';
+import { loadHistory, loadSessions } from '../../shared/storage';
+import type { HistorySummary, SessionRecord } from '../../shared/types';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
   const el = document.getElementById(id);
@@ -27,7 +32,10 @@ const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
 };
 
 let sessions: SessionRecord[] = [];
+let history: HistorySummary = emptyHistory();
 let selectedId: string | null = null;
+let selectedFormat: CardFormat = 'landscape';
+let detailToken = 0;
 let toastTimer: number | null = null;
 
 function escapeHtml(value: string): string {
@@ -45,10 +53,13 @@ function pluralSessions(count: number): string {
 function renderMain(): void {
   const today = sessions.filter((session) => dayKey(session.startedAt) === dayKey(Date.now()));
   const stats = aggregate(today);
+  const drafts = today.filter((session) => session.resumed).length;
 
   $('today-think').textContent = stats.sessions ? formatWpm(stats.thinkWpm) : '—';
   $('today-flow').textContent = stats.sessions ? formatWpm(stats.flowWpm) : '—';
-  $('today-count').textContent = today.length ? pluralSessions(today.length) : 'NO SESSIONS';
+  $('today-count').textContent = stats.sessions
+    ? `${pluralSessions(stats.sessions)}${drafts ? ` / ${drafts} DRAFT` : ''}`
+    : 'NO SESSIONS';
 
   $('today-summary').textContent = stats.sessions
     ? `${formatWords(stats.words)} words / ${formatDuration(stats.activeMs)} hands-on${
@@ -56,8 +67,19 @@ function renderMain(): void {
       }`
     : 'No readings yet today. Open ChatGPT and write something you actually care about.';
 
+  renderBaseline();
   renderChart();
   renderSessions();
+}
+
+function renderBaseline(): void {
+  const idle = idleReadout(history);
+  $('base-last').textContent = idle.last ? formatWpm(idle.last) : '—';
+  $('base-best').textContent = idle.best ? formatWpm(idle.best) : '—';
+  $('base-avg').textContent = idle.avg ? formatWpm(idle.avg) : '—';
+  $('baseline-count').textContent = history.totals.recorded
+    ? `${history.totals.recorded} READINGS / ${history.totals.drafts} DRAFTS`
+    : 'NO READINGS';
 }
 
 function renderChart(): void {
@@ -106,12 +128,12 @@ function renderSessions(): void {
 
   list.innerHTML = recent
     .map((session) => {
-      const badge =
-        session.pasteRatio >= 0.5
-          ? '<span class="badge">PASTED</span>'
-          : session.resumed
-            ? '<span class="badge">DRAFT</span>'
-            : '';
+      const badges: string[] = [];
+      if (session.resumed) badges.push('<span class="badge">DRAFT</span>');
+      if (session.pasteRatio >= 0.5) badges.push('<span class="badge">PASTED</span>');
+      if (session.ime) badges.push('<span class="badge">IME</span>');
+      if (session.id === history.best.sessionId) badges.push('<span class="badge">BEST</span>');
+      const badge = badges.join('');
       return `
         <li>
           <button class="row" data-id="${session.id}">
@@ -163,21 +185,37 @@ function statRows(session: SessionRecord): Array<[string, string]> {
 
 function detailNote(session: SessionRecord): string {
   if (session.resumed) {
-    return 'This reading resumed a draft that was already in the composer. WPM counts the characters typed after tracking began.';
+    return 'This reading resumed a draft that was already in the composer. It is kept as a draft and excluded from your best and averages.';
   }
   if (session.pasteRatio >= 0.5) {
-    return 'Most of this message was pasted. It is saved for completeness but excluded from your averages.';
+    return 'Most of this message was pasted. Paste-dominated runs are not recorded as normal readings.';
+  }
+  if (session.ime) {
+    return session.confidence >= 0.85
+      ? 'This reading used an input method. The signal was strong enough to count, but treat the hands-on cadence as approximate.'
+      : 'This reading used an input method. It counts toward your averages but is excluded from your best.';
   }
   if (session.confidence < 0.6) {
-    return 'Low signal: some text was pasted, replaced by autocorrect, or typed with an input method. Treat these numbers as approximate.';
+    return 'Low signal: some text was replaced by autocorrect or typed with an input method. Treat these numbers as approximate.';
   }
   return 'Measured locally from keystrokes in the ChatGPT composer. Only numbers are stored — never your words.';
+}
+
+function cardContext(): CardContext {
+  return {
+    bestThinkWpm: history.best.thinkWpm,
+    bestFlowWpm: history.best.flowWpm,
+    bestPeakWpm: history.best.peakWpm,
+    avgThinkWpm: history.rolling.thinkWpm,
+    avgFlowWpm: history.rolling.flowWpm,
+  };
 }
 
 async function openDetail(id: string): Promise<void> {
   const session = sessions.find((item) => item.id === id);
   if (!session) return;
   selectedId = id;
+  selectedFormat = 'landscape';
 
   $('view-main').hidden = true;
   $('view-detail').hidden = false;
@@ -185,6 +223,7 @@ async function openDetail(id: string): Promise<void> {
   $('detail-date').textContent = formatDate(session.startedAt).toUpperCase();
   $('detail-think').textContent = formatWpm(session.wpm.think);
   $('detail-flow').textContent = formatWpm(session.wpm.flow);
+  $('detail-best').hidden = session.id !== history.best.sessionId;
 
   $('detail-stats').innerHTML = statRows(session)
     .map(
@@ -194,15 +233,53 @@ async function openDetail(id: string): Promise<void> {
     .join('');
 
   $('detail-note').textContent = detailNote(session);
+  renderFormatTabs();
   window.scrollTo({ top: 0 });
+  await renderDetailPreview();
+}
+
+function renderFormatTabs(): void {
+  document.querySelectorAll<HTMLButtonElement>('[data-format]').forEach((button) => {
+    button.setAttribute('aria-selected', String(button.dataset.format === selectedFormat));
+  });
+}
+
+async function renderDetailPreview(): Promise<void> {
+  const session = currentSession();
+  if (!session) return;
+  const token = ++detailToken;
+  const spec = CARD_FORMATS[selectedFormat];
+  $('card-file').textContent = cardFileName(session, selectedFormat);
+  $('card-size').textContent = 'RENDERING…';
 
   await ensureCardFonts();
-  if (selectedId !== id) return;
+  if (token !== detailToken) return;
+
   const preview = $('card-preview');
   preview.replaceChildren();
-  const canvas = renderCard(session);
-  canvas.setAttribute('aria-label', 'Share receipt preview');
+  const canvas = renderCard(session, selectedFormat, cardContext(), 1);
+  canvas.style.display = 'block';
+  canvas.style.width = 'auto';
+  canvas.style.height = 'auto';
+  canvas.style.maxWidth = '100%';
+  canvas.style.maxHeight = '300px';
+  canvas.setAttribute(
+    'aria-label',
+    `Share receipt preview, ${spec.width} by ${spec.height} pixels`,
+  );
   preview.appendChild(canvas);
+
+  try {
+    const blob = await cardBlob(session, selectedFormat, cardContext());
+    if (token !== detailToken) return;
+    $('card-size').textContent = `${spec.width}×${spec.height} / ${Math.max(
+      1,
+      Math.round(blob.size / 1024),
+    )} KB`;
+  } catch {
+    if (token !== detailToken) return;
+    $('card-size').textContent = `${spec.width}×${spec.height}`;
+  }
 }
 
 function showMain(): void {
@@ -249,16 +326,24 @@ function bind(): void {
     if (row?.dataset.id) void openDetail(row.dataset.id);
   });
 
+  document.querySelectorAll<HTMLButtonElement>('[data-format]').forEach((button) => {
+    button.addEventListener('click', () => {
+      selectedFormat = (button.dataset.format as CardFormat) ?? 'landscape';
+      renderFormatTabs();
+      void renderDetailPreview();
+    });
+  });
+
   $('copy-image').addEventListener('click', async () => {
     const session = currentSession();
     if (!session) return;
     const button = $('copy-image') as HTMLButtonElement;
     button.disabled = true;
     try {
-      const result = await copyCardImage(session);
-      toast(result === 'copied' ? 'RECEIPT COPIED TO CLIPBOARD' : 'RECEIPT DOWNLOADED');
+      const result = await copyCardImage(session, selectedFormat, cardContext());
+      toast(result === 'copied' ? 'CARD COPIED TO CLIPBOARD' : 'CARD DOWNLOADED');
     } catch {
-      toast('COULD NOT CREATE THE RECEIPT');
+      toast('COULD NOT CREATE THE CARD');
     } finally {
       button.disabled = false;
     }
@@ -268,10 +353,10 @@ function bind(): void {
     const session = currentSession();
     if (!session) return;
     try {
-      await downloadCard(session);
-      toast('RECEIPT DOWNLOADED');
+      await downloadCard(session, selectedFormat, cardContext());
+      toast('CARD DOWNLOADED');
     } catch {
-      toast('COULD NOT CREATE THE RECEIPT');
+      toast('COULD NOT CREATE THE CARD');
     }
   });
 
@@ -293,7 +378,7 @@ function bind(): void {
 }
 
 async function refresh(): Promise<void> {
-  sessions = await loadSessions();
+  [sessions, history] = await Promise.all([loadSessions(), loadHistory()]);
   if (selectedId) {
     if (sessions.some((session) => session.id === selectedId)) void openDetail(selectedId);
     else showMain();
@@ -303,7 +388,7 @@ async function refresh(): Promise<void> {
 }
 
 async function init(): Promise<void> {
-  sessions = await loadSessions();
+  [sessions, history] = await Promise.all([loadSessions(), loadHistory()]);
   $('version').textContent = `V${chrome.runtime.getManifest().version}`;
   bind();
   renderMain();

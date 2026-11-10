@@ -2,12 +2,18 @@ import { describe, expect, it } from 'vitest';
 import type { RawSession, SessionRecord } from '../shared/types';
 import {
   aggregate,
+  buildHistory,
   computeStats,
   countWords,
   dailyBuckets,
   dayKey,
+  emptyHistory,
+  idleReadout,
+  isBestEligible,
   isEligible,
+  isNewBest,
   median,
+  shouldRecord,
   thinkRatio,
   wpmFrom,
 } from '../shared/metrics';
@@ -176,7 +182,7 @@ describe('aggregate', () => {
     expect(stats.consistency).toBe(80);
   });
 
-  it('uses the typed portion for resumed drafts in aggregates', () => {
+  it('excludes resumed drafts from best and averages', () => {
     const resumed = record({
       chars: 150,
       insertedChars: 50,
@@ -186,8 +192,31 @@ describe('aggregate', () => {
       words: 25,
       wpm: { think: 20, flow: 10, peak: 20 },
     });
-    const stats = aggregate([resumed]);
-    expect(stats.thinkWpm).toBeCloseTo(20, 5);
+    expect(isEligible(resumed)).toBe(false);
+    expect(aggregate([resumed]).sessions).toBe(0);
+  });
+
+  it('weights the average by characters and time, not by session mean', () => {
+    const short = record({
+      chars: 100,
+      insertedChars: 100,
+      wallMs: 60_000,
+      activeMs: 60_000,
+      words: 20,
+      wpm: { think: 20, flow: 20, peak: 30 },
+    });
+    const long = record({
+      chars: 300,
+      insertedChars: 300,
+      wallMs: 120_000,
+      activeMs: 120_000,
+      words: 60,
+      wpm: { think: 50, flow: 50, peak: 70 },
+    });
+    const stats = aggregate([short, long]);
+    // (100 + 300) chars / 5 / 3 minutes = 26.67, not (20 + 50) / 2 = 35.
+    expect(stats.thinkWpm).toBeCloseTo(26.666, 2);
+    expect(stats.flowWpm).toBeCloseTo(26.666, 2);
   });
 
   it('returns zeros with no sessions', () => {
@@ -200,6 +229,131 @@ describe('aggregate', () => {
       flowWpm: 0,
       consistency: 0,
     });
+  });
+});
+
+describe('record gates and eligibility', () => {
+  const gate = {
+    wallMs: 10_000,
+    chars: 40,
+    words: 8,
+    confidence: 0.9,
+    pasteRatio: 0,
+    minChars: 20,
+  };
+
+  it('records a normal sent prompt', () => {
+    expect(shouldRecord(gate)).toBe(true);
+  });
+
+  it('rejects tiny, quick, pasted and low-signal runs', () => {
+    expect(shouldRecord({ ...gate, wallMs: 2000 })).toBe(false);
+    expect(shouldRecord({ ...gate, chars: 10 })).toBe(false);
+    expect(shouldRecord({ ...gate, chars: 10, minChars: 0 })).toBe(false);
+    expect(shouldRecord({ ...gate, pasteRatio: 0.6 })).toBe(false);
+    expect(shouldRecord({ ...gate, confidence: 0.4 })).toBe(false);
+    expect(shouldRecord({ ...gate, words: 0 })).toBe(false);
+  });
+
+  it('excludes drafts, paste-dominated runs and weak signal from averages', () => {
+    expect(isEligible(record())).toBe(true);
+    expect(isEligible(record({ resumed: true }))).toBe(false);
+    expect(isEligible(record({ pasteRatio: 0.6 }))).toBe(false);
+    expect(isEligible(record({ confidence: 0.4 }))).toBe(false);
+    expect(isEligible(record({ wallMs: 2000 }))).toBe(false);
+  });
+
+  it('allows an IME average only above the signal floor, and a best only above the high bar', () => {
+    const approximate = record({ ime: true, confidence: 0.75 });
+    expect(isEligible(approximate)).toBe(true);
+    expect(isBestEligible(approximate)).toBe(false);
+    expect(isBestEligible(record({ ime: true, confidence: 0.9 }))).toBe(true);
+  });
+});
+
+describe('history', () => {
+  function session(
+    overrides: Partial<SessionRecord> & { think: number; at: number },
+  ): SessionRecord {
+    const { think, at, ...rest } = overrides;
+    return record({
+      startedAt: at,
+      endedAt: at + 60_000,
+      chars: 100,
+      insertedChars: 100,
+      wallMs: 60_000,
+      activeMs: 60_000,
+      words: 20,
+      consistency: 80,
+      confidence: 0.94,
+      pasteRatio: 0,
+      resumed: false,
+      ime: false,
+      wpm: { think, flow: think + 10, peak: think + 20 },
+      ...rest,
+    });
+  }
+
+  it('never lowers a best when a slower run is appended', () => {
+    const fast = session({ id: 'fast', think: 70, at: 1_000 });
+    const slow = session({ id: 'slow', think: 40, at: 2_000 });
+    const history = buildHistory([slow, fast]);
+    expect(history.best.thinkWpm).toBe(70);
+    expect(history.best.sessionId).toBe('fast');
+  });
+
+  it('keeps a previous best even when its session is no longer retained', () => {
+    const previous = buildHistory([session({ id: 'old', think: 90, at: 1_000 })]);
+    const current = buildHistory([session({ id: 'new', think: 40, at: 2_000 })], previous);
+    expect(current.best.thinkWpm).toBe(90);
+    expect(current.best.sessionId).toBe('old');
+  });
+
+  it('keeps the last eligible run when a newer draft was recorded', () => {
+    const normal = session({ id: 'run', think: 60, at: 1_000 });
+    const draft = session({ id: 'draft', think: 80, at: 2_000, resumed: true });
+    const history = buildHistory([draft, normal]);
+    expect(history.last?.id).toBe('run');
+    expect(history.totals.recorded).toBe(2);
+    expect(history.totals.drafts).toBe(1);
+  });
+
+  it('uses a weighted rolling window for the last 20 eligible runs', () => {
+    const sessions = Array.from({ length: 25 }, (_, index) =>
+      session({
+        id: `s${index}`,
+        think: 20 + index,
+        at: index * 1000,
+        chars: 100 + index * 10,
+        wallMs: 60_000,
+      }),
+    );
+    const history = buildHistory(sessions);
+    expect(history.rolling.sessions).toBe(20);
+    expect(history.allTime.sessions).toBe(25);
+    // The last 20 sessions are s5..s24, with 150..340 chars.
+    const chars = sessions.slice(5).reduce((sum, item) => sum + item.chars, 0);
+    const wall = sessions.slice(5).reduce((sum, item) => sum + item.wallMs, 0);
+    expect(history.rolling.thinkWpm).toBeCloseTo(wpmFrom(chars, wall), 5);
+  });
+
+  it('marks a new best only for an eligible, higher run', () => {
+    const previous = buildHistory([session({ id: 'best', think: 90, at: 1_000 })]).best;
+    expect(isNewBest(session({ id: 'lower', think: 80, at: 2_000 }), previous)).toBe(false);
+    expect(isNewBest(session({ id: 'higher', think: 95, at: 2_000 }), previous)).toBe(true);
+    expect(isNewBest(session({ id: 'draft', think: 99, at: 2_000, resumed: true }), previous)).toBe(
+      false,
+    );
+    expect(isNewBest(session({ id: 'ime', think: 99, at: 2_000, ime: true, confidence: 0.75 }), previous)).toBe(
+      false,
+    );
+  });
+
+  it('shows dashes rather than zero when there is no history', () => {
+    expect(idleReadout(emptyHistory())).toEqual({ last: null, best: null, avg: null });
+    const history = buildHistory([session({ id: 'one', think: 63, at: 1_000 })]);
+    // The summary average is weighted from 100 chars / 60s, not copied from wpm.think.
+    expect(idleReadout(history)).toEqual({ last: 63, best: 63, avg: 20 });
   });
 });
 

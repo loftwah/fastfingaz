@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thinktype — instrument gallery</title>
+    <link rel="stylesheet" href="/fonts.css" />
+    <style>
+      :root {
+        --stage: #212121;
+        --stage-deep: #181818;
+        --stage-line: #303030;
+        --stage-text: #ececec;
+        --stage-muted: #9b9b9b;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        background: var(--stage);
+        color: var(--stage-text);
+        font-family:
+          'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .stage {
+        position: fixed;
+        inset: 0;
+      }
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 340px;
+        padding: 22px 16px;
+        border-right: 1px solid var(--stage-line);
+        background: var(--stage-deep);
+      }
+      .sidebar.hidden {
+        display: none;
+      }
+      .side-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .side-mark {
+        width: 18px;
+        height: 18px;
+        border: 1px solid var(--stage-muted);
+        border-radius: 50%;
+      }
+      .side-new {
+        margin-top: 22px;
+        padding: 9px 12px;
+        border: 1px solid var(--stage-line);
+        border-radius: 6px;
+        color: var(--stage-text);
+        font-size: 13px;
+      }
+      .side-list {
+        margin-top: 26px;
+        font-size: 12px;
+        line-height: 1;
+        color: var(--stage-muted);
+      }
+      .side-list div {
+        padding: 10px 8px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .side-account {
+        position: absolute;
+        left: 16px;
+        bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 11px;
+        color: var(--stage-muted);
+      }
+      .avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #ff4d00;
+      }
+      .main {
+        position: fixed;
+        left: 340px;
+        right: 0;
+        top: 0;
+        bottom: 0;
+      }
+      .sidebar.hidden ~ .main {
+        left: 0;
+      }
+      .sidebar.hidden ~ .main .composer {
+        left: 50%;
+      }
+      .thread {
+        width: 768px;
+        max-width: calc(100vw - 48px);
+        margin: 0 auto;
+        padding: 110px 0 220px;
+      }
+      .thread.wide {
+        width: 1200px;
+      }
+      .turn {
+        margin-bottom: 34px;
+      }
+      .turn.user {
+        display: flex;
+        justify-content: flex-end;
+      }
+      .bubble {
+        max-width: 560px;
+        padding: 14px 18px;
+        border-radius: 18px;
+        background: #303030;
+        font-size: 14px;
+        line-height: 1.55;
+      }
+      .answer {
+        max-width: 700px;
+        font-size: 15px;
+        line-height: 1.65;
+        color: #dedede;
+      }
+      .answer b {
+        color: #fff;
+        font-weight: 600;
+      }
+      .composer {
+        position: fixed;
+        left: calc(50% + 170px);
+        bottom: 24px;
+        width: 768px;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 52px;
+        padding: 0 10px 0 18px;
+        border: 1px solid #3a3a3a;
+        border-radius: 26px;
+        background: #303030;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+        color: var(--stage-muted);
+        font-size: 15px;
+      }
+      .composer.wide {
+        width: 1200px;
+      }
+      .composer .plus {
+        font-size: 24px;
+        font-weight: 300;
+        color: #b9b9b9;
+      }
+      .composer .placeholder {
+        flex: 1;
+      }
+      .composer .send {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border: 0;
+        border-radius: 50%;
+        background: #f2efe6;
+        color: #0b0b0a;
+        font-size: 18px;
+      }
+      .disclaimer {
+        position: fixed;
+        left: 50%;
+        bottom: 4px;
+        transform: translateX(-50%);
+        font-size: 10px;
+        color: #8b8b8b;
+      }
+      .hud-stage {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+      }
+      .page-label {
+        position: fixed;
+        left: 16px;
+        top: 12px;
+        z-index: 2;
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-size: 8px;
+        letter-spacing: 0.14em;
+        color: #7c7c7c;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-label" id="page-label">GALLERY / TYPING</div>
+    <div class="stage">
+      <aside class="sidebar" id="sidebar">
+        <div class="side-brand"><span class="side-mark"></span>ChatGPT</div>
+        <div class="side-new">+ New chat</div>
+        <div class="side-list">
+          <div>Oyster platform overview</div>
+          <div>Discuss software engineering</div>
+          <div>Icon critique writing</div>
+          <div>Required final report</div>
+          <div>Two week sitrep progress</div>
+          <div>Research em dash configuration</div>
+          <div>Estimate music video costs</div>
+          <div>Create terminator cartoon style</div>
+          <div>Bettersquirt</div>
+        </div>
+        <div class="side-account"><span class="avatar"></span>Dean Lofts</div>
+      </aside>
+      <main class="main">
+        <div class="thread" id="thread">
+          <div class="turn user">
+            <div class="bubble">Can you explain why the composer is the right place to measure composition?</div>
+          </div>
+          <div class="turn">
+            <div class="answer">
+              Because the composer is where the thought stops being private and becomes text. A typing test
+              hands you the sentence; a conversation makes you find it. The interesting number is not how
+              fast your hands can move — it is how much of the finished thought survives the pause.
+            </div>
+          </div>
+          <div class="turn user">
+            <div class="bubble">So the gap between think and flow is the product?</div>
+          </div>
+          <div class="turn">
+            <div class="answer">
+              <b>The gap is the reading.</b> Think WPM includes every re-read and every “what am I actually
+              trying to say”. Flow WPM is your hands when the words are already there. One is the finished
+              thought; the other is the instrument. Keep both.
+            </div>
+          </div>
+        </div>
+        <div class="composer" id="composer">
+          <span class="plus">+</span>
+          <span class="placeholder">Ask anything</span>
+          <span style="font-size: 11px; color: #b9b9b9">Medium</span>
+          <span style="font-size: 16px; color: #b9b9b9">◉</span>
+          <span class="send">↑</span>
+        </div>
+        <div class="disclaimer">ChatGPT can make mistakes. Check important info.</div>
+      </main>
+    </div>
+    <div class="hud-stage" id="hud-stage"></div>
+    <script type="module" src="./gallery.ts"></script>
+  </body>
+</html>

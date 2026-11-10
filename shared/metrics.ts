@@ -1,6 +1,10 @@
 import type {
   Aggregate,
   DailyBucket,
+  HistoryAverage,
+  HistoryBest,
+  HistoryLast,
+  HistorySummary,
   RawSession,
   SessionRecord,
   SessionStats,
@@ -8,6 +12,26 @@ import type {
 
 /** The standard "word" used by typing tools: five characters, spaces included. */
 export const CHARS_PER_WORD = 5;
+
+/**
+ * Recording gates. A session must clear all of these before it is written to
+ * history. The user's minimum-character setting is applied on top.
+ */
+export const MIN_RECORD_WALL_MS = 3000;
+export const MIN_RECORD_WORDS = 1;
+export const MIN_RECORD_CONFIDENCE = 0.5;
+export const MAX_PASTE_RATIO = 0.5;
+
+/** Eligibility is stricter than recording: tiny outliers never move a baseline. */
+export const MIN_ELIGIBLE_WALL_MS = 3000;
+export const MIN_ELIGIBLE_CHARS = 16;
+export const MIN_BEST_CONFIDENCE = 0.55;
+
+/** An IME run can set a best only when the observed-key signal is strong. */
+export const IME_BEST_MIN_CONFIDENCE = 0.85;
+
+/** The rolling baseline is the last 20 eligible sessions, not all of them. */
+export const ROLLING_WINDOW = 20;
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
@@ -200,8 +224,85 @@ export function computeStats(raw: RawSession, idleThresholdMs = 2000): SessionSt
   };
 }
 
+/** Should this run be written to local history at all? */
+export interface RecordGate {
+  wallMs: number;
+  chars: number;
+  words: number;
+  confidence: number;
+  pasteRatio: number;
+  /** The user's minimum message length. */
+  minChars: number;
+  minWallMs?: number;
+}
+
+export function shouldRecord(gate: RecordGate): boolean {
+  return (
+    Number.isFinite(gate.wallMs) &&
+    gate.wallMs >= (gate.minWallMs ?? MIN_RECORD_WALL_MS) &&
+    Number.isFinite(gate.chars) &&
+    gate.chars >= Math.max(0, gate.minChars) &&
+    gate.chars >= MIN_ELIGIBLE_CHARS &&
+    gate.words >= MIN_RECORD_WORDS &&
+    gate.confidence >= MIN_RECORD_CONFIDENCE &&
+    gate.pasteRatio < MAX_PASTE_RATIO
+  );
+}
+
+/**
+ * A session that can move the baseline. Resumed drafts are deliberately kept
+ * in the record but excluded here: their wall clock only measures the tail of
+ * the message, so they are not comparable with a full run.
+ */
 export function isEligible(session: SessionRecord): boolean {
-  return session.pasteRatio < 0.5 && session.words > 0;
+  return (
+    !session.resumed &&
+    session.wallMs >= MIN_ELIGIBLE_WALL_MS &&
+    session.chars >= MIN_ELIGIBLE_CHARS &&
+    session.words >= MIN_RECORD_WORDS &&
+    session.pasteRatio < MAX_PASTE_RATIO &&
+    session.confidence >= MIN_RECORD_CONFIDENCE
+  );
+}
+
+/** A best must clear the normal gate and, for IME, a much higher signal bar. */
+export function isBestEligible(session: SessionRecord): boolean {
+  if (!isEligible(session)) return false;
+  if (session.confidence < MIN_BEST_CONFIDENCE) return false;
+  if (session.ime && session.confidence < IME_BEST_MIN_CONFIDENCE) return false;
+  return true;
+}
+
+export function emptyHistoryAverage(): HistoryAverage {
+  return { sessions: 0, chars: 0, wallMs: 0, activeMs: 0, thinkWpm: 0, flowWpm: 0 };
+}
+
+export function emptyHistory(): HistorySummary {
+  return {
+    v: 1,
+    updatedAt: 0,
+    best: { thinkWpm: 0, flowWpm: 0, peakWpm: 0, sessionId: null, at: null },
+    last: null,
+    rolling: emptyHistoryAverage(),
+    allTime: emptyHistoryAverage(),
+    totals: { recorded: 0, drafts: 0 },
+  };
+}
+
+function summarize(sessions: SessionRecord[]): HistoryAverage {
+  if (!sessions.length) return emptyHistoryAverage();
+  const sum = (pick: (s: SessionRecord) => number) => sessions.reduce((a, s) => a + pick(s), 0);
+  const chars = sum((s) => s.chars);
+  const activeMs = sum((s) => s.activeMs);
+  const wallMs = sum((s) => s.wallMs);
+  return {
+    sessions: sessions.length,
+    chars,
+    wallMs,
+    activeMs,
+    thinkWpm: wpmFrom(chars, wallMs),
+    flowWpm: wpmFrom(sum((s) => s.insertedChars), activeMs),
+  };
 }
 
 export function aggregate(sessions: SessionRecord[]): Aggregate {
@@ -218,13 +319,8 @@ export function aggregate(sessions: SessionRecord[]): Aggregate {
     };
   }
 
+  const average = summarize(eligible);
   const sum = (pick: (s: SessionRecord) => number) => eligible.reduce((a, s) => a + pick(s), 0);
-  const chars = sum((s) => s.chars);
-  const thinkChars = sum((s) => (s.resumed ? s.insertedChars : s.chars));
-  const inserted = sum((s) => s.insertedChars);
-  const wall = sum((s) => s.wallMs);
-  const active = sum((s) => s.activeMs);
-
   const withConsistency = eligible.filter((s) => s.consistency > 0);
   const consistency = withConsistency.length
     ? withConsistency.reduce((a, s) => a + s.consistency, 0) / withConsistency.length
@@ -233,12 +329,102 @@ export function aggregate(sessions: SessionRecord[]): Aggregate {
   return {
     sessions: eligible.length,
     words: sum((s) => s.words),
-    chars,
-    activeMs: active,
-    thinkWpm: wpmFrom(thinkChars, wall),
-    flowWpm: wpmFrom(inserted, active),
+    chars: average.chars,
+    activeMs: average.activeMs,
+    thinkWpm: average.thinkWpm,
+    flowWpm: average.flowWpm,
     consistency: Math.round(consistency * 10) / 10,
   };
+}
+
+function lastFrom(session: SessionRecord): HistoryLast {
+  return {
+    id: session.id,
+    thinkWpm: session.wpm.think,
+    flowWpm: session.wpm.flow,
+    peakWpm: session.wpm.peak,
+    words: session.words,
+    wallMs: session.wallMs,
+    confidence: session.confidence,
+    consistency: session.consistency,
+    startedAt: session.startedAt,
+    endedAt: session.endedAt,
+  };
+}
+
+/**
+ * Derive the durable baseline. When `previous` is supplied, its best values
+ * are merged by maximum, so trimming an old session out of the retained list
+ * can never lower a personal best.
+ */
+export function buildHistory(
+  sessions: SessionRecord[],
+  previous: HistorySummary = emptyHistory(),
+): HistorySummary {
+  const ordered = [...sessions].sort((a, b) => b.endedAt - a.endedAt);
+  const eligible = ordered.filter(isEligible);
+  const bestEligible = eligible.filter(isBestEligible);
+
+  const bestSession = bestEligible.reduce<SessionRecord | null>(
+    (best, session) => (!best || session.wpm.think > best.wpm.think ? session : best),
+    null,
+  );
+  const previousBest = previous.best;
+  const computedBest: HistoryBest = {
+    thinkWpm: bestSession?.wpm.think ?? 0,
+    flowWpm: bestEligible.reduce((max, session) => Math.max(max, session.wpm.flow), 0),
+    peakWpm: bestEligible.reduce((max, session) => Math.max(max, session.wpm.peak), 0),
+    sessionId: bestSession?.id ?? null,
+    at: bestSession?.startedAt ?? null,
+  };
+
+  const best: HistoryBest =
+    computedBest.thinkWpm >= previousBest.thinkWpm
+      ? {
+          ...computedBest,
+          flowWpm: Math.max(computedBest.flowWpm, previousBest.flowWpm),
+          peakWpm: Math.max(computedBest.peakWpm, previousBest.peakWpm),
+        }
+      : {
+          ...previousBest,
+          flowWpm: Math.max(computedBest.flowWpm, previousBest.flowWpm),
+          peakWpm: Math.max(computedBest.peakWpm, previousBest.peakWpm),
+        };
+
+  return {
+    v: 1,
+    updatedAt: Date.now(),
+    best,
+    last: eligible.length ? lastFrom(eligible[0]!) : null,
+    rolling: summarize(eligible.slice(0, ROLLING_WINDOW)),
+    allTime: summarize(eligible),
+    totals: {
+      recorded: ordered.length,
+      drafts: ordered.filter((session) => session.resumed).length,
+    },
+  };
+}
+
+export interface IdleReadout {
+  last: number | null;
+  best: number | null;
+  avg: number | null;
+}
+
+/** Null means "no reading yet" and renders as a dash, never as zero. */
+export function idleReadout(history: HistorySummary): IdleReadout {
+  return {
+    last: history.last && history.last.thinkWpm > 0 ? history.last.thinkWpm : null,
+    best: history.best.thinkWpm > 0 ? history.best.thinkWpm : null,
+    avg: history.rolling.sessions > 0 && history.rolling.thinkWpm > 0
+      ? history.rolling.thinkWpm
+      : null,
+  };
+}
+
+/** A new best is only possible for a best-eligible run that beats the old one. */
+export function isNewBest(session: SessionRecord, previousBest: HistoryBest): boolean {
+  return isBestEligible(session) && session.wpm.think > previousBest.thinkWpm;
 }
 
 export function dayKey(timestamp: number): string {

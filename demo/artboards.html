@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thinktype — marketing artboards</title>
+    <link rel="stylesheet" href="/fonts.css" />
+    <style>
+      :root {
+        --paper: #f2efe6;
+        --paper-deep: #e8e3d7;
+        --ink: #0b0b0a;
+        --muted: #6d675c;
+        --line: #d5cfc1;
+        --line-strong: #bdb6a7;
+        --orange: #ff4d00;
+        --orange-ink: #b83600;
+        --orange-display: #e84a00;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family:
+          'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+      .board {
+        display: none;
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      body[data-board='og'] .board-og,
+      body[data-board='x'] .board-x,
+      body[data-board='github'] .board-github,
+      body[data-board='instagram'] .board-instagram,
+      body[data-board='story'] .board-story,
+      body[data-board='promo'] .board-promo {
+        display: block;
+      }
+      .board > * {
+        position: relative;
+        z-index: 1;
+      }
+      .inner-border {
+        position: absolute;
+        inset: 20px;
+        z-index: 2;
+        border: 1px solid var(--line);
+        pointer-events: none;
+      }
+      .rail {
+        position: absolute;
+        left: 64px;
+        right: 64px;
+        top: 44px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .tmark {
+        display: block;
+        width: 34px;
+        height: 34px;
+      }
+      .wordmark {
+        font-family: 'Geist Pixel', 'Geist Mono', ui-monospace, monospace;
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.02em;
+      }
+      .rail-serial {
+        margin-left: auto;
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+      }
+      .rule {
+        position: absolute;
+        left: 64px;
+        right: 64px;
+        top: 112px;
+        height: 6px;
+        background: var(--orange);
+      }
+      .copy {
+        position: absolute;
+        left: 64px;
+        top: 158px;
+        width: 620px;
+      }
+      .headline {
+        margin: 0;
+        font-size: 64px;
+        font-weight: 600;
+        line-height: 1.02;
+        letter-spacing: -0.035em;
+      }
+      .sub {
+        margin: 22px 0 0;
+        max-width: 555px;
+        font-size: 18px;
+        line-height: 1.55;
+        color: var(--muted);
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 26px;
+        padding: 9px 12px;
+        background: var(--ink);
+        color: var(--paper);
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-size: 9px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .chip b {
+        color: var(--orange);
+        font-weight: 500;
+      }
+      .domain {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+      }
+      .domain::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: var(--orange);
+      }
+      .foot {
+        position: absolute;
+        left: 64px;
+        right: 64px;
+        bottom: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding-top: 10px;
+        border-top: 1px solid var(--line);
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-size: 8px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+      }
+      .hud-img {
+        position: absolute;
+        width: 300px;
+        height: auto;
+      }
+      .card-img {
+        position: absolute;
+        height: auto;
+        border: 1px solid var(--line-strong);
+      }
+      .sample {
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-size: 7px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        color: var(--orange-ink);
+      }
+      .spec-row {
+        position: absolute;
+        left: 64px;
+        display: flex;
+        gap: 34px;
+      }
+      .spec {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .spec b {
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-size: 34px;
+        font-weight: 500;
+        line-height: 0.9;
+        letter-spacing: -0.04em;
+        font-variant-numeric: tabular-nums;
+      }
+      .spec span {
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-size: 8px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+      }
+
+      /* OG / 1200 × 630 ---------------------------------------------------- */
+      .board-og .rail-serial,
+      .board-x .rail-serial,
+      .board-github .rail-serial {
+        display: none;
+      }
+      .board-og .rule,
+      .board-x .rule,
+      .board-github .rule {
+        right: 420px;
+      }
+      .board-og .hud-img {
+        right: 80px;
+        top: 58px;
+      }
+      .board-og .sample {
+        position: absolute;
+        right: 80px;
+        top: 574px;
+      }
+      .board-og .domain {
+        position: absolute;
+        left: 64px;
+        bottom: 64px;
+      }
+
+      /* X / 1200 × 675 ----------------------------------------------------- */
+      .board-x .hud-img {
+        right: 80px;
+        top: 72px;
+      }
+      .board-x .copy {
+        top: 168px;
+      }
+      .board-x .headline {
+        font-size: 66px;
+      }
+      .board-x .spec-row {
+        bottom: 142px;
+      }
+      .board-x .domain {
+        position: absolute;
+        left: 64px;
+        bottom: 66px;
+      }
+      .board-x .sample {
+        position: absolute;
+        right: 80px;
+        top: 588px;
+      }
+
+      /* GitHub / 1280 × 640 ------------------------------------------------ */
+      .board-github .rail,
+      .board-github .rule,
+      .board-github .foot {
+        left: 64px;
+        right: 64px;
+      }
+      .board-github .copy {
+        width: 700px;
+      }
+      .board-github .headline {
+        font-size: 68px;
+      }
+      .board-github .hud-img {
+        right: 80px;
+        top: 62px;
+      }
+      .board.board-github .rule {
+        right: 420px;
+      }
+      .board-github .spec-row {
+        bottom: 132px;
+      }
+      .board-github .domain {
+        position: absolute;
+        left: 64px;
+        bottom: 60px;
+      }
+      .board-github .sample {
+        position: absolute;
+        right: 80px;
+        top: 580px;
+      }
+
+      /* Instagram / 1080 × 1080 -------------------------------------------- */
+      .board-instagram .rail {
+        left: 64px;
+        right: 64px;
+        top: 60px;
+      }
+      .board-instagram .rule {
+        left: 64px;
+        right: 64px;
+        top: 124px;
+        height: 7px;
+      }
+      .board-instagram .copy {
+        left: 64px;
+        top: 190px;
+        width: 620px;
+      }
+      .board-instagram .headline {
+        font-size: 86px;
+      }
+      .board-instagram .sub {
+        max-width: 570px;
+        font-size: 19px;
+      }
+      .board-instagram .hud-img {
+        right: 64px;
+        top: 402px;
+      }
+      .board-instagram .quote {
+        position: absolute;
+        left: 64px;
+        top: 770px;
+        width: 560px;
+        font-size: 19px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      .board-instagram .quote b {
+        color: var(--ink);
+        font-weight: 500;
+      }
+      .board-instagram .sample {
+        position: absolute;
+        right: 64px;
+        top: 918px;
+      }
+      .board-instagram .foot {
+        left: 64px;
+        right: 64px;
+        bottom: 38px;
+      }
+
+      /* Story / 1080 × 1920 ------------------------------------------------ */
+      .board-story .rail {
+        left: 84px;
+        right: 84px;
+        top: 72px;
+      }
+      .board-story .rule {
+        left: 84px;
+        right: 84px;
+        top: 146px;
+        height: 9px;
+      }
+      .board-story .copy {
+        left: 84px;
+        top: 228px;
+        width: 900px;
+      }
+      .board-story .headline {
+        font-size: 108px;
+        line-height: 0.98;
+      }
+      .board-story .sub {
+        max-width: 700px;
+        margin-top: 30px;
+        font-size: 24px;
+      }
+      .board-story .chip {
+        margin-top: 34px;
+        padding: 11px 14px;
+        font-size: 10px;
+      }
+      .board-story .hud-img {
+        left: 84px;
+        top: 790px;
+        width: 300px;
+      }
+      .board-story .reading {
+        position: absolute;
+        left: 440px;
+        top: 830px;
+        width: 520px;
+      }
+      .board-story .reading .sample {
+        display: block;
+        margin-bottom: 16px;
+      }
+      .board-story .reading .big {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-variant-numeric: tabular-nums;
+      }
+      .board-story .reading .big b {
+        font-size: 104px;
+        font-weight: 500;
+        line-height: 0.82;
+        letter-spacing: -0.04em;
+      }
+      .board-story .reading .big b.flow {
+        color: var(--orange-display);
+      }
+      .board-story .reading .big span {
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        color: var(--muted);
+      }
+      .board-story .reading p {
+        margin: 30px 0 0;
+        font-size: 20px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      .board-story .reading p b {
+        color: var(--ink);
+        font-weight: 500;
+      }
+      .board-story .card-img {
+        left: 160px;
+        top: 1340px;
+        width: 760px;
+      }
+      .board-story .domain {
+        position: absolute;
+        left: 84px;
+        bottom: 62px;
+      }
+      .board-story .sample-card {
+        position: absolute;
+        left: 160px;
+        top: 1312px;
+      }
+      .board-story .foot {
+        left: 84px;
+        right: 84px;
+        bottom: 30px;
+      }
+
+      /* Promo / 440 × 280 -------------------------------------------------- */
+      .board-promo .rail {
+        left: 24px;
+        right: 24px;
+        top: 22px;
+      }
+      .board-promo .tmark {
+        width: 22px;
+        height: 22px;
+      }
+      .board-promo .wordmark {
+        font-size: 15px;
+      }
+      .board-promo .rail-serial {
+        font-size: 7px;
+      }
+      .board-promo .rule {
+        left: 24px;
+        right: 24px;
+        top: 56px;
+        height: 4px;
+      }
+      .board-promo .headline {
+        position: absolute;
+        left: 24px;
+        top: 82px;
+        width: 250px;
+        font-size: 36px;
+        line-height: 1.02;
+      }
+      .board-promo .sub {
+        position: absolute;
+        left: 24px;
+        top: 186px;
+        width: 250px;
+        margin: 0;
+        font-size: 10px;
+        line-height: 1.5;
+      }
+      .board-promo .big {
+        position: absolute;
+        right: 24px;
+        top: 78px;
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-size: 112px;
+        font-weight: 500;
+        line-height: 0.8;
+        letter-spacing: -0.05em;
+      }
+      .board-promo .big span {
+        display: block;
+        margin-top: 8px;
+        font-size: 8px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        color: var(--muted);
+      }
+      .board-promo .domain {
+        position: absolute;
+        left: 24px;
+        bottom: 22px;
+        font-size: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="board board-og" aria-label="Open Graph artboard">
+      <div class="inner-border"></div>
+      <div class="rail">
+        <svg class="tmark" viewBox="0 0 40 40" aria-hidden="true">
+          <g fill="#ff4d00">
+            <rect x="0" y="0" width="6" height="6" /><rect x="8" y="0" width="6" height="6" />
+            <rect x="16" y="0" width="6" height="6" /><rect x="24" y="0" width="6" height="6" />
+            <rect x="32" y="0" width="6" height="6" /><rect x="16" y="8" width="6" height="6" />
+            <rect x="16" y="16" width="6" height="6" /><rect x="16" y="24" width="6" height="6" />
+          </g>
+        </svg>
+        <span class="wordmark">THINKTYPE</span>
+        <span class="rail-serial">TT-02 / OG</span>
+      </div>
+      <div class="rule"></div>
+      <div class="copy">
+        <h1 class="headline">Measure the speed<br />of a thought.</h1>
+        <p class="sub">
+          Thinktype times how fast you turn a thought into text in ChatGPT. Two clocks — think WPM
+          and flow WPM — printed as a receipt. Local-only.
+        </p>
+        <div class="chip">CHROME MV3 <b>v0.2.0</b> LOCAL ONLY</div>
+      </div>
+      <img class="hud-img" src="./art-assets/hud-typing.png" width="300" height="505" alt="" />
+      <span class="sample">SAMPLE READING / NOT A BENCHMARK</span>
+      <div class="domain">THINKTYPE.LOFTAH.COM</div>
+      <div class="foot"><span>LOCAL ONLY / NO SERVER / NO ACCOUNT</span><span>EARLY BUILD</span></div>
+    </section>
+
+    <section class="board board-x" aria-label="X artboard">
+      <div class="inner-border"></div>
+      <div class="rail">
+        <svg class="tmark" viewBox="0 0 40 40" aria-hidden="true">
+          <g fill="#ff4d00">
+            <rect x="0" y="0" width="6" height="6" /><rect x="8" y="0" width="6" height="6" />
+            <rect x="16" y="0" width="6" height="6" /><rect x="24" y="0" width="6" height="6" />
+            <rect x="32" y="0" width="6" height="6" /><rect x="16" y="8" width="6" height="6" />
+            <rect x="16" y="16" width="6" height="6" /><rect x="16" y="24" width="6" height="6" />
+          </g>
+        </svg>
+        <span class="wordmark">THINKTYPE</span>
+        <span class="rail-serial">TT-02 / X</span>
+      </div>
+      <div class="rule"></div>
+      <div class="copy">
+        <h1 class="headline">Measure the speed<br />of a thought.</h1>
+        <p class="sub">
+          Think WPM is the finished thought. Flow WPM is your hands when the words are already
+          there. The gap is the reading. No server, no account, no analytics.
+        </p>
+        <div class="chip">CHROME MV3 <b>v0.2.0</b> LOCAL ONLY</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec"><b>62</b><span>THINK WPM</span></div>
+        <div class="spec"><b>78</b><span>FLOW WPM</span></div>
+        <div class="spec"><b>94%</b><span>SIGNAL</span></div>
+      </div>
+      <img class="hud-img" src="./art-assets/hud-typing.png" width="300" height="505" alt="" />
+      <span class="sample">SAMPLE READING / NOT A BENCHMARK</span>
+      <div class="domain">THINKTYPE.LOFTAH.COM</div>
+      <div class="foot"><span>LOCAL ONLY / NO SERVER / NO ACCOUNT</span><span>EARLY BUILD</span></div>
+    </section>
+
+    <section class="board board-github" aria-label="GitHub artboard">
+      <div class="inner-border"></div>
+      <div class="rail">
+        <svg class="tmark" viewBox="0 0 40 40" aria-hidden="true">
+          <g fill="#ff4d00">
+            <rect x="0" y="0" width="6" height="6" /><rect x="8" y="0" width="6" height="6" />
+            <rect x="16" y="0" width="6" height="6" /><rect x="24" y="0" width="6" height="6" />
+            <rect x="32" y="0" width="6" height="6" /><rect x="16" y="8" width="6" height="6" />
+            <rect x="16" y="16" width="6" height="6" /><rect x="16" y="24" width="6" height="6" />
+          </g>
+        </svg>
+        <span class="wordmark">THINKTYPE</span>
+        <span class="rail-serial">TT-02 / GITHUB</span>
+      </div>
+      <div class="rule"></div>
+      <div class="copy">
+        <h1 class="headline">Measure the speed<br />of a thought.</h1>
+        <p class="sub">
+          A typing instrument for original composition in ChatGPT. Two clocks, one receipt, every
+          number local. Built with Chrome MV3, WXT and Canvas.
+        </p>
+        <div class="chip">CHROME MV3 <b>v0.2.0</b> LOCAL ONLY</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec"><b>62</b><span>THINK WPM</span></div>
+        <div class="spec"><b>78</b><span>FLOW WPM</span></div>
+        <div class="spec"><b>94%</b><span>SIGNAL</span></div>
+      </div>
+      <img class="hud-img" src="./art-assets/hud-typing.png" width="300" height="505" alt="" />
+      <span class="sample">SAMPLE READING / NOT A BENCHMARK</span>
+      <div class="domain">THINKTYPE.LOFTAH.COM</div>
+      <div class="foot"><span>LOCAL ONLY / NO SERVER / NO ACCOUNT</span><span>GITHUB.COM/LOFTWAH/THINKTYPE</span></div>
+    </section>
+
+    <section class="board board-instagram" aria-label="Instagram artboard">
+      <div class="inner-border"></div>
+      <div class="rail">
+        <svg class="tmark" viewBox="0 0 40 40" aria-hidden="true">
+          <g fill="#ff4d00">
+            <rect x="0" y="0" width="6" height="6" /><rect x="8" y="0" width="6" height="6" />
+            <rect x="16" y="0" width="6" height="6" /><rect x="24" y="0" width="6" height="6" />
+            <rect x="32" y="0" width="6" height="6" /><rect x="16" y="8" width="6" height="6" />
+            <rect x="16" y="16" width="6" height="6" /><rect x="16" y="24" width="6" height="6" />
+          </g>
+        </svg>
+        <span class="wordmark">THINKTYPE</span>
+        <span class="rail-serial">TT-02 / 1080</span>
+      </div>
+      <div class="rule"></div>
+      <div class="copy">
+        <h1 class="headline">Your thoughts,<br />measured.</h1>
+        <p class="sub">
+          A typing instrument for original composition in ChatGPT. Think WPM, flow WPM and a printed
+          receipt — no test paragraphs, no memorising.
+        </p>
+        <div class="chip">NO SERVER <b>NO ACCOUNT</b> TEXT OPT-IN</div>
+      </div>
+      <p class="quote">
+        “A pause is counted as <b>thinking</b>, not a reset.” The live number holds; the baseline
+        never regresses.
+      </p>
+      <img class="hud-img" src="./art-assets/hud-typing.png" width="300" height="505" alt="" />
+      <span class="sample">SAMPLE READING / NOT A BENCHMARK</span>
+      <div class="foot"><span>THINKTYPE.LOFTAH.COM</span><span>CHROME MV3 / EARLY BUILD</span></div>
+    </section>
+
+    <section class="board board-story" aria-label="Story artboard">
+      <div class="inner-border"></div>
+      <div class="rail">
+        <svg class="tmark" viewBox="0 0 40 40" aria-hidden="true">
+          <g fill="#ff4d00">
+            <rect x="0" y="0" width="6" height="6" /><rect x="8" y="0" width="6" height="6" />
+            <rect x="16" y="0" width="6" height="6" /><rect x="24" y="0" width="6" height="6" />
+            <rect x="32" y="0" width="6" height="6" /><rect x="16" y="8" width="6" height="6" />
+            <rect x="16" y="16" width="6" height="6" /><rect x="16" y="24" width="6" height="6" />
+          </g>
+        </svg>
+        <span class="wordmark">THINKTYPE</span>
+        <span class="rail-serial">TT-02 / STORY</span>
+      </div>
+      <div class="rule"></div>
+      <div class="copy">
+        <h1 class="headline">Measure the<br />speed of a<br />thought.</h1>
+        <p class="sub">
+          Two clocks. One receipt. Every number local. Thinktype measures the composition, not the
+          transcription.
+        </p>
+        <div class="chip">THINK <b>62</b> FLOW <b>78</b> SIGNAL <b>94%</b></div>
+      </div>
+      <img class="hud-img" src="./art-assets/hud-typing.png" width="300" height="505" alt="" />
+      <div class="reading">
+        <span class="sample">SAMPLE READING / NOT A BENCHMARK</span>
+        <div class="big">
+          <b>62</b><span>THINK WPM</span>
+          <b class="flow">78</b><span>FLOW WPM</span>
+        </div>
+        <p>
+          The gap between the two is the interesting part. <b>Pauses are counted, not erased.</b>
+        </p>
+      </div>
+      <span class="sample-card">THE RECEIPT / 1200 × 630</span>
+      <img class="card-img" src="./art-assets/card-landscape.png" width="600" height="315" alt="" />
+      <div class="domain">THINKTYPE.LOFTAH.COM</div>
+      <div class="foot"><span>LOCAL ONLY / NO SERVER / NO ACCOUNT</span><span>EARLY BUILD</span></div>
+    </section>
+
+    <section class="board board-promo" aria-label="Promo tile">
+      <div class="rail">
+        <svg class="tmark" viewBox="0 0 40 40" aria-hidden="true">
+          <g fill="#ff4d00">
+            <rect x="0" y="0" width="6" height="6" /><rect x="8" y="0" width="6" height="6" />
+            <rect x="16" y="0" width="6" height="6" /><rect x="24" y="0" width="6" height="6" />
+            <rect x="32" y="0" width="6" height="6" /><rect x="16" y="8" width="6" height="6" />
+            <rect x="16" y="16" width="6" height="6" /><rect x="16" y="24" width="6" height="6" />
+          </g>
+        </svg>
+        <span class="wordmark">THINKTYPE</span>
+        <span class="rail-serial">TT-02</span>
+      </div>
+      <div class="rule"></div>
+      <h1 class="headline">Real typing<br />speed.</h1>
+      <p class="sub">Think WPM + flow WPM, printed as a receipt inside ChatGPT. Local only.</p>
+      <div class="big">62<span>THINK WPM</span></div>
+      <div class="domain">THINKTYPE.LOFTAH.COM</div>
+    </section>
+
+    <script>
+      const board = new URLSearchParams(location.search).get('board') || 'og';
+      document.body.dataset.board = board;
+      document.documentElement.dataset.ready = 'true';
+    </script>
+  </body>
+</html>

@@ -46,6 +46,18 @@
           </p>
         </section>
 
+        <section class="baseline" aria-label="Personal baseline">
+          <div class="baseline-head">
+            <h2>BASELINE</h2>
+            <span id="baseline-count">NO READINGS</span>
+          </div>
+          <div class="baseline-grid">
+            <div><b id="base-last">—</b><span>LAST</span></div>
+            <div><b id="base-best">—</b><span>BEST</span></div>
+            <div><b id="base-avg">—</b><span>AVG / 20</span></div>
+          </div>
+        </section>
+
         <section class="block">
           <div class="block-head">
             <h2>LAST 14 DAYS</h2>
@@ -77,6 +89,7 @@
         <div class="detail-head">
           <div class="detail-meta">
             <span id="detail-serial">NO. 0000</span>
+            <span id="detail-best" class="detail-best" hidden>NEW BEST</span>
             <span id="detail-date"></span>
           </div>
           <div class="detail-nums">
@@ -84,14 +97,26 @@
             <div><b id="detail-flow">0</b><span>FLOW WPM</span></div>
           </div>
         </div>
+
+        <div class="share-tabs" role="tablist" aria-label="Card format">
+          <button data-format="landscape" aria-selected="true">OG 1200×630</button>
+          <button data-format="square" aria-selected="false">SQUARE 1080</button>
+          <button data-format="story" aria-selected="false">STORY 1080×1920</button>
+        </div>
         <div class="receipt-preview" id="card-preview"></div>
+        <div class="share-meta">
+          <span id="card-file">thinktype.png</span>
+          <span id="card-size">RENDERING…</span>
+        </div>
+
         <div class="spec" id="detail-stats"></div>
         <div class="detail-actions">
-          <button id="copy-image" class="primary">COPY RECEIPT</button>
-          <button id="download-image" class="ghost">DOWNLOAD</button>
+          <button id="copy-image" class="primary">COPY IMAGE</button>
+          <button id="download-image" class="ghost">DOWNLOAD PNG</button>
           <button id="copy-text" class="ghost">COPY TEXT</button>
         </div>
         <p class="signal" id="detail-note"></p>
+        <p class="share-note">Each format is laid out separately. Rendered on this machine; nothing is uploaded.</p>
       </main>
 
       <footer class="foot">

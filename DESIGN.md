@@ -81,20 +81,26 @@ components:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     rounded: "{rounded.hud}"
-    padding: "10px 12px 12px"
-    width: "420px"
+    padding: "10px 12px 11px"
+    width: "300px"
   hud-display:
     backgroundColor: "{colors.ink}"
     textColor: "{colors.white}"
     rounded: "{rounded.panel}"
-    padding: "12px 14px 10px"
-    width: "396px"
+    padding: "13px 14px 11px"
+    width: "276px"
+  hud-slim:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.hud}"
+    padding: "8px 8px 9px"
+    width: "142px"
   receipt:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     rounded: "{rounded.panel}"
     padding: "10px 12px 12px"
-    width: "420px"
+    width: "300px"
   device-panel:
     backgroundColor: "{colors.ink}"
     textColor: "{colors.white}"
@@ -175,8 +181,8 @@ display face.
 
 ### Hierarchy
 
-- **Display** (500, 196px on the receipt / 64px in the HUD, 0.8–0.86 line-height, −0.04em):
-  WPM numerals and receipt headlines. Always tabular.
+- **Display** (500, 196px landscape receipt / 300px square / 380px story / 80px full HUD / 60px
+  slim HUD, 0.78–0.9 line-height, −0.04em): WPM numerals and receipt headlines. Always tabular.
 - **Headline** (600, 54px, 1.03, −0.035em): the demo hero only; never inside the product chrome.
 - **Title** (500, 52px popup / 42px detail, 0.84–0.86, −0.04em): today's and session readouts.
 - **Body** (400, 14px, 1.5, 65–75ch): settings prose, hints, detail notes.
@@ -196,10 +202,14 @@ Documents use a 900px maximum measure with 32px gutters. Settings are a two-colu
 sheet: a 160px margin for the section heading and a 620px content column separated by 40px. Sections
 are divided by 1px hairlines, not cards.
 
-The popup is a 380×600 document: a black device panel for today, then a 14-day chart, then hairline
-session rows. The HUD is a fixed 420px paper instrument with a black LCD display, docked beside the
-composer (right of it when there is room, above it otherwise) and collapsible to a 60px orb. The share receipt is 1200×630 with 64px margins, a 576px cadence chart, and a right column of
-flow/peak plus a three-row spec table.
+The popup is a 380×600 document: a black device panel for today, a baseline strip, a 14-day chart,
+then hairline session rows. The HUD is a tall paper instrument with a black LCD display, anchored to
+the bottom of the viewport and docked in the empty gutter beside the conversation. It has three
+widths — 300px full, 232px medium, 142px slim — and collapses to a 60px orb. It never covers the
+composer, send button or the last message. The share sheet and receipt live inside the same paper
+housing; the receipt is a 300px print with a serial, barcode and a small NEW BEST stamp. Share cards
+are designed at 1200×630, 1080×1080 and 1080×1920, with 64–84px margins and a cadence chart scaled
+to the format.
 
 Spacing follows a 4/8/16/24/40 rhythm. More space above a heading than below it. Responsive:
 settings stack at 760px and 520px; the HUD clamps to the viewport; the popup scrolls inside its max
@@ -249,19 +259,48 @@ doing the work wrong. Radii stay under 12px except the orb.
 
 ### HUD
 
-420px paper housing around a black LCD window. Header with orange square, `THINKTYPE`, `TT-01`,
-collapse and hide. 64px mono live WPM in the LCD with `WPM` and a state label, plus timer and words.
-A 38-bar, 40px cadence meter: 55% history opacity, newest nine at full. Footer on paper with the state
-and `THINK 63 / FLOW 78`. When a draft already exists, the LCD says `DRAFT / TYPE TO MEASURE` and
-starts measuring on the next keystroke. The receipt state removes the LCD, prints down in five steps,
-and shows think/flow/words, serial, time/signal, barcode and **COPY RECEIPT**.
+A tall paper housing around a black LCD window, anchored to the bottom of the viewport. Header with
+orange square, `THINKTYPE`, `TT-02`, a dock/reset control, collapse and hide. The LCD holds an 80px
+mono live WPM (72px on medium, 60px on slim) with `WPM` and a state label, a four-cell meta row
+(TIME / WORDS / SIGNAL / STEADY), a 38-bar cadence meter and a three-cell FLOW / THINK / PEAK row.
+The paper strip below is the baseline: BEST THINK, AVG THINK / 20, BEST FLOW, AVG FLOW / 20,
+READINGS and DRAFTS. The footer carries the state and one short line.
+
+States: `LIVE FLOW` while typing; `THINKING` with the live number held; `DRAFT / TYPE TO MEASURE`
+when text already exists; `PAUSED / NOT RECORDED` after a reload; idle `LAST SESSION` with
+LAST / BEST / AVG on the instrument. A dash, never a zero, means no reading yet. The receipt state
+removes the LCD, prints down in five steps, and shows think/flow/peak, words/time/signal, best and
+average, a serial, a barcode, a small **NEW BEST** stamp and **SHARE CARD / DONE**. The share sheet
+replaces the receipt with three format tabs, a live preview, the file name and PNG size, and
+**COPY IMAGE / DOWNLOAD / BACK**.
+
+**The Gutter Rule.** The HUD lives in the empty gutter beside the conversation, never over the
+composer, send button or last message. Use the full 300px panel when the gutter allows it, the 232px
+medium panel at narrow widths, and the 142px slim strip when only a slim column fits. If there is no
+gutter on either side, it may use the sidebar area rather than cover the conversation; Reset HUD
+position returns it to the dock.
+
+**The Hold Rule.** A pause is not a reset. The live number holds in THINKING; only the cadence meter
+dims. Never snap the big number to zero while the run is alive.
+
+**The Baseline Rule.** Idle shows LAST / BEST / AVG, with dashes before the first reading. A slower
+run never overwrites a best, and a resumed draft never enters the baseline.
 
 ### Receipt and share card
 
-A paper record, never a dashboard. The share card uses a 196px think number, an orange 6px header rule,
-a black thinking-overhead block, orange cadence bars, flow/peak on the right, three spec rows, a
-barcode and a dashed footer. Paste-dominated sessions say `PASTED / LOW SIGNAL` instead of hiding
-data.
+A paper record, never a dashboard. Each social format is designed at its own dimensions:
+
+- **Landscape / OG (1200×630):** a 196px think number, orange 6px header rule, black
+  thinking-overhead chip, 576px cadence chart, right column of flow/peak, best/average and a
+  three-cell spec row, barcode and domain footer.
+- **Square (1080×1080):** a 300px think number, full-width cadence chart, three big readings
+  (flow/peak/best) and a second row of average/words/signal.
+- **Story (1080×1920):** a 380px think number, 170px cadence chart, a black instrument block for
+  flow/peak/best, a 2×3 baseline/spec grid, a pause note and the domain footer.
+
+The card carries the serial, barcode, cadence bars, best/average and the current domain. Paste-
+dominated or draft sessions say `PASTED / LOW SIGNAL` or `DRAFT RESUME` instead of hiding data. The
+receipt and every format are drawn locally on canvas; no image model touches the text.
 
 ### Popup device panel
 
@@ -277,6 +316,10 @@ summary. Everything below it is a paper document.
 - **Do** use Signal Orange for live state, data, focus and one primary action.
 - **Do** use Signal Orange Ink for small orange text on paper and Display for large numerals.
 - **Do** keep the receipt's serial, barcode and dashed perforation; they are the signature.
+- **Do** anchor the HUD to the bottom and keep it in the conversation's side gutter.
+- **Do** hold the live number during THINKING and show LAST / BEST / AVG at idle.
+- **Do** design each share format separately; the landscape, square and story are different
+  compositions, not one stretched canvas.
 - **Do** self-host Geist and preserve the OFL licence.
 
 ### Don't:
@@ -288,3 +331,6 @@ summary. Everything below it is a paper document.
 - **Don't** use cards inside cards, section numbers, eyebrow labels or emoji icons.
 - **Don't** animate everything; the receipt print and the two-step thinking blink are the only authored
   motions.
+- **Don't** dock the HUD to the top-right, cover the composer or overlay the last message.
+- **Don't** reset the live number to zero on a pause, or overwrite a personal best with a lower run.
+- **Don't** stretch a share card to a new aspect ratio; lay it out again.

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thinktype — share card formats</title>
+    <link rel="stylesheet" href="/fonts.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #212121;
+        color: #ececec;
+        font-family:
+          'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      }
+      body.single {
+        background: #f2efe6;
+      }
+      .grid {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 28px;
+        padding: 32px;
+      }
+      .card {
+        border: 1px solid #3a3a3a;
+        background: #f2efe6;
+      }
+      .label {
+        padding: 8px 10px;
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-size: 9px;
+        letter-spacing: 0.12em;
+        color: #9b9b9b;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      body.single .grid {
+        display: block;
+        padding: 0;
+      }
+      body.single .card {
+        border: 0;
+      }
+      body.single .label {
+        display: none;
+      }
+      body.single canvas {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid" id="grid"></div>
+    <script type="module" src="./cards.ts"></script>
+  </body>
+</html>

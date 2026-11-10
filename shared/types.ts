@@ -103,7 +103,7 @@ export interface DailyBucket {
 }
 
 export interface Aggregate {
-  /** Number of eligible sessions (paste-dominated runs excluded). */
+  /** Number of eligible sessions (drafts, paste-dominated and low-signal runs excluded). */
   sessions: number;
   words: number;
   chars: number;
@@ -113,6 +113,62 @@ export interface Aggregate {
   consistency: number;
 }
 
+/** A weighted average over a set of eligible sessions. */
+export interface HistoryAverage {
+  sessions: number;
+  chars: number;
+  wallMs: number;
+  activeMs: number;
+  thinkWpm: number;
+  flowWpm: number;
+}
+
+export interface HistoryBest {
+  thinkWpm: number;
+  flowWpm: number;
+  peakWpm: number;
+  /** The eligible session that set the think best, when it is known. */
+  sessionId: string | null;
+  at: number | null;
+}
+
+/** The last eligible sent prompt, small enough to live outside the session list. */
+export interface HistoryLast {
+  id: string;
+  thinkWpm: number;
+  flowWpm: number;
+  peakWpm: number;
+  words: number;
+  wallMs: number;
+  confidence: number;
+  consistency: number;
+  startedAt: number;
+  endedAt: number;
+}
+
+export interface HistoryTotals {
+  /** Every session retained in local history, including drafts. */
+  recorded: number;
+  /** Resumed-draft runs. Kept for the record, excluded from best and averages. */
+  drafts: number;
+}
+
+/**
+ * The durable baseline shown in the idle HUD and popup. It is derived from
+ * eligible sessions, so a slow run can never overwrite a personal best.
+ */
+export interface HistorySummary {
+  v: 1;
+  updatedAt: number;
+  best: HistoryBest;
+  last: HistoryLast | null;
+  /** Last 20 eligible sessions. */
+  rolling: HistoryAverage;
+  /** Every eligible session retained locally (capped at MAX_SESSIONS). */
+  allTime: HistoryAverage;
+  totals: HistoryTotals;
+}
+
 export type LiveStatus = 'idle' | 'typing' | 'thinking';
 
 export interface LiveStats {
@@ -120,10 +176,17 @@ export interface LiveStats {
   wpm: number;
   thinkWpm: number;
   flowWpm: number;
+  peakWpm: number;
+  consistency: number;
+  /** 0-1 estimate of final text attributable to observed keys. */
+  signal: number;
   words: number;
   ms: number;
+  activeMs: number;
   status: LiveStatus;
   /** A draft exists but tracking has not started yet. */
   draft: boolean;
+  /** True while a pause is being held in THINKING rather than reset. */
+  holding: boolean;
   series: number[];
 }

@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The method — how Thinktype measures typing</title>
+    <meta
+      name="description"
+      content="Think WPM, flow WPM, active time, peak, consistency, signal quality and the eligibility rules behind every Thinktype reading."
+    />
+    <link rel="canonical" href="https://thinktype.loftwah.com/metrics" />
+    <meta name="theme-color" content="#f2efe6" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icon-128.png" type="image/png" sizes="128x128" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/GeistMono-Variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/assets/site.css" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Thinktype" />
+    <meta property="og:title" content="The method — how Thinktype measures typing" />
+    <meta
+      property="og:description"
+      content="Two clocks, an explicit idle model and honest eligibility rules. The full measurement notes."
+    />
+    <meta property="og:url" content="https://thinktype.loftwah.com/metrics" />
+    <meta property="og:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The method — how Thinktype measures typing" />
+    <meta
+      name="twitter:description"
+      content="Two clocks, an explicit idle model and honest eligibility rules. The full measurement notes."
+    />
+    <meta name="twitter:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
+  </head>
+  <body>
+    <a class="skip" href="#main">SKIP TO CONTENT</a>
+    <div class="top-rule" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="/" aria-label="Thinktype home">
+          <svg viewBox="0 0 40 40" aria-hidden="true">
+            <g fill="#ff4d00">
+              <rect x="0" y="0" width="6" height="6" /><rect x="8" y="0" width="6" height="6" />
+              <rect x="16" y="0" width="6" height="6" /><rect x="24" y="0" width="6" height="6" />
+              <rect x="32" y="0" width="6" height="6" /><rect x="16" y="8" width="6" height="6" />
+              <rect x="16" y="16" width="6" height="6" /><rect x="16" y="24" width="6" height="6" />
+            </g>
+          </svg>
+          <span class="wordmark">THINKTYPE</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="/#how">How it works</a>
+          <a href="/metrics" aria-current="page">The method</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/changelog">Changelog</a>
+        </nav>
+        <div class="header-actions">
+          <a class="button ghost" href="https://github.com/loftwah/thinktype">GitHub ↗</a>
+          <a class="button" href="https://github.com/loftwah/thinktype/releases/latest"
+            >Get the extension <span class="arrow">↓</span></a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <article class="wrap doc">
+        <header class="doc-head">
+          <span class="margin-label">The method</span>
+          <div>
+            <h1>How Thinktype measures typing.</h1>
+            <p class="meta">
+              TWO CLOCKS / AN EXPLICIT IDLE MODEL / AN HONEST SIGNAL SCORE / v0.2.0
+            </p>
+          </div>
+        </header>
+
+        <div class="doc-body">
+          <nav class="doc-toc" aria-label="On this page">
+            <a href="#clocks">Two clocks</a>
+            <a href="#active">Active time</a>
+            <a href="#peak">Peak and consistency</a>
+            <a href="#corrections">Corrections</a>
+            <a href="#signal">Signal quality</a>
+            <a href="#eligibility">Eligibility</a>
+            <a href="#aggregation">Aggregation</a>
+            <a href="#not-measured">Not measured</a>
+            <a href="#validation">Validation</a>
+          </nav>
+
+          <div class="doc-copy">
+            <p>
+              The short version: standard WPM measures transcription. Thinktype measures
+              composition. That requires two clocks, an explicit idle model, and an honest signal
+              score.
+            </p>
+
+            <h2 id="clocks">Two clocks</h2>
+            <p>Every sent prompt produces one session with two WPM numbers.</p>
+
+            <h3>Think WPM — finished thought</h3>
+            <pre><code>thinkWpm = (finalCharacters / 5) / (wallMs / 60000)</code></pre>
+            <ul>
+              <li><code>finalCharacters</code> is the length of the text that was actually sent.</li>
+              <li>
+                <code>wallMs</code> runs from the first editing keystroke in an empty composer to
+                the send action.
+              </li>
+              <li>
+                This includes every pause, every re-read, every “what am I actually trying to say”.
+              </li>
+            </ul>
+            <p>
+              This is the number that does not exist anywhere else. It is slower than your hands, by
+              design.
+            </p>
+
+            <h3>Flow WPM — hands-only cadence</h3>
+            <pre><code>flowWpm = (insertedCharacters / 5) / (activeMs / 60000)</code></pre>
+            <ul>
+              <li>
+                <code>insertedCharacters</code> counts every character inserted, including ones later
+                deleted.
+              </li>
+              <li><code>activeMs</code> is wall time with long gaps clamped (see below).</li>
+              <li>This is close to what a typing test measures, except the text is yours.</li>
+            </ul>
+            <p>
+              Five characters per word is the conventional definition used by Monkeytype and most
+              typing tools. Spaces count. A separate word count is shown for humans, but all WPM
+              math uses the five-character word so the numbers are comparable across tools.
+            </p>
+
+            <h2 id="active">Active time and the thinking threshold</h2>
+            <p>
+              A naive “time between first and last key” makes a thoughtful writer look slow. Ignoring
+              pauses entirely makes a distracted session look fast. Thinktype clamps each gap
+              instead:
+            </p>
+            <pre><code>for every gap between editing keys (and the final gap to send):
+  activeMs += min(gap, idleThresholdMs)</code></pre>
+            <p>
+              Default threshold: <strong>2000 ms</strong>. A 30-second pause contributes 2 seconds of
+              active time. You can set it from 1 to 5 seconds in settings.
+            </p>
+            <p>
+              Why clamp rather than drop? Dropping makes a session with many pauses artificially
+              fast, because the pauses vanish from the denominator. Clamping treats a pause as a
+              short reset — you still pay for it, but it does not swallow the whole session.
+            </p>
+            <p>
+              The threshold is also used to define “thinking” for the live HUD. If no key has
+              arrived for <code>max(1200ms, threshold)</code>, the HUD switches to THINKING. The
+              live number is held, not reset to zero; a pause is not a failed run.
+            </p>
+
+            <h2 id="peak">Peak and consistency</h2>
+            <p>
+              <strong>Peak</strong> is the best 5-second window, measured against the real span of
+              that window:
+            </p>
+            <pre><code>peak = max over i of (keys in [t_i, t_i + 5000] / 5) / (actualSpan / 60000)</code></pre>
+            <p>
+              A window needs at least 1.5 seconds of real span and 5 keys to count, so a 2-key
+              session cannot produce a fake 300 WPM peak. Peak is a “what were you capable of for a
+              moment” number, not an average.
+            </p>
+            <p>
+              <strong>Consistency</strong> is the coefficient of variation of inter-key intervals
+              inside the idle threshold:
+            </p>
+            <pre><code>intervals = [t_i - t_{i-1}] where 0 &lt; interval &lt;= idleThreshold
+cv        = stdev(intervals) / mean(intervals)
+consistency = clamp(100 * (1 - cv), 0, 100)</code></pre>
+            <p>
+              This is deliberately the Monkeytype definition. A perfectly even rhythm scores 100.
+              Real prose scores lower than a typing test because spaces, punctuation and capital
+              letters change interval lengths. Treat it as a relative signal across your own
+              sessions, not an absolute grade.
+            </p>
+
+            <h2 id="corrections">Correction rate</h2>
+            <pre><code>correctionRate = deletedCharacters / (insertedCharacters + deletedCharacters) * 100</code></pre>
+            <p>
+              There is no target text, so accuracy cannot be measured. Correction rate is the honest
+              proxy: how much of your editing was spent removing things. Backspacing a whole clause
+              is a normal part of thinking in text; it is not “wrong”.
+            </p>
+
+            <h2 id="signal">Signal quality</h2>
+            <p>
+              The percentage on a receipt and card answers: <em>how much of this final text can we
+              attribute to keys we actually observed?</em>
+            </p>
+            <pre><code>netTyped = max(0, inserted - deleted - pasted)
+base     = clamp(netTyped / finalCharacters, 0, 1)
+
+if pasted &gt; 0:        base *= 0.55
+if ime:               base *= 0.75
+if undoCount &gt; 0:     base *= 0.92
+if replacements &gt; 0:  base *= 0.97
+
+signal = clamp(base, 0.05, 1)</code></pre>
+            <p>
+              A pasted draft, a heavily autocorrected message, or an IME-composed message is not
+              hidden. But a session needs at least <strong>50% signal</strong> to be recorded at all,
+              and paste-dominated runs are rejected before they reach history.
+            </p>
+
+            <h2 id="eligibility">Eligibility</h2>
+            <p>
+              Only sent prompts are measured. Drafts and abandoned runs are never written to history.
+              A run must clear all of these gates:
+            </p>
+            <table>
+              <thead>
+                <tr><th>Gate</th><th>Rule</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Sent prompt</td><td>Composer cleared after Enter or the send button.</td></tr>
+                <tr><td>Minimum wall time</td><td>3 seconds.</td></tr>
+                <tr><td>Minimum characters</td><td>Your setting, with a hard floor of 16.</td></tr>
+                <tr><td>Signal</td><td>At least 50%.</td></tr>
+                <tr><td>Paste</td><td>Less than 50% of the final text.</td></tr>
+                <tr><td>Resumed draft</td><td>Recorded in the draft bucket; excluded from best and averages.</td></tr>
+                <tr><td>IME</td><td>Counts toward averages above 50% signal; excluded from best below 85%.</td></tr>
+              </tbody>
+            </table>
+            <p>
+              A personal best is only possible for a best-eligible run that beats the old value. A
+              lower run can never overwrite a higher best.
+            </p>
+
+            <h2 id="aggregation">Aggregation</h2>
+            <p>
+              Averages are weighted by the underlying time and characters, not by taking a mean of
+              per-session WPMs:
+            </p>
+            <pre><code>averageThinkWpm = sum(finalChars) / 5 / (sum(wallMs) / 60000)
+averageFlowWpm  = sum(insertedChars) / 5 / (sum(activeMs) / 60000)</code></pre>
+            <p>
+              The idle HUD shows the last eligible run, the best think WPM, and a rolling average of
+              the last 20 eligible sessions. The popup also stores an all-time average over the
+              locally retained history (up to 500 sessions). Drafts, paste-dominated runs and
+              low-signal runs are excluded.
+            </p>
+
+            <h2 id="not-measured">What is deliberately not measured</h2>
+            <ul>
+              <li>
+                <strong>Accuracy vs a target.</strong> There is no target. Correction rate is the
+                substitute.
+              </li>
+              <li>
+                <strong>Thinking before the first keystroke.</strong> The wall clock starts at the
+                first key, not when the page loaded. Think of it as “how fast does a thought become
+                text once you start writing it”.
+              </li>
+              <li>
+                <strong>Speech, dictation, AI autocomplete.</strong> Not typing; paste and dictation
+                paths lower signal.
+              </li>
+              <li>
+                <strong>Absolute skill.</strong> These numbers are most useful against your own
+                baseline, on your own topics.
+              </li>
+            </ul>
+
+            <h2 id="validation">Validation plan</h2>
+            <ol>
+              <li>
+                <strong>Baseline against a known test.</strong> Type a 60-second Monkeytype run and a
+                Thinktype prompt of similar length. Flow WPM should land in the same neighbourhood; a
+                large gap means the idle model or character accounting needs work.
+              </li>
+              <li>
+                <strong>Threshold sweep.</strong> Run the same three prompts at 1s, 2s and 3s
+                thresholds. Pick the threshold that best matches when you feel you stopped typing
+                versus stopped thinking.
+              </li>
+              <li>
+                <strong>Repeated prompts.</strong> Write the same explanation three times on different
+                days. The spread is your noise floor; any “improvement” smaller than that is not real.
+              </li>
+              <li>
+                <strong>Paste and autocorrect probes.</strong> Confirm that a pasted prompt and an
+                autocorrected prompt both report low signal, and that a normal prompt reports high
+                signal.
+              </li>
+              <li>
+                <strong>UI drift probes.</strong> ChatGPT ships composer changes regularly. The
+                selector fallbacks should keep attaching; add a case whenever a new composer shape
+                appears.
+              </li>
+            </ol>
+            <blockquote>
+              This is a measurement instrument, and instruments need calibration. Treat the first
+              week as a baseline, not a scoreboard.
+            </blockquote>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <span class="wordmark">THINKTYPE</span>
+            <p>
+              A typing instrument for thoughts. Measure the composition, not the transcription.
+              Local-only by construction.
+            </p>
+          </div>
+          <nav class="footer-nav" aria-label="Footer">
+            <a href="/metrics">The method</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/changelog">Changelog</a>
+            <a href="https://github.com/loftwah/thinktype">GitHub</a>
+            <a href="https://github.com/loftwah/thinktype/issues">Issues</a>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <span>THINKTYPE.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.2.0</span></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

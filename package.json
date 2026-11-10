@@ -1,6 +1,6 @@
 {
   "name": "thinktype",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "A Chrome extension that measures your real typing speed while you think out loud with ChatGPT.",
@@ -25,6 +25,9 @@
     "postinstall": "wxt prepare",
     "unpacked": "node scripts/copy-unpacked.mjs",
     "demo": "vite --config demo/vite.config.ts",
+    "site:build": "node scripts/build-site.mjs",
+    "site:serve": "node scripts/serve-site.mjs",
+    "site:deploy": "npm run site:build && npx wrangler pages deploy site/dist --project-name thinktype --branch main",
     "icons": "node scripts/icons.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

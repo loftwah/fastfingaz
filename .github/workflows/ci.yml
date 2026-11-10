@@ -20,9 +20,16 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - run: npm run site:build
 
       - uses: actions/upload-artifact@v7
         with:
           name: thinktype-dist
           path: .output/chrome-mv3
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: thinktype-site
+          path: site/dist
           if-no-files-found: error

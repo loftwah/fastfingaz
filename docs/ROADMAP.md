@@ -1,25 +1,27 @@
 # Roadmap
 
-## v0.1 — the instrument (current)
+## v0.2 — trustworthy numbers (current)
 
-- [x] WXT + Chrome MV3 for `chatgpt.com` and `chat.openai.com`
-- [x] Composer discovery with legacy and generic fallbacks
-- [x] Think WPM / Flow WPM / Peak / Consistency / Corrections / Pauses / Signal
-- [x] Paste, autocorrect, undo and IME awareness
-- [x] Floating HUD, collapsed orb, printed receipt, keyboard toggle
-- [x] 420px paper HUD with a black LCD and smart docking beside the composer
-- [x] Draft-aware sessions: DRAFT state, then measure from the next keystroke
-- [x] Local storage and 14-day history
-- [x] Share receipt (copy PNG or download) and text summary
-- [x] Options: threshold, minimum length, privacy, export, clear
-- [x] Instrument brand system: Teenage Engineering reference, Geist Sans/Mono/Pixel, paper + signal orange
-- [x] 27 unit tests for the measurement core
-- [x] Placeholder brand art and a no-install visual demo
+- [x] Vertical, bottom-anchored HUD in the empty gutter beside the conversation
+- [x] Full / medium / slim layouts; never covers the composer or last message
+- [x] Pause holds the run in THINKING; the live number does not drop to zero
+- [x] Idle LAST / BEST / AVG with dashes before the first reading
+- [x] Durable best think / flow / peak, last eligible run, weighted 20-session average, all-time average
+- [x] Best never regresses; a lower run cannot overwrite a higher one
+- [x] Eligibility gates: sent prompts only, minimum characters/time, 50% signal, paste-dominated rejection
+- [x] Resumed drafts in a draft bucket; IME best only above 85% signal
+- [x] Text-free in-progress snapshot in `chrome.storage.session`, shown as PAUSED / NOT RECORDED
+- [x] Three designed share formats: 1200×630, 1080×1080, 1080×1920
+- [x] Share sheet in the HUD receipt and popup with format tabs, preview, file size, copy and download
+- [x] Share cards at exact social dimensions, rendered locally
+- [x] Static marketing site at https://thinktype.loftwah.com on Cloudflare Pages
+- [x] SEO: canonical, OG/Twitter tags, JSON-LD, sitemap, robots, 404, favicon, web manifest
+- [x] 38 unit tests; green typecheck, tests and production build
+- [x] No new manifest permissions
 
-## v0.2 — trustworthy numbers
+## v0.3 — calibration and trust
 
 - [ ] Calibrate the idle threshold against Monkeytype runs (see `docs/METRICS.md`)
-- [ ] Personal baseline band: compare a session to *your* last 20, not to a global average
 - [ ] Threshold presets: "fast hands", "balanced", "deep thinking"
 - [ ] Better IME accounting: derive characters from final text and composition spans
 - [ ] Harden send detection against editor changes (observe the send button state as another signal)
@@ -27,22 +29,23 @@
 - [ ] Import an export file (restore history)
 - [ ] 30-day view and a weekly recap line
 - [ ] Surface metric definitions in the popup (hover/tap)
+- [ ] A personal baseline band on the 14-day chart
 
-## v0.3 — shareable by default
+## v0.4 — shareable by default
 
-- [ ] Card formats: 1200×630, 1080×1080, 1080×1920
 - [ ] "This week" recap card with a small trend
 - [ ] Optional comparison card: this session vs your baseline
 - [ ] Copy a compact text block for posts and DMs
-- [ ] Theme lock for cards (dark, light, transparent)
+- [ ] Theme lock for cards (paper, ink, transparent)
 - [ ] Better empty states and first-run onboarding
+- [ ] A real Chrome Web Store submission with five captures
 
-## v0.4 — beyond one host
+## v0.5 — beyond one host
 
 - [ ] Host adapters: Claude, Gemini, Perplexity
 - [ ] Generic contenteditable mode with a manual "track this box" picker
 - [ ] Firefox port (WebExtensions with a different manifest)
-- [ ] Chrome Web Store listing, privacy policy, screenshots, review notes
+- [ ] Store listing, privacy policy, screenshots, review notes
 
 ## Deliberately not planned
 
@@ -51,11 +54,13 @@
 - "AI coaching" that tells you your writing is bad
 - Tracking keystrokes outside the composer
 - Storing prompt text without an explicit opt-in
+- Purchasing a domain or renaming the product without approval
 
 ## Open questions
 
 1. Is think WPM or flow WPM the number people actually want on the toolbar badge?
 2. Is "thinking overhead" the right framing, or does it read as a penalty?
 3. Does the 2s idle threshold match how long a real thinking pause feels?
-4. Should a session be saved when a message is sent but the composer was never empty (reply editing)?
+4. Should a resumed draft ever be eligible for a separate draft best?
 5. Do we need per-keystroke histograms, or is the rolling sparkline enough?
+6. Is the slim 142 px HUD at 1440 readable enough, or should it collapse to the orb?

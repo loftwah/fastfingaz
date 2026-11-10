@@ -36,6 +36,14 @@ export class TypingSession {
     return this.insertedChars;
   }
 
+  get deletedCount(): number {
+    return this.deletedChars;
+  }
+
+  get pastedCount(): number {
+    return this.pastedChars;
+  }
+
   noteKey(timestamp: number): void {
     if (this.ended || !Number.isFinite(timestamp) || timestamp < this.startedAt) return;
     this.keys.push(timestamp);

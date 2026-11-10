@@ -15,7 +15,9 @@ npm run dev
 in `chrome://extensions`.
 
 `npm run demo` serves the real HUD and share-receipt components with sample data at
-`http://localhost:4173` — useful for visual work without reloading the extension.
+`http://localhost:4173` — useful for visual work without reloading the extension. Useful pages:
+`gallery.html` (the HUD over a mock conversation), `cards.html` (the three share formats) and
+`artboards.html` (marketing art). Query parameters are documented in `AGENTS.md`.
 
 ## Where things live
 
@@ -26,7 +28,8 @@ in `chrome://extensions`.
 - `content/overlay.ts` + `overlay.css` — the HUD (shadow DOM, no framework).
 - `content/font-faces.ts` — data-URI fonts for the page context (ChatGPT's CSP blocks extension
   font URLs).
-- `shared/share-card.ts` — the 1200×630 canvas receipt.
+- `shared/share-card.ts` — the three canvas receipts (1200×630, 1080×1080, 1080×1920) and the
+  shared drawing helpers.
 - `shared/brand.ts` — palette, type, serials.
 - `entrypoints/popup/`, `entrypoints/options/` — vanilla TS, one entrypoint each.
 - `entrypoints/content.ts`, `entrypoints/background.ts` — WXT entrypoints.
@@ -59,15 +62,21 @@ Before opening a PR that touches the content script or UI:
 
 - [ ] `npm run dev` loads the extension in Chrome.
 - [ ] Open a new ChatGPT chat and type 30+ characters. The HUD shows live WPM, timer and words.
-- [ ] Pause for 5 seconds. The status switches to THINKING; live WPM returns to 0.
-- [ ] Send the message. The receipt prints with think/flow/words/signal.
-- [ ] Press **Copy receipt**. Clipboard image or download fallback works.
-- [ ] Open the popup. Today, chart and recent sessions update; detail renders a receipt.
+- [ ] Pause for 5 seconds. The status switches to THINKING and the live number **holds**; it does not
+  snap to zero.
+- [ ] Send the message. The receipt prints with think/flow/peak/words/signal and a NEW BEST stamp only
+  when it actually beats the stored best.
+- [ ] Open **Share card**. The three formats render, the file size appears, and copy/download work.
+- [ ] Open the popup. Today, baseline, chart and recent sessions update; detail renders all three
+  formats.
 - [ ] Toggle the HUD with `Alt+Shift+T`; reload and confirm the setting persists.
-- [ ] Switch auto/dark/paper in options; HUD and popup follow.
-- [ ] Paste a whole message and send. It is flagged low-signal and excluded from averages.
-- [ ] Try a narrow window (≈1024px) and drag the HUD; it stays on screen.
+- [ ] Reload the tab mid-run. The HUD shows PAUSED / NOT RECORDED, never a fake live run.
+- [ ] Paste a whole message and send. It is rejected or flagged low-signal and excluded from averages.
+- [ ] Try 1280, 1440, 1728 and 2048 widths. The HUD stays in the side gutter, never covers the composer
+  or the last message, and remains readable at full / medium / slim widths.
 - [ ] `npm run typecheck && npm test && npm run build` passes.
+- [ ] `npm run site:build` passes and `PORT=4319 npm run site:serve` loads the home, privacy, metrics,
+  changelog and 404 pages.
 
 ## Pull requests
 

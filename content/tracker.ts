@@ -2,10 +2,14 @@ import { MIN_SESSION_MS } from '../shared/constants';
 import {
   buildSeries,
   computeStats,
+  consistencyScore,
   countWords,
+  peakWpm,
   rollingWpm,
+  shouldRecord,
   wpmFrom,
 } from '../shared/metrics';
+import type { LiveSnapshot } from '../shared/storage';
 import type { LiveStats, SessionRecord, Settings } from '../shared/types';
 import { SCHEMA_VERSION } from '../shared/types';
 import { getComposerText, isSendControl, selectionLength } from './composer';
@@ -16,10 +20,15 @@ export const EMPTY_LIVE: LiveStats = {
   wpm: 0,
   thinkWpm: 0,
   flowWpm: 0,
+  peakWpm: 0,
+  consistency: 0,
+  signal: 0,
   words: 0,
   ms: 0,
+  activeMs: 0,
   status: 'idle',
   draft: false,
+  holding: false,
   series: [],
 };
 
@@ -43,6 +52,8 @@ export class ComposerTracker {
   private ime = false;
   private lastKeyAt = 0;
   private lastNonEmpty = '';
+  /** Last non-zero rolling reading. A pause holds it instead of snapping to 0. */
+  private heldWpm = 0;
   private pollTimer: number | null = null;
   private clearTimer: number | null = null;
   private listeners: Array<() => void> = [];
@@ -76,28 +87,56 @@ export class ComposerTracker {
     const now = performance.now();
     const text = getComposerText(this.el);
     const keys = [...this.session.keyTimes];
-    const ms = Math.max(0, now - this.session.startedAt);
+    const wallMs = Math.max(0, now - this.session.startedAt);
+    const activeMs = Math.max(1, this.session.activeMs(now, this.settings.idleThresholdMs));
     const sinceKey = now - this.lastKeyAt;
     const active = sinceKey <= Math.max(1200, this.settings.idleThresholdMs);
-    const flow = wpmFrom(
-      this.session.insertedCount,
-      Math.max(1, this.session.activeMs(now, this.settings.idleThresholdMs)),
-    );
+    const liveWpm = rollingWpm(keys, now);
+    if (liveWpm > 0) this.heldWpm = liveWpm;
+
+    const flow = wpmFrom(this.session.insertedCount, activeMs);
     // A resumed draft measures the characters typed after tracking began.
     const thinkSource =
       this.session.prefilledChars > 0 ? this.session.insertedCount : text.length;
-    const think = wpmFrom(thinkSource, Math.max(1, ms));
+    const think = wpmFrom(thinkSource, Math.max(1, wallMs));
+    const attributable = Math.max(1, text.length - this.session.prefilledChars);
+    const netTyped = Math.max(
+      0,
+      this.session.insertedCount - this.session.deletedCount - this.session.pastedCount,
+    );
 
     return {
       active: true,
-      wpm: active ? rollingWpm(keys, now) : 0,
+      wpm: active ? liveWpm : this.heldWpm,
       thinkWpm: think,
       flowWpm: flow,
+      peakWpm: peakWpm(keys),
+      consistency: consistencyScore(keys, this.settings.idleThresholdMs),
+      signal: Math.min(1, netTyped / attributable),
       words: countWords(text),
-      ms,
+      ms: wallMs,
+      activeMs,
       status: active ? 'typing' : 'thinking',
       draft: false,
+      holding: !active,
       series: buildSeries(keys, this.session.startedAt, now),
+    };
+  }
+
+  /** A text-free snapshot for chrome.storage.session. */
+  snapshot(): LiveSnapshot | null {
+    if (!this.session || this.session.isEnded) return null;
+    const live = this.liveStats();
+    return {
+      startedAt: Date.now() - live.ms,
+      endedAt: Date.now(),
+      wallMs: live.ms,
+      words: live.words,
+      thinkWpm: live.thinkWpm,
+      flowWpm: live.flowWpm,
+      peakWpm: live.peakWpm,
+      consistency: live.consistency,
+      series: live.series,
     };
   }
 
@@ -162,6 +201,7 @@ export class ComposerTracker {
     this.ime = false;
     this.lastNonEmpty = text.trim() ? text : '';
     this.lastKeyAt = now;
+    this.heldWpm = 0;
     return true;
   }
 
@@ -295,10 +335,23 @@ export class ComposerTracker {
     this.session = null;
     this.pendingSend = null;
     this.lastNonEmpty = '';
+    this.heldWpm = 0;
     this.clearTimers();
 
     const stats = computeStats(raw, this.settings.idleThresholdMs);
-    if (stats.wallMs < MIN_SESSION_MS || stats.chars < this.settings.minSessionChars) return;
+    if (
+      !shouldRecord({
+        wallMs: stats.wallMs,
+        chars: stats.chars,
+        words: stats.words,
+        confidence: stats.confidence,
+        pasteRatio: stats.pasteRatio,
+        minChars: this.settings.minSessionChars,
+        minWallMs: MIN_SESSION_MS,
+      })
+    ) {
+      return;
+    }
 
     const endedAt = Date.now();
     const record: SessionRecord = {
@@ -318,6 +371,7 @@ export class ComposerTracker {
     this.session = null;
     this.pendingSend = null;
     this.lastNonEmpty = '';
+    this.heldWpm = 0;
     this.clearTimers();
   }
 

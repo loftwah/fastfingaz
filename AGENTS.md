@@ -23,10 +23,33 @@ sections, permission justifications and store limits. Every entry in `manifest` 
 ## Checks
 
 ```bash
-npm run check       # typecheck, tests, production build
-npm run unpacked    # copy the build to the visible unpacked/ folder
-npm run demo        # visual preview at localhost:4173
+npm run check        # typecheck, tests, production build
+npm run unpacked     # copy the build to the visible unpacked/ folder
+npm run demo         # visual preview at localhost:4173
+npm run site:build   # build site/dist with fonts, art and icons
+PORT=4319 npm run site:serve   # serve the static site locally
+npm run site:deploy  # build and deploy to Cloudflare Pages
 ```
+
+## Cloudflare
+
+- Pages project: `thinktype`, production branch `main`.
+- Live domain: https://thinktype.loftwah.com (CNAME to `thinktype-7sb.pages.dev`, DNS-only).
+- Cloudflare credentials live in `.env`; never print or commit them. Use `set -a; . ./.env; set +a`
+  in a shell command so the token is never echoed.
+- No R2 bucket is used. The Pages assets are enough.
+
+## Visual previews and art
+
+- `demo/gallery.html` mounts the real HUD over a mock conversation. Query parameters:
+  `state=typing|thinking|draft|idle|empty|receipt|receipt-draft|share`, `sidebar=0|1`, `wide=1`,
+  `label=0`.
+- `demo/artboards.html?board=og|x|github|instagram|story|promo` renders the marketing artboards at
+  the exact asset sizes.
+- `demo/cards.html?format=landscape|square|story` renders the share cards; add `stress=1` or
+  `empty=1` to check long values and missing baselines.
+- Save final art in `docs/art/social`, `docs/art/share` and `docs/art/`; note the source and the
+  sample-data status in `docs/art/social/PROMPTS.md`.
 
 ## Browser testing
 

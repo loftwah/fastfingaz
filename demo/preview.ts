@@ -39,10 +39,15 @@ const LIVE: LiveStats = {
   wpm: 78,
   thinkWpm: 63,
   flowWpm: 78,
+  peakWpm: 96,
+  consistency: 84,
+  signal: 0.94,
   words: 96,
   ms: 112_000,
+  activeMs: 94_000,
   status: 'typing',
   draft: false,
+  holding: false,
   series: SERIES.slice(0, 44),
 };
 
