@@ -6,7 +6,7 @@
     <title>Changelog — Thinktype</title>
     <meta
       name="description"
-      content="Thinktype release notes: the v0.3.1 live counter fix, the v0.3.0 pause and hold, honest best and average history, three share card formats, and the static site."
+      content="Thinktype release notes: the v0.3.2 draggable, resizable WPM orb, the v0.3.1 live counter fix, the v0.3.0 pause and hold, honest best and average history, three share card formats, and the static site."
     />
     <link rel="canonical" href="https://thinktype.loftwah.com/changelog" />
     <meta name="theme-color" content="#f2efe6" />
@@ -81,13 +81,14 @@
           <div>
             <h1>Build notes, not marketing beats.</h1>
             <p class="meta">
-              CURRENTLY v0.3.1 / 11 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
+              CURRENTLY v0.3.2 / 11 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
             </p>
           </div>
         </header>
 
         <div class="doc-body">
           <nav class="doc-toc" aria-label="Releases">
+            <a href="#v032">v0.3.2</a>
             <a href="#v031">v0.3.1</a>
             <a href="#v030">v0.3.0</a>
             <a href="#v022">v0.2.2</a>
@@ -99,9 +100,37 @@
           </nav>
 
           <div>
+            <section class="release" id="v032">
+              <div>
+                <span class="version">v0.3.2 <span class="tag">CURRENT</span></span>
+                <span class="date">11 NOV 2026</span>
+              </div>
+              <div>
+                <h2>The orb moves.</h2>
+                <ul>
+                  <li>
+                    The collapsed WPM orb is now a drag handle. Move it anywhere; the position
+                    persists across reloads and chats. A click still expands it.
+                  </li>
+                  <li>
+                    A corner grip resizes the orb from 44px to 104px. Drag it, or focus it and use the
+                    arrow keys (hold Shift for bigger steps). The size persists.
+                  </li>
+                  <li>
+                    The full HUD still drags by its header and auto-fits the conversation gutter; the
+                    resize grip applies to the minimized orb.
+                  </li>
+                  <li>
+                    Settings adds <strong>Reset orb size</strong> next to <strong>Reset HUD
+                    position</strong>. No new permissions; 47 tests.
+                  </li>
+                </ul>
+              </div>
+            </section>
+
             <section class="release" id="v031">
               <div>
-                <span class="version">v0.3.1 <span class="tag">CURRENT</span></span>
+                <span class="version">v0.3.1</span>
                 <span class="date">11 NOV 2026</span>
               </div>
               <div>
@@ -337,7 +366,7 @@
         </div>
         <div class="footer-bottom">
           <span>THINKTYPE.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
-          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.1</span></span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.2</span></span>
         </div>
       </div>
     </footer>

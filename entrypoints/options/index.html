@@ -72,11 +72,16 @@
           <p class="hint">
             The HUD docks to the bottom of the viewport and lives in the empty gutter beside the
             conversation. It shrinks to a slim strip when the gutter is narrow, and never covers the
-            composer or your last message. Drag it anywhere. Pause or resume the measurement with
+            composer or your last message. Drag the full HUD by its header, or drag the collapsed orb
+            by its face. Drag the orb’s bottom-right grip to resize it (44–104px), or focus the grip
+            and use the arrow keys. Pause or resume the measurement with
             <strong>Alt+Shift+P</strong>; the pause button is in the HUD header.
           </p>
 
-          <button id="reset-pos" class="ghost" type="button">RESET HUD POSITION</button>
+          <div class="action-row">
+            <button id="reset-pos" class="ghost" type="button">RESET HUD POSITION</button>
+            <button id="reset-orb" class="ghost" type="button">RESET ORB SIZE</button>
+          </div>
         </div>
       </section>
 

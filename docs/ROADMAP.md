@@ -27,7 +27,7 @@
 - [x] 8-second rolling live window and a held number through short gaps
 - [x] 42 unit tests (pause intervals, wall/active exclusion, auto-resume)
 
-## v0.3.1 — honest live counter (current)
+## v0.3.1 — honest live counter
 
 - [x] Live window counts only actual typing; think gaps no longer drag the reading down
 - [x] Short runs use their own typing span, not a full eight-second denominator
@@ -35,6 +35,14 @@
 - [x] Manual pauses are removed from the live window
 - [x] Idle big number labelled `LAST THINK`; FLOW and PEAK are the Monkeytype comparisons
 - [x] 47 unit tests
+
+## v0.3.2 — the orb moves (current)
+
+- [x] Collapsed WPM orb is draggable; position persists
+- [x] Corner grip resizes the orb from 44px to 104px; size persists
+- [x] Keyboard resize with arrow keys; Shift for larger steps
+- [x] Reset orb size control in settings
+- [x] Full HUD drag and gutter docking unchanged
 
 ## v0.4 — calibration and trust
 

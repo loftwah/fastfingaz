@@ -216,11 +216,12 @@ The popup is a 380×600 document: a black device panel for today, a baseline str
 then hairline session rows. The HUD is a tall anodised black instrument with a black LCD display,
 anchored to the bottom of the viewport and docked in the empty gutter beside the conversation. It
 has a fixed 680px frame and three widths — 360px full, 286px medium, 142px slim — and collapses to a
-60px orb when no gutter fits. It never covers the composer, send button or the last message. When the
-left gutter allows it, a companion baseline rail shows LAST / BEST / AVG, a 14-day chart and the
-recent readings. The share sheet lives inside the same dark frame; the receipt is a paper print
-inside it, with a serial, barcode and a small NEW BEST stamp. Share cards are designed at 1200×630,
-1080×1080 and 1080×1920, with 64–84px margins and a cadence chart scaled to the format.
+draggable WPM orb (44–104px, resized from its corner grip) when collapsed or when no gutter fits. It
+never covers the composer, send button or the last message. When the left gutter allows it, a
+companion baseline rail shows LAST / BEST / AVG, a 14-day chart and the recent readings. The share
+sheet lives inside the same dark frame; the receipt is a paper print inside it, with a serial,
+barcode and a small NEW BEST stamp. Share cards are designed at 1200×630, 1080×1080 and 1080×1920,
+with 64–84px margins and a cadence chart scaled to the format.
 
 Spacing follows a 4/8/16/24/40 rhythm. More space above a heading than below it. Responsive:
 settings stack at 760px and 520px; the HUD clamps to the viewport; the popup scrolls inside its max

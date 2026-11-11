@@ -21,6 +21,7 @@ export const MIN_SESSION_MS = 3000;
 export const DEFAULT_SETTINGS: Settings = {
   showHud: true,
   hudCollapsed: false,
+  hudOrbSize: 60,
   hudPos: null,
   idleThresholdMs: 2000,
   minSessionChars: 32,

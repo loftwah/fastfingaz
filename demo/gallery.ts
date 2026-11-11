@@ -153,14 +153,20 @@ async function boot(): Promise<void> {
 
   const history = state === 'empty' ? blankHistory() : historySample();
   const composer = document.getElementById('composer')!;
+  const orbParam = Number(params.get('orb'));
+  const orbSize = Number.isFinite(orbParam)
+    ? Math.min(104, Math.max(44, Math.round(orbParam)))
+    : 60;
   const overlay = new Overlay({
-    collapsed: false,
+    collapsed: params.get('collapsed') === '1' || state === 'orb',
     pos: null,
+    orbSize,
     fontFacesCss: FONT_FACE_CSS,
     getComposerRect: () => composer.getBoundingClientRect(),
     getMainRect: () => document.querySelector('main')?.getBoundingClientRect() ?? null,
     onMove: () => undefined,
     onCollapse: () => undefined,
+    onOrbSize: () => undefined,
     onHide: () => undefined,
     onPause: () => undefined,
   });

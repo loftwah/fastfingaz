@@ -17,6 +17,8 @@ import css from './overlay.css?inline';
 
 const BAR_COUNT = 38;
 const DASH = '—';
+const MIN_ORB_SIZE = 44;
+const MAX_ORB_SIZE = 104;
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
@@ -40,12 +42,15 @@ const EMPTY: LiveStats = {
 export interface OverlayOptions {
   collapsed: boolean;
   pos: { x: number; y: number } | null;
+  /** Collapsed orb diameter in CSS pixels. */
+  orbSize: number;
   fontFacesCss: string;
   getComposerRect?: () => DOMRect | null;
   /** The host's main content rect. Its left edge is the sidebar width. */
   getMainRect?: () => DOMRect | null;
   onMove: (pos: { x: number; y: number } | null) => void;
   onCollapse: (collapsed: boolean) => void;
+  onOrbSize: (size: number) => void;
   onHide: () => void;
   onPause: () => void;
 }
@@ -74,6 +79,8 @@ export class Overlay {
   private sessions: SessionRecord[] = [];
   private bar: HTMLDivElement;
   private pauseButton: HTMLButtonElement;
+  private orb: HTMLButtonElement;
+  private orbResizeHandle: HTMLButtonElement;
   private num: HTMLElement;
   private unit: HTMLElement;
   private orbNum: HTMLElement;
@@ -125,7 +132,17 @@ export class Overlay {
   private options: OverlayOptions;
   private collapsed: boolean;
   private customPos: { x: number; y: number } | null;
+  private orbSize: number;
   private drag: { dx: number; dy: number } | null = null;
+  private orbDrag: {
+    dx: number;
+    dy: number;
+    startX: number;
+    startY: number;
+  } | null = null;
+  private orbMoved = false;
+  private orbResize: { startX: number; startY: number; startSize: number } | null = null;
+  private suppressClick = false;
   private panel: 'dashboard' | 'receipt' | 'share' = 'dashboard';
   private receiptUntil = 0;
   private receiptTimer: number | null = null;
@@ -141,6 +158,11 @@ export class Overlay {
   constructor(options: OverlayOptions) {
     this.options = options;
     this.collapsed = options.collapsed;
+    this.orbSize = clamp(
+      Number.isFinite(options.orbSize) ? options.orbSize : 60,
+      MIN_ORB_SIZE,
+      MAX_ORB_SIZE,
+    );
     this.customPos = options.pos;
     ensureDocumentFonts(options.fontFacesCss);
 
@@ -300,10 +322,12 @@ export class Overlay {
         </section>
         </div>
 
-        <button class="orb" data-act="expand" aria-label="Expand Thinktype">
+        <button class="orb" data-act="expand" aria-label="Expand Thinktype" title="Drag to move, click to expand">
           <span class="orb-num" data-orb>${DASH}</span>
           <span class="orb-unit">WPM</span>
         </button>
+        <button class="orb-resize" data-act="orb-resize" aria-label="Resize Thinktype orb"
+                title="Drag to resize, or use the arrow keys"></button>
       </div>
 
       <aside class="rail" data-visible="false" aria-label="Thinktype baseline log">
@@ -358,6 +382,8 @@ export class Overlay {
     this.num = pick<HTMLElement>('[data-wpm]');
     this.unit = pick<HTMLElement>('.unit');
     this.orbNum = pick<HTMLElement>('[data-orb]');
+    this.orb = pick<HTMLButtonElement>('.orb');
+    this.orbResizeHandle = pick<HTMLButtonElement>('.orb-resize');
     this.time = pick<HTMLElement>('[data-time]');
     this.words = pick<HTMLElement>('[data-words]');
     this.signal = pick<HTMLElement>('[data-signal]');
@@ -467,6 +493,12 @@ export class Overlay {
 
   setPosition(pos: { x: number; y: number } | null): void {
     this.customPos = pos;
+    this.applyPosition();
+  }
+
+  setOrbSize(size: number): void {
+    if (!Number.isFinite(size)) return;
+    this.orbSize = clamp(Math.round(size), MIN_ORB_SIZE, MAX_ORB_SIZE);
     this.applyPosition();
   }
 
@@ -922,6 +954,7 @@ export class Overlay {
     side: 'left' | 'right';
     railWidth: number;
     railVisible: boolean;
+    orb: boolean;
   } {
     const composer = this.options.getComposerRect?.();
     const main = this.options.getMainRect?.();
@@ -936,10 +969,11 @@ export class Overlay {
 
     if (this.collapsed) {
       return {
-        width: 60,
+        width: this.orbSize,
         side: rightGap >= leftGap ? 'right' : 'left',
         railWidth: 0,
         railVisible: false,
+        orb: true,
       };
     }
 
@@ -949,15 +983,16 @@ export class Overlay {
       const width = clamp(minWidth, gap - 32, target);
       const railVisible = !this.customPos && side === 'right' && leftGap >= 300;
       const railWidth = railVisible ? clamp(240, leftGap - 40, 320) : 0;
-      return { width, side, railWidth, railVisible };
+      return { width, side, railWidth, railVisible, orb: false };
     }
 
     // No usable gutter: keep the instrument out of the way as the orb.
     return {
-      width: 60,
+      width: this.orbSize,
       side: rightGap >= leftGap ? 'right' : 'left',
       railWidth: 0,
       railVisible: false,
+      orb: true,
     };
   }
 
@@ -972,13 +1007,20 @@ export class Overlay {
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     const margin = 16;
-    const orbFit = width <= 60 && !this.collapsed;
-    const height = this.collapsed || orbFit ? 60 : Math.min(680, viewportHeight - 32);
+    const orbFit = metrics.orb;
+    const height = orbFit ? this.orbSize : Math.min(680, viewportHeight - 32);
     this.hud.style.setProperty('--tt-w', `${width}px`);
     this.hud.style.setProperty('--tt-h', `${height}px`);
     this.hud.dataset.fit = orbFit ? 'orb' : 'panel';
-    this.hud.dataset.size =
-      width >= 300 ? 'full' : width >= 210 ? 'medium' : width > 80 ? 'slim' : 'orb';
+    this.hud.dataset.size = orbFit
+      ? 'orb'
+      : width >= 300
+        ? 'full'
+        : width >= 210
+          ? 'medium'
+          : width > 80
+            ? 'slim'
+            : 'orb';
 
     const main = this.options.getMainRect?.();
     const sidebarWidth = main && main.left > 1 ? main.left : 0;
@@ -1062,6 +1104,101 @@ export class Overlay {
     if (this.customPos) this.options.onMove(this.customPos);
   };
 
+  /** A collapsed orb has no header, so the orb face is the drag handle. */
+  private handleOrbPointerDown = (event: PointerEvent): void => {
+    if (event.button !== 0) return;
+    const rect = this.hud.getBoundingClientRect();
+    this.orbDrag = {
+      dx: event.clientX - rect.left,
+      dy: event.clientY - rect.top,
+      startX: event.clientX,
+      startY: event.clientY,
+    };
+    this.orbMoved = false;
+    this.suppressClick = false;
+    this.orb.setPointerCapture(event.pointerId);
+  };
+
+  private handleOrbPointerMove = (event: PointerEvent): void => {
+    const drag = this.orbDrag;
+    if (!drag) return;
+    if (
+      !this.orbMoved &&
+      Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) < 4
+    ) {
+      return;
+    }
+    this.orbMoved = true;
+    this.hud.classList.add('dragging');
+    this.customPos = {
+      x: event.clientX - drag.dx,
+      y: event.clientY - drag.dy,
+    };
+    this.applyPosition();
+  };
+
+  private handleOrbPointerUp = (event: PointerEvent): void => {
+    if (!this.orbDrag) return;
+    const moved = this.orbMoved;
+    this.orbDrag = null;
+    this.orbMoved = false;
+    this.hud.classList.remove('dragging');
+    if (this.orb.hasPointerCapture(event.pointerId)) {
+      this.orb.releasePointerCapture(event.pointerId);
+    }
+    if (moved) {
+      this.suppressClick = true;
+      // A click normally follows pointerup. If it does not (release outside),
+      // clear the guard so the next real click still expands the orb.
+      window.setTimeout(() => {
+        this.suppressClick = false;
+      }, 250);
+      if (this.customPos) this.options.onMove(this.customPos);
+    }
+  };
+
+  private handleResizePointerDown = (event: PointerEvent): void => {
+    if (event.button !== 0) return;
+    this.orbResize = {
+      startX: event.clientX,
+      startY: event.clientY,
+      startSize: this.orbSize,
+    };
+    this.orbResizeHandle.setPointerCapture(event.pointerId);
+    this.hud.classList.add('resizing');
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  private handleResizePointerMove = (event: PointerEvent): void => {
+    const resize = this.orbResize;
+    if (!resize) return;
+    const delta = Math.max(event.clientX - resize.startX, event.clientY - resize.startY);
+    this.setOrbSize(resize.startSize + delta);
+  };
+
+  private handleResizePointerUp = (event: PointerEvent): void => {
+    if (!this.orbResize) return;
+    this.orbResize = null;
+    this.hud.classList.remove('resizing');
+    if (this.orbResizeHandle.hasPointerCapture(event.pointerId)) {
+      this.orbResizeHandle.releasePointerCapture(event.pointerId);
+    }
+    this.options.onOrbSize(this.orbSize);
+  };
+
+  private handleResizeKeyDown = (event: KeyboardEvent): void => {
+    const step = event.shiftKey ? 8 : 4;
+    let next = this.orbSize;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next += step;
+    else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next -= step;
+    else return;
+    event.preventDefault();
+    event.stopPropagation();
+    this.setOrbSize(next);
+    this.options.onOrbSize(this.orbSize);
+  };
+
   private bind(): void {
     window.addEventListener('resize', this.handleResize);
     this.bar.addEventListener('pointerdown', this.handlePointerDown);
@@ -1069,7 +1206,22 @@ export class Overlay {
     this.bar.addEventListener('pointerup', this.handlePointerUp);
     this.bar.addEventListener('pointercancel', this.handlePointerUp);
 
+    this.orb.addEventListener('pointerdown', this.handleOrbPointerDown);
+    this.orb.addEventListener('pointermove', this.handleOrbPointerMove);
+    this.orb.addEventListener('pointerup', this.handleOrbPointerUp);
+    this.orb.addEventListener('pointercancel', this.handleOrbPointerUp);
+
+    this.orbResizeHandle.addEventListener('pointerdown', this.handleResizePointerDown);
+    this.orbResizeHandle.addEventListener('pointermove', this.handleResizePointerMove);
+    this.orbResizeHandle.addEventListener('pointerup', this.handleResizePointerUp);
+    this.orbResizeHandle.addEventListener('pointercancel', this.handleResizePointerUp);
+    this.orbResizeHandle.addEventListener('keydown', this.handleResizeKeyDown);
+
     this.hud.addEventListener('click', (event) => {
+      if (this.suppressClick) {
+        this.suppressClick = false;
+        return;
+      }
       const target = event.target as Element | null;
       const format = target?.closest<HTMLElement>('[data-format]')?.dataset.format;
       if (format) {

@@ -12,6 +12,8 @@ export interface Settings {
   showHud: boolean;
   /** HUD rendered as the little orb instead of the full card. */
   hudCollapsed: boolean;
+  /** Collapsed orb diameter in CSS pixels (44–104). */
+  hudOrbSize: number;
   /** Last dragged position, in CSS pixels from the viewport's top-left. */
   hudPos: { x: number; y: number } | null;
   /** Gaps longer than this are treated as thinking, not typing. */

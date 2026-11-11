@@ -76,6 +76,10 @@ function bind(): void {
     void persist({ hudPos: null }).then(() => toast('HUD POSITION RESET'));
   });
 
+  $('reset-orb').addEventListener('click', () => {
+    void persist({ hudOrbSize: 60 }).then(() => toast('ORB SIZE RESET'));
+  });
+
   $('export').addEventListener('click', async () => {
     try {
       const json = await exportAll();

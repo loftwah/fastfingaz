@@ -420,6 +420,12 @@ a:focus-visible {
   color: var(--text);
 }
 
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .ghost:hover {
   border-color: var(--solid-bg);
   background: var(--solid-bg);

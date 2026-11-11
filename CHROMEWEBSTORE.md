@@ -22,6 +22,7 @@ A pause is not a failed run. The live reading is the last eight seconds of actua
 
 Key features:
 • A tall, bottom-anchored instrument that lives in the empty gutter beside the ChatGPT conversation, with a 38-bar cadence meter and a 72–120 px live WPM reading
+• A draggable WPM orb for the collapsed state: click to expand, drag to move, resize from 44–104 px with the corner grip; position and size persist
 • Live WPM measured over the last eight seconds of actual typing: short prompts are not diluted, think gaps hold the number, and manual pauses are excluded
 • A manual pause button and Alt+Shift+P shortcut: the clocks freeze, the number holds, and the break is excluded from the final reading
 • Think WPM, flow WPM, peak, best, weighted 20-session average, words, time, signal and consistency
@@ -152,7 +153,8 @@ https://github.com/loftwah/thinktype
 
 | Version | Date | Changes | Status |
 | --- | --- | --- | --- |
-| 0.3.1 | 2026-11-11 | Live counter fixed: last 8s of actual typing, no short-run dilution, no clock bleed, think gaps hold the reading, idle label LAST THINK, 47 tests | Draft — not submitted |
+| 0.3.2 | 2026-11-11 | Draggable collapsed orb, 44–104 px resize grip + keyboard resizing, persisted position/size, reset control, 47 tests | Draft — not submitted |
+| 0.3.1 | 2026-11-11 | Live counter fixed: last 8s of actual typing, no short-run dilution, no clock bleed, think gaps hold the reading, idle label LAST THINK, 47 tests | Draft — superseded by 0.3.2 |
 | 0.3.0 | 2026-11-11 | Manual pause button and Alt+Shift+P, frozen clocks and held number, pause time excluded from the session, slower live-number decay, 42 tests | Draft — superseded by 0.3.1 |
 | 0.2.2 | 2026-11-11 | Stable dock: the HUD and rail no longer re-dock as the ChatGPT composer grows, wider gutter buffers, fixed 680px frame across all states, 38 tests | Draft — superseded by 0.3.0 |
 | 0.2.1 | 2026-11-11 | Anodised black fixed-frame HUD, 360/286/142 side-gutter layouts, left baseline rail at wide widths, 120px primary, receipt cadence chart, share sheet inside the fixed frame, no size change between states, 38 tests | Draft — superseded by 0.2.2 |
