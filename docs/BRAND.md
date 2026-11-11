@@ -1,8 +1,8 @@
 # Brand direction
 
-Status: **Thinktype is the shipping name.** Fastfingaz is the recommended rename, but no domain was
-purchased, no repository was renamed and no store listing was changed. A rename needs explicit
-approval.
+Status: **Approved 11 November 2026.** Fastfingaz is the target name. Execution is tracked in
+issue #6. The live product remains Thinktype until the coordinated rename lands; no half-renamed
+release. The domain purchase is the only spend and still needs a price check before checkout.
 
 ## What happened to Fastfingaz
 
@@ -93,8 +93,6 @@ Short, deadpan, technical. The joke is in the format, not in trying to sound lik
 
 ## Decision
 
-Approve **Fastfingaz** and the white-label direction, or keep **Thinktype** and apply the same
-visual language to the existing name. The icon and site work can proceed either way; the rename
-cannot.
-
-No domain, trademark, repository or store change happens without that approval.
+Approved by the owner on 11 November 2026: **Fastfingaz**, the white-label direction, and the
+**Pixel F** primary mark. The coordinated rename is tracked in issue #6. The domain purchase needs a
+price check before checkout; everything else in the runbook can proceed without spending money.
