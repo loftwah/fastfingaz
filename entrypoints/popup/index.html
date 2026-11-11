@@ -38,6 +38,38 @@
         <span class="hud-toggle-key">ALT+SHIFT+T</span>
       </button>
 
+      <section id="live" class="live" aria-label="Current run" hidden>
+        <div class="live-head">
+          <span>LIVE RUN</span>
+          <span id="live-status">TYPING</span>
+        </div>
+        <div class="live-main">
+          <div><b id="live-wpm">—</b><span>WPM</span></div>
+          <div><b id="live-time">0:00</b><span>TIME</span></div>
+          <div><b id="live-words">0</b><span>WORDS</span></div>
+          <div><b id="live-flow">—</b><span>FLOW</span></div>
+        </div>
+        <p class="live-note">
+          <span>NOT SAVED UNTIL SENT</span>
+          <span id="live-peak">PEAK —</span>
+        </p>
+      </section>
+
+      <section class="hud-size" aria-label="HUD size">
+        <div class="hud-size-head">
+          <span>HUD SIZE</span>
+          <span id="size-value">AUTO</span>
+        </div>
+        <div class="hud-size-buttons" role="group" aria-label="HUD size">
+          <button type="button" data-hud-size="auto" aria-pressed="true">AUTO</button>
+          <button type="button" data-hud-size="mini" aria-pressed="false">MINI</button>
+          <button type="button" data-hud-size="small" aria-pressed="false">SMALL</button>
+          <button type="button" data-hud-size="medium" aria-pressed="false">MEDIUM</button>
+          <button type="button" data-hud-size="large" aria-pressed="false">LARGE</button>
+        </div>
+        <p class="hud-size-note">AUTO FITS THE GUTTER. MANUAL SIZES MAY OVERLAP THE CONVERSATION.</p>
+      </section>
+
       <main id="view-main">
         <section class="device" aria-label="Today's readings">
           <div class="device-head">

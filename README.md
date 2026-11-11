@@ -32,7 +32,7 @@ reading in THINKING, and the idle state shows your last, best and rolling averag
 break, the pause button (or <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) freezes both clocks,
 holds the display and excludes the pause from the final session; typing resumes automatically.
 
-**Live:** https://thinktype.loftwah.com · **Current build:** v0.3.3 (early, unpacked install)
+**Live:** https://thinktype.loftwah.com · **Current build:** v0.3.4 (early, unpacked install)
 
 ## The instrument
 
@@ -41,12 +41,14 @@ Engineering**'s anodised black, signal orange, technical-label language (OP-1 fi
 palette, type, density and one signature move, not a pretend hardware shell.
 
 The HUD is a tall anodised black instrument with a black LCD, anchored to the bottom of the viewport
-and docked in the empty gutter beside the conversation. It has a fixed 680px frame and three widths
-— 360px full, 286px medium and 142px slim — and collapses to a draggable WPM orb (44–104px, resized
-from its corner grip) when collapsed or when no gutter fits. It never covers the composer, send
-button or the last message. The primary reading is 72–120px; the cadence meter is 38 bars. When the
-left gutter allows it, a companion baseline rail shows LAST / BEST / AVG, a 14-day chart and the
-recent readings. The live HUD, popup and settings page are dark; the receipt and share cards are paper.
+and docked in the empty gutter beside the conversation. It has a fixed 680px frame and three panel
+widths — 360px full, 286px medium and 142px slim — plus a draggable WPM orb (44–104px, resized from
+its corner grip). Auto fits the gutter; manual Small, Medium and Large use the chosen width and may
+overlap the conversation. It never covers the composer, send button or the last message in Auto. The
+primary reading is 72–120px; the cadence meter is 38 bars. When the left gutter allows it, a companion
+baseline rail shows LAST / BEST / AVG, a 14-day chart and the recent readings. The popup is the
+control centre: HUD toggle, a live-run panel, the size selector, today's readings and history. The
+live HUD, popup and settings page are dark; the receipt and share cards are paper.
 
 The type system is Vercel's **Geist** family, self-hosted under the SIL Open Font License:
 
@@ -184,7 +186,7 @@ images.
   included in your export.
 - Export or clear everything from the options page.
 - Permissions: `storage`, `clipboardWrite`, and the two ChatGPT host permissions. No new permissions
-  in v0.3.3.
+  in v0.3.4.
 
 Canonical policy: https://thinktype.loftwah.com/privacy · Source: [docs/PRIVACY.md](docs/PRIVACY.md)
 

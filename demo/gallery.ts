@@ -157,10 +157,16 @@ async function boot(): Promise<void> {
   const orbSize = Number.isFinite(orbParam)
     ? Math.min(104, Math.max(44, Math.round(orbParam)))
     : 60;
+  const sizeParam = params.get('size');
+  const size =
+    sizeParam === 'small' || sizeParam === 'medium' || sizeParam === 'large'
+      ? sizeParam
+      : 'auto';
   const overlay = new Overlay({
     collapsed: params.get('collapsed') === '1' || state === 'orb',
     pos: null,
     orbSize,
+    size,
     fontFacesCss: FONT_FACE_CSS,
     getComposerRect: () => composer.getBoundingClientRect(),
     getMainRect: () => document.querySelector('main')?.getBoundingClientRect() ?? null,

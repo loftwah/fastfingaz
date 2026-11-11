@@ -6,7 +6,7 @@
     <title>Changelog — Thinktype</title>
     <meta
       name="description"
-      content="Thinktype release notes: the v0.3.3 dark popup and HUD restore, the v0.3.2 draggable WPM orb, the v0.3.1 live counter fix, the v0.3.0 pause and hold, and the static site."
+      content="Thinktype release notes: the v0.3.4 four HUD sizes and live popup, the v0.3.3 dark popup and HUD restore, the v0.3.2 draggable orb, the v0.3.1 live counter fix, and the v0.3.0 pause and hold."
     />
     <link rel="canonical" href="https://thinktype.loftwah.com/changelog" />
     <meta name="theme-color" content="#f2efe6" />
@@ -81,13 +81,14 @@
           <div>
             <h1>Build notes, not marketing beats.</h1>
             <p class="meta">
-              CURRENTLY v0.3.3 / 11 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
+              CURRENTLY v0.3.4 / 11 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
             </p>
           </div>
         </header>
 
         <div class="doc-body">
           <nav class="doc-toc" aria-label="Releases">
+            <a href="#v034">v0.3.4</a>
             <a href="#v033">v0.3.3</a>
             <a href="#v032">v0.3.2</a>
             <a href="#v031">v0.3.1</a>
@@ -101,9 +102,36 @@
           </nav>
 
           <div>
+            <section class="release" id="v034">
+              <div>
+                <span class="version">v0.3.4 <span class="tag">CURRENT</span></span>
+                <span class="date">11 NOV 2026</span>
+              </div>
+              <div>
+                <h2>Four sizes, one instrument.</h2>
+                <ul>
+                  <li>
+                    <strong>Auto, Mini, Small, Medium, Large.</strong> Auto fits the conversation
+                    gutter; Mini is the WPM orb; Small, Medium and Large are the 142px, 286px and
+                    360px panels. Manual sizes use the chosen width and may overlap the conversation.
+                  </li>
+                  <li>
+                    The popup has the size selector and remembers the choice. Changing size also
+                    shows the HUD if it was hidden.
+                  </li>
+                  <li>
+                    A <strong>LIVE RUN</strong> panel in the popup shows the current held WPM, time,
+                    words, flow, peak and status from the text-free session snapshot. It disappears
+                    when the run ends.
+                  </li>
+                  <li>No new permissions; 47 tests.</li>
+                </ul>
+              </div>
+            </section>
+
             <section class="release" id="v033">
               <div>
-                <span class="version">v0.3.3 <span class="tag">CURRENT</span></span>
+                <span class="version">v0.3.3</span>
                 <span class="date">11 NOV 2026</span>
               </div>
               <div>
@@ -397,7 +425,7 @@
         </div>
         <div class="footer-bottom">
           <span>THINKTYPE.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
-          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.3</span></span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.4</span></span>
         </div>
       </div>
     </footer>

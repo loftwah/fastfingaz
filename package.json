@@ -1,6 +1,6 @@
 {
   "name": "thinktype",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": true,
   "type": "module",
   "description": "A Chrome extension that measures your real typing speed while you think out loud with ChatGPT.",

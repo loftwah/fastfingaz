@@ -185,8 +185,9 @@ baseline.
 
 The content script writes a text-free snapshot of the current run to `chrome.storage.session` about
 once per second. If the tab reloads, the HUD shows those numbers as **PAUSED / NOT RECORDED** until
-you start typing again. The snapshot contains WPM, words, time and the cadence series — never prompt
-text — and it is never saved as history.
+you start typing again. The snapshot contains the held live WPM, think/flow/peak, words, time, status
+and the cadence series — never prompt text — and it is never saved as history. The popup reads the
+same snapshot to show a **LIVE RUN** panel while you are typing.
 
 ## Pauses
 

@@ -44,13 +44,22 @@
 - [x] Reset orb size control in settings
 - [x] Full HUD drag and gutter docking unchanged
 
-## v0.3.3 — dark and recoverable (current)
+## v0.3.3 — dark and recoverable
 
 - [x] Dark popup and settings page to match the HUD
 - [x] Popup HUD show/hide toggle and `Alt+Shift+T` hint
 - [x] `OFF` badge while the HUD is hidden
 - [x] Dark scrollbars and brighter chart bars
 - [x] Regression pass on orb drag/resize, full HUD drag, pause and receipt
+
+## v0.3.4 — four sizes, live popup (current)
+
+- [x] Saved HUD size: Auto, Mini, Small, Medium, Large
+- [x] Popup size selector; changing size shows the HUD
+- [x] Manual sizes use the chosen width; Auto still fits the gutter
+- [x] Popup LIVE RUN panel with WPM, time, words, flow, peak and status
+- [x] Text-free live snapshot carries held WPM and status
+- [x] 47 tests; no new permissions
 
 ## v0.4 — calibration and trust
 

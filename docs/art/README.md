@@ -21,6 +21,7 @@ it with a static image.
 | `hud-receipt.png` | 2048×1024 | Printed receipt + NEW BEST | `demo/gallery.html?state=receipt&sidebar=1&chatgpt=1` |
 | `hud-share.png` | 2048×1024 | Share sheet | `demo/gallery.html?state=share&sidebar=1&chatgpt=1` |
 | `popup-main.png` | 380×600 | Popup history and baseline | `demo/popup-harness.html` |
+| `popup-live.png` | 380×600 | Popup live-run panel | `demo/popup-harness.html?live=1` |
 | `popup-detail.png` | 380×600 | Popup receipt detail + formats | `demo/popup-harness.html` |
 | `share/thinktype-landscape.png` | 1200×630 | Landscape receipt | `demo/cards.html?format=landscape` |
 | `share/thinktype-square.png` | 1080×1080 | Square receipt | `demo/cards.html?format=square` |

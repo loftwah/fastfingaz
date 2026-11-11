@@ -161,6 +161,8 @@ export class ComposerTracker {
       peakWpm: live.peakWpm,
       consistency: live.consistency,
       series: live.series,
+      wpm: live.wpm,
+      status: live.status,
     };
   }
 

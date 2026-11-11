@@ -22,8 +22,9 @@ import {
   type CardContext,
   type CardFormat,
 } from '../../shared/share-card';
-import { loadHistory, loadSessions, loadSettings, saveSettings } from '../../shared/storage';
-import type { HistorySummary, SessionRecord } from '../../shared/types';
+import { loadHistory, loadLiveSnapshot, loadSessions, loadSettings, saveSettings } from '../../shared/storage';
+import type { LiveSnapshot } from '../../shared/storage';
+import type { HistorySummary, HudSize, SessionRecord } from '../../shared/types';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
   const el = document.getElementById(id);
@@ -34,6 +35,8 @@ const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
 let sessions: SessionRecord[] = [];
 let history: HistorySummary = emptyHistory();
 let showHud = true;
+let hudCollapsed = false;
+let hudSize: HudSize = 'auto';
 let selectedId: string | null = null;
 let selectedFormat: CardFormat = 'landscape';
 let detailToken = 0;
@@ -61,9 +64,46 @@ function renderHudToggle(): void {
   $('hud-toggle-label').textContent = showHud ? 'HIDE HUD' : 'SHOW HUD';
 }
 
-async function refreshHudToggle(): Promise<void> {
-  showHud = (await loadSettings()).showHud;
+function renderHudSize(): void {
+  const current = hudCollapsed ? 'mini' : hudSize;
+  $('size-value').textContent = current.toUpperCase();
+  document.querySelectorAll<HTMLButtonElement>('[data-hud-size]').forEach((button) => {
+    button.setAttribute('aria-pressed', String(button.dataset.hudSize === current));
+  });
+}
+
+async function refreshHudState(): Promise<void> {
+  const settings = await loadSettings();
+  showHud = settings.showHud;
+  hudCollapsed = settings.hudCollapsed;
+  hudSize = settings.hudSize;
   renderHudToggle();
+  renderHudSize();
+}
+
+function readWpm(value: number | undefined): string {
+  return value !== undefined && value > 0 ? formatWpm(value) : '—';
+}
+
+function renderLive(snapshot: LiveSnapshot | null): void {
+  const panel = $('live');
+  const fresh = !!snapshot && Date.now() - snapshot.endedAt < 6000;
+  panel.hidden = !fresh;
+  if (!fresh || !snapshot) return;
+
+  $('live-status').textContent = (snapshot.status ?? 'typing').toUpperCase();
+  $('live-wpm').textContent = readWpm(
+    snapshot.wpm && snapshot.wpm > 0 ? snapshot.wpm : snapshot.flowWpm,
+  );
+  $('live-time').textContent = formatClock(snapshot.wallMs);
+  $('live-words').textContent = formatWords(snapshot.words);
+  $('live-flow').textContent = readWpm(snapshot.flowWpm);
+  $('live-peak').textContent =
+    snapshot.peakWpm > 0 ? `PEAK ${formatWpm(snapshot.peakWpm)}` : 'PEAK —';
+}
+
+async function refreshLive(): Promise<void> {
+  renderLive(await loadLiveSnapshot());
 }
 
 function renderMain(): void {
@@ -339,6 +379,35 @@ function bind(): void {
     toast(onChatGpt ? 'HUD SHOWN' : 'OPEN CHATGPT TO SEE THE HUD');
   });
 
+  document.querySelectorAll<HTMLButtonElement>('[data-hud-size]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const choice = button.dataset.hudSize;
+      if (choice === 'mini') {
+        showHud = true;
+        hudCollapsed = true;
+        renderHudToggle();
+        renderHudSize();
+        void saveSettings({ showHud: true, hudCollapsed: true });
+        toast('HUD: MINI');
+        return;
+      }
+      if (
+        choice === 'auto' ||
+        choice === 'small' ||
+        choice === 'medium' ||
+        choice === 'large'
+      ) {
+        showHud = true;
+        hudCollapsed = false;
+        hudSize = choice;
+        renderHudToggle();
+        renderHudSize();
+        void saveSettings({ showHud: true, hudCollapsed: false, hudSize: choice });
+        toast(`HUD: ${choice.toUpperCase()}`);
+      }
+    });
+  });
+
   $('open-options').addEventListener('click', () => {
     void chrome.runtime.openOptionsPage();
   });
@@ -407,6 +476,10 @@ function bind(): void {
   });
 
   chrome.storage.onChanged.addListener((_changes, area) => {
+    if (area === 'session') {
+      void refreshLive();
+      return;
+    }
     if (area !== 'local') return;
     void refresh();
   });
@@ -414,7 +487,7 @@ function bind(): void {
 
 async function refresh(): Promise<void> {
   [sessions, history] = await Promise.all([loadSessions(), loadHistory()]);
-  await refreshHudToggle();
+  await refreshHudState();
   if (selectedId) {
     if (sessions.some((session) => session.id === selectedId)) void openDetail(selectedId);
     else showMain();
@@ -425,11 +498,16 @@ async function refresh(): Promise<void> {
 
 async function init(): Promise<void> {
   [sessions, history] = await Promise.all([loadSessions(), loadHistory()]);
-  showHud = (await loadSettings()).showHud;
+  const settings = await loadSettings();
+  showHud = settings.showHud;
+  hudCollapsed = settings.hudCollapsed;
+  hudSize = settings.hudSize;
   $('version').textContent = `V${chrome.runtime.getManifest().version}`;
   bind();
   renderMain();
   renderHudToggle();
+  renderHudSize();
+  void refreshLive();
 }
 
 void init();

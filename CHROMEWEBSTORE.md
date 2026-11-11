@@ -23,7 +23,9 @@ A pause is not a failed run. The live reading is the last eight seconds of actua
 Key features:
 • A tall, bottom-anchored instrument that lives in the empty gutter beside the ChatGPT conversation, with a 38-bar cadence meter and a 72–120 px live WPM reading
 • A draggable WPM orb for the collapsed state: click to expand, drag to move, resize from 44–104 px with the corner grip; position and size persist
+• HUD sizes — Mini (WPM orb), Small, Medium and Large, plus Auto — selected and remembered from the popup
 • A black instrument popup and settings page, with a HUD toggle and an OFF badge so the HUD can always be brought back
+• A LIVE RUN panel in the popup with the current WPM, time, words, flow, peak and status
 • Live WPM measured over the last eight seconds of actual typing: short prompts are not diluted, think gaps hold the number, and manual pauses are excluded
 • A manual pause button and Alt+Shift+P shortcut: the clocks freeze, the number holds, and the break is excluded from the final reading
 • Think WPM, flow WPM, peak, best, weighted 20-session average, words, time, signal and consistency
@@ -71,7 +73,7 @@ English
 ### Screenshot Notes
 
 - **Screenshot 1:** the vertical HUD beside a sample ChatGPT conversation, with the live reading, cadence meter and baseline. This is a designed sample composition, not a capture of a real user session.
-- **Screenshot 2:** the popup showing today's numbers, the baseline, the 14-day chart and recent sessions. A designed sample composition, not a real account.
+- **Screenshot 2:** the popup showing the HUD size selector, today's numbers, the baseline, the 14-day chart and recent sessions. A designed sample composition, not a real account.
 - **Screenshot 3:** the printed receipt close-up with think/flow/peak, words/time/signal, serial and barcode. Needed before submission.
 - **Screenshot 4:** the three share formats side by side (1200×630, 1080×1080, 1080×1920) with the file-size row. Needed before submission.
 - **Screenshot 5:** the draft state (`DRAFT / TYPE TO MEASURE`) and the settings threshold. Needed before submission.
@@ -154,7 +156,8 @@ https://github.com/loftwah/thinktype
 
 | Version | Date | Changes | Status |
 | --- | --- | --- | --- |
-| 0.3.3 | 2026-11-11 | Dark popup and settings, HUD show/hide toggle, OFF badge when hidden, dark scrollbars and chart contrast, 47 tests | Draft — not submitted |
+| 0.3.4 | 2026-11-11 | Four HUD sizes (Auto/Mini/Small/Medium/Large), popup size selector, live-run popup panel, 47 tests | Draft — not submitted |
+| 0.3.3 | 2026-11-11 | Dark popup and settings, HUD show/hide toggle, OFF badge when hidden, dark scrollbars and chart contrast, 47 tests | Draft — superseded by 0.3.4 |
 | 0.3.2 | 2026-11-11 | Draggable collapsed orb, 44–104 px resize grip + keyboard resizing, persisted position/size, reset control, 47 tests | Draft — superseded by 0.3.3 |
 | 0.3.1 | 2026-11-11 | Live counter fixed: last 8s of actual typing, no short-run dilution, no clock bleed, think gaps hold the reading, idle label LAST THINK, 47 tests | Draft — superseded by 0.3.2 |
 | 0.3.0 | 2026-11-11 | Manual pause button and Alt+Shift+P, frozen clocks and held number, pause time excluded from the session, slower live-number decay, 42 tests | Draft — superseded by 0.3.1 |

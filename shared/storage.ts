@@ -1,6 +1,6 @@
 import { DEFAULT_SETTINGS, MAX_SESSIONS, STORAGE_KEYS } from './constants';
 import { buildHistory, emptyHistory } from './metrics';
-import type { HistorySummary, SessionRecord, Settings } from './types';
+import type { HistorySummary, LiveStatus, SessionRecord, Settings } from './types';
 
 function hasStorage(): boolean {
   return typeof chrome !== 'undefined' && !!chrome.storage?.local;
@@ -20,6 +20,9 @@ export interface LiveSnapshot {
   peakWpm: number;
   consistency: number;
   series: number[];
+  /** Current held live reading. Optional for snapshots written before 0.3.4. */
+  wpm?: number;
+  status?: LiveStatus;
 }
 
 export async function loadSettings(): Promise<Settings> {

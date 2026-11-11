@@ -212,14 +212,14 @@ Documents use a 900px maximum measure with 32px gutters. Settings are a two-colu
 sheet: a 160px margin for the section heading and a 620px content column separated by 40px. Sections
 are divided by 1px hairlines, not cards.
 
-The popup is a 380×600 black instrument report: a near-black device panel for today, a baseline
-strip, a 14-day chart, then hairline session rows. The HUD is a tall anodised black instrument with a
-black LCD display,
-anchored to the bottom of the viewport and docked in the empty gutter beside the conversation. It
-has a fixed 680px frame and three widths — 360px full, 286px medium, 142px slim — and collapses to a
-draggable WPM orb (44–104px, resized from its corner grip) when collapsed or when no gutter fits. It
-never covers the composer, send button or the last message. When the left gutter allows it, a
-companion baseline rail shows LAST / BEST / AVG, a 14-day chart and the recent readings. The share
+The popup is a 380×600 black instrument report: a HUD toggle, a LIVE RUN panel when a run is active,
+a four-step size selector (Auto, Mini, Small, Medium, Large), a near-black device panel for today, a
+baseline strip, a 14-day chart, then hairline session rows. The HUD is a tall anodised black
+instrument with a black LCD display, anchored to the bottom of the viewport and docked in the empty
+gutter beside the conversation. It has a fixed 680px frame and three panel widths — 360px full, 286px
+medium, 142px slim — plus the Mini orb (44–104px, resized from its corner grip). Auto fits the gutter;
+a manual size uses the chosen width and may overlap the conversation. When the left gutter allows it,
+a companion baseline rail shows LAST / BEST / AVG, a 14-day chart and the recent readings. The share
 sheet lives inside the same dark frame; the receipt is a paper print inside it, with a serial,
 barcode and a small NEW BEST stamp. Share cards are designed at 1200×630, 1080×1080 and 1080×1920,
 with 64–84px margins and a cadence chart scaled to the format.
@@ -301,11 +301,12 @@ state is readable at a glance. The share sheet
 replaces the receipt with three format tabs, a live preview, the file name and PNG size, and
 **COPY IMAGE / DOWNLOAD / BACK**.
 
-**The Gutter Rule.** The HUD lives in the empty gutter beside the conversation, never over the
-composer, send button or last message. Use the full 300px panel when the gutter allows it, the 232px
-medium panel at narrow widths, and the 142px slim strip when only a slim column fits. If there is no
-gutter on either side, it may use the sidebar area rather than cover the conversation; Reset HUD
-position returns it to the dock.
+**The Gutter Rule.** In Auto, the HUD lives in the empty gutter beside the conversation, never over
+the composer, send button or last message. Auto uses the 360px full panel when the gutter allows it,
+the 286px medium panel at narrow widths, and the 142px slim strip when only a slim column fits. If
+there is no gutter on either side, Auto uses the Mini orb rather than covering the conversation.
+Manual Small, Medium and Large ignore the gutter and may overlap the conversation; that is the
+user's explicit trade. Reset HUD position returns it to the dock.
 
 **The Hold Rule.** A pause is not a reset. The live number holds in THINKING; only the cadence meter
 dims. Never snap the big number to zero while the run is alive. The reading is updated only when a key
@@ -342,7 +343,8 @@ receipt and every format are drawn locally on canvas; no image model touches the
 ### Popup device panel
 
 The darkest panel in the popup. It holds today's think/flow pair, the session count and a one-line
-summary. Everything below it is the same black instrument shell with hairline dividers.
+summary. Above it, a LIVE RUN panel shows the current held WPM, time, words, flow and peak; below it,
+the baseline, chart and recent rows share the same black instrument shell with hairline dividers.
 
 ## Do's and Don'ts
 

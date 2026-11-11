@@ -57,6 +57,7 @@ function setupOverlay(pos: { x: number; y: number }): Overlay {
     collapsed: false,
     pos,
     orbSize: 60,
+    size: 'auto',
     fontFacesCss: FONT_FACE_CSS,
     onMove: () => undefined,
     onCollapse: () => undefined,

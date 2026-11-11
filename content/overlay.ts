@@ -12,7 +12,7 @@ import {
   type CardFormat,
 } from '../shared/share-card';
 import type { LiveSnapshot } from '../shared/storage';
-import type { HistorySummary, LiveStats, SessionRecord } from '../shared/types';
+import type { HistorySummary, HudSize, LiveStats, SessionRecord } from '../shared/types';
 import css from './overlay.css?inline';
 
 const BAR_COUNT = 38;
@@ -44,6 +44,8 @@ export interface OverlayOptions {
   pos: { x: number; y: number } | null;
   /** Collapsed orb diameter in CSS pixels. */
   orbSize: number;
+  /** Manual panel size; auto fits the gutter. */
+  size: HudSize;
   fontFacesCss: string;
   getComposerRect?: () => DOMRect | null;
   /** The host's main content rect. Its left edge is the sidebar width. */
@@ -133,6 +135,7 @@ export class Overlay {
   private collapsed: boolean;
   private customPos: { x: number; y: number } | null;
   private orbSize: number;
+  private size: HudSize;
   private drag: { dx: number; dy: number } | null = null;
   private orbDrag: {
     dx: number;
@@ -163,6 +166,7 @@ export class Overlay {
       MIN_ORB_SIZE,
       MAX_ORB_SIZE,
     );
+    this.size = options.size;
     this.customPos = options.pos;
     ensureDocumentFonts(options.fontFacesCss);
 
@@ -499,6 +503,11 @@ export class Overlay {
   setOrbSize(size: number): void {
     if (!Number.isFinite(size)) return;
     this.orbSize = clamp(Math.round(size), MIN_ORB_SIZE, MAX_ORB_SIZE);
+    this.applyPosition();
+  }
+
+  setSize(size: HudSize): void {
+    this.size = size;
     this.applyPosition();
   }
 
@@ -974,6 +983,19 @@ export class Overlay {
         railWidth: 0,
         railVisible: false,
         orb: true,
+      };
+    }
+
+    if (this.size !== 'auto') {
+      const target = this.size === 'small' ? 142 : this.size === 'medium' ? 286 : 360;
+      // A manual size intentionally ignores the gutter. The user chose it;
+      // keep it on-screen, but do not silently shrink it to the gutter.
+      return {
+        width: Math.min(target, Math.max(120, viewportWidth - 16)),
+        side: rightGap >= leftGap ? 'right' : 'left',
+        railWidth: 0,
+        railVisible: false,
+        orb: false,
       };
     }
 

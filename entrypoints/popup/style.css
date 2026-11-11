@@ -228,6 +228,145 @@ a:focus-visible {
   color: var(--muted);
 }
 
+/* Live run --------------------------------------------------------------- */
+
+.live {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--orange);
+  background: var(--device-bg);
+  color: var(--device-text);
+}
+
+.live-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--device-muted);
+}
+
+.live-head span:last-child {
+  color: var(--device-orange);
+}
+
+.live-main {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.live-main b {
+  display: block;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.live-main span {
+  display: block;
+  margin-top: 4px;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--device-muted);
+}
+
+.live-note {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 10px 0 0;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 7px;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+}
+
+/* HUD size --------------------------------------------------------------- */
+
+.hud-size {
+  margin-top: 10px;
+}
+
+.hud-size-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--faint);
+}
+
+.hud-size-head span:last-child {
+  color: var(--orange);
+}
+
+.hud-size-buttons {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 3px;
+  margin-top: 6px;
+}
+
+.hud-size-buttons button {
+  padding: 6px 2px;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--muted);
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  transition:
+    background 90ms linear,
+    border-color 90ms linear,
+    color 90ms linear;
+}
+
+.hud-size-buttons button:hover {
+  border-color: var(--orange);
+  color: var(--text);
+}
+
+.hud-size-buttons button[aria-pressed='true'] {
+  border-color: var(--orange-bright);
+  background: var(--orange-bright);
+  color: #0b0b0a;
+}
+
+.hud-size-buttons button:focus-visible {
+  outline: 1px solid var(--orange);
+  outline-offset: 1px;
+}
+
+.hud-size-note {
+  margin: 6px 0 0;
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 6.5px;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+
 /* Today device ----------------------------------------------------------- */
 
 .device {

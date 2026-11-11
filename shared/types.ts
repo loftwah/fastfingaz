@@ -7,6 +7,9 @@
 
 export const SCHEMA_VERSION = 1;
 
+/** Manual HUD size. `auto` keeps the gutter-fitting behaviour. */
+export type HudSize = 'auto' | 'small' | 'medium' | 'large';
+
 export interface Settings {
   /** Show the floating HUD on ChatGPT. Tracking continues when hidden. */
   showHud: boolean;
@@ -14,6 +17,8 @@ export interface Settings {
   hudCollapsed: boolean;
   /** Collapsed orb diameter in CSS pixels (44–104). */
   hudOrbSize: number;
+  /** Manual panel size; `auto` fits the conversation gutter. */
+  hudSize: HudSize;
   /** Last dragged position, in CSS pixels from the viewport's top-left. */
   hudPos: { x: number; y: number } | null;
   /** Gaps longer than this are treated as thinking, not typing. */

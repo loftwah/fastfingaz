@@ -46,6 +46,7 @@ async function boot(): Promise<void> {
     collapsed: settings.hudCollapsed,
     pos: settings.hudPos,
     orbSize: settings.hudOrbSize,
+    size: settings.hudSize,
     fontFacesCss: CONTENT_FONT_FACES,
     getComposerRect: () => currentEl?.getBoundingClientRect() ?? null,
     getMainRect: () => document.querySelector('main')?.getBoundingClientRect() ?? null,
@@ -172,6 +173,7 @@ async function boot(): Promise<void> {
     overlay.setCollapsed(next.hudCollapsed, false);
     overlay.setPosition(next.hudPos);
     overlay.setOrbSize(next.hudOrbSize);
+    overlay.setSize(next.hudSize);
     syncVisibility();
   });
 
