@@ -36,7 +36,7 @@
 - [x] Idle big number labelled `LAST THINK`; FLOW and PEAK are the Monkeytype comparisons
 - [x] 47 unit tests
 
-## v0.3.2 — the orb moves (current)
+## v0.3.2 — the orb moves
 
 - [x] Collapsed WPM orb is draggable; position persists
 - [x] Corner grip resizes the orb from 44px to 104px; size persists
@@ -44,8 +44,17 @@
 - [x] Reset orb size control in settings
 - [x] Full HUD drag and gutter docking unchanged
 
+## v0.3.3 — dark and recoverable (current)
+
+- [x] Dark popup and settings page to match the HUD
+- [x] Popup HUD show/hide toggle and `Alt+Shift+T` hint
+- [x] `OFF` badge while the HUD is hidden
+- [x] Dark scrollbars and brighter chart bars
+- [x] Regression pass on orb drag/resize, full HUD drag, pause and receipt
+
 ## v0.4 — calibration and trust
 
+- [ ] Per-tab opt-in for arbitrary text boxes (`activeTab` + `scripting`, generic composer adapter)
 - [ ] Calibrate the idle threshold against Monkeytype runs (see `docs/METRICS.md`)
 - [ ] Threshold presets: "fast hands", "balanced", "deep thinking"
 - [ ] Better IME accounting: derive characters from final text and composition spans

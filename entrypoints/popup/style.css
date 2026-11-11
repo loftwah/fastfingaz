@@ -1,20 +1,22 @@
 :root {
-  --bg: #f2efe6;
-  --text: #0b0b0a;
-  --muted: #6d675c;
+  --bg: #111110;
+  --text: #f7f5ef;
+  --muted: #9a9488;
   --faint: #6d675c;
-  --line: #d5cfc1;
-  --line-strong: #bdb6a7;
-  --orange: #b83600;
+  --line: #2a2824;
+  --line-strong: #3a3731;
+  --orange: #ff4d00;
   --orange-bright: #ff4d00;
-  --solid-bg: #0b0b0a;
-  --solid-text: #f2efe6;
-  --device-bg: #0b0b0a;
+  --solid-bg: #f2efe6;
+  --solid-text: #0b0b0a;
+  --hover-bg: #24221e;
+  --hover-text: #f7f5ef;
+  --device-bg: #050505;
   --device-text: #f7f5ef;
-  --device-muted: #b9b3a6;
+  --device-muted: #9a9488;
   --device-line: #2a2824;
   --device-orange: #ff4d00;
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 
@@ -27,6 +29,10 @@ html,
 body {
   margin: 0;
   padding: 0;
+}
+
+html {
+  background: var(--bg);
 }
 
 body {
@@ -43,14 +49,17 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   width: 8px;
 }
 
+html::-webkit-scrollbar-thumb,
 body::-webkit-scrollbar-thumb {
   background: var(--line-strong);
 }
 
+html::-webkit-scrollbar-track,
 body::-webkit-scrollbar-track {
   background: transparent;
 }
@@ -160,6 +169,63 @@ a:focus-visible {
 .icon-btn:hover {
   border-color: var(--orange-bright);
   color: var(--orange-bright);
+}
+
+/* HUD toggle ------------------------------------------------------------- */
+
+.hud-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text);
+  font-family:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-align: left;
+  transition:
+    background 90ms linear,
+    border-color 90ms linear,
+    color 90ms linear;
+}
+
+.hud-toggle:hover {
+  border-color: var(--orange);
+  background: var(--hover-bg);
+}
+
+.hud-toggle:focus-visible {
+  outline: 1px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.hud-dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  background: var(--orange);
+}
+
+.hud-toggle[aria-pressed='false'] .hud-dot {
+  background: var(--faint);
+}
+
+.hud-toggle-key {
+  margin-left: auto;
+  color: var(--faint);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.hud-toggle:hover .hud-toggle-key {
+  color: var(--muted);
 }
 
 /* Today device ----------------------------------------------------------- */
@@ -354,7 +420,7 @@ a:focus-visible {
 
 .chart .bar {
   fill: var(--orange-bright);
-  opacity: 0.32;
+  opacity: 0.78;
   transition: opacity 90ms linear;
 }
 
@@ -363,7 +429,7 @@ a:focus-visible {
 }
 
 .chart .bar:hover {
-  opacity: 0.7;
+  opacity: 1;
 }
 
 .chart .base {
@@ -413,8 +479,8 @@ a:focus-visible {
 
 .row:hover,
 .row:focus-visible {
-  background: var(--solid-bg);
-  color: var(--solid-text);
+  background: var(--hover-bg);
+  color: var(--hover-text);
 }
 
 .row:focus-visible {

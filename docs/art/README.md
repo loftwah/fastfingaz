@@ -1,10 +1,10 @@
 # Art and captures
 
 Everything here is rendered from the built UI or the same HTML/CSS components with sample data. The
-values are examples, not user data and not a benchmark. The live HUD and baseline rail are anodised
-black instruments in a fixed 680px frame; the receipt, popup, options page and share cards are paper
-documents. The receipt renderer in `shared/share-card.ts` stays the source of truth for share cards;
-do not replace it with a static image.
+values are examples, not user data and not a benchmark. The live HUD, baseline rail, popup and
+settings page are anodised black instruments; the receipt and share cards are paper documents. The
+receipt renderer in `shared/share-card.ts` stays the source of truth for share cards; do not replace
+it with a static image.
 
 | File | Size | Purpose | How it was made |
 | --- | --- | --- | --- |

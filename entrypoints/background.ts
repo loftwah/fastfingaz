@@ -1,6 +1,7 @@
 import { defineBackground } from 'wxt/utils/define-background';
+import { STORAGE_KEYS } from '../shared/constants';
 import { aggregate, dayKey } from '../shared/metrics';
-import { loadSessions } from '../shared/storage';
+import { loadSessions, loadSettings } from '../shared/storage';
 
 const action = chrome.action as typeof chrome.action & {
   setBadgeTextColor?: (details: { color: string }) => Promise<void>;
@@ -9,6 +10,13 @@ const action = chrome.action as typeof chrome.action & {
 /** The toolbar badge shows today's think WPM. No badge before the first session. */
 async function updateBadge(): Promise<void> {
   try {
+    const settings = await loadSettings();
+    if (!settings.showHud) {
+      await chrome.action.setBadgeText({ text: 'OFF' });
+      await chrome.action.setBadgeBackgroundColor({ color: '#3a3731' });
+      await action.setBadgeTextColor?.({ color: '#f7f5ef' });
+      return;
+    }
     const sessions = await loadSessions();
     const today = dayKey(Date.now());
     const stats = aggregate(sessions.filter((session) => dayKey(session.startedAt) === today));
@@ -41,6 +49,10 @@ export default defineBackground(() => {
       void updateBadge();
     }
     return false;
+  });
+
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && changes[STORAGE_KEYS.settings]) void updateBadge();
   });
 
   chrome.commands.onCommand.addListener((command) => {

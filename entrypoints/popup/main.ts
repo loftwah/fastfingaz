@@ -22,7 +22,7 @@ import {
   type CardContext,
   type CardFormat,
 } from '../../shared/share-card';
-import { loadHistory, loadSessions } from '../../shared/storage';
+import { loadHistory, loadSessions, loadSettings, saveSettings } from '../../shared/storage';
 import type { HistorySummary, SessionRecord } from '../../shared/types';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
@@ -33,6 +33,7 @@ const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
 
 let sessions: SessionRecord[] = [];
 let history: HistorySummary = emptyHistory();
+let showHud = true;
 let selectedId: string | null = null;
 let selectedFormat: CardFormat = 'landscape';
 let detailToken = 0;
@@ -48,6 +49,21 @@ function escapeHtml(value: string): string {
 
 function pluralSessions(count: number): string {
   return pluralize(count, 'session').toUpperCase();
+}
+
+function renderHudToggle(): void {
+  const button = $('toggle-hud');
+  button.setAttribute('aria-pressed', String(showHud));
+  button.setAttribute(
+    'aria-label',
+    showHud ? 'HUD is visible. Hide it.' : 'HUD is hidden. Show it.',
+  );
+  $('hud-toggle-label').textContent = showHud ? 'HIDE HUD' : 'SHOW HUD';
+}
+
+async function refreshHudToggle(): Promise<void> {
+  showHud = (await loadSettings()).showHud;
+  renderHudToggle();
 }
 
 function renderMain(): void {
@@ -305,6 +321,24 @@ function currentSession(): SessionRecord | null {
 }
 
 function bind(): void {
+  $('toggle-hud').addEventListener('click', async () => {
+    showHud = !showHud;
+    renderHudToggle();
+    await saveSettings({ showHud });
+    if (!showHud) {
+      toast('HUD HIDDEN — ALT+SHIFT+T TO SHOW');
+      return;
+    }
+    let onChatGpt = false;
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      onChatGpt = !!tab?.url && /^https:\/\/(chatgpt\.com|chat\.openai\.com)\//.test(tab.url);
+    } catch {
+      // The active tab may be a restricted page.
+    }
+    toast(onChatGpt ? 'HUD SHOWN' : 'OPEN CHATGPT TO SEE THE HUD');
+  });
+
   $('open-options').addEventListener('click', () => {
     void chrome.runtime.openOptionsPage();
   });
@@ -380,6 +414,7 @@ function bind(): void {
 
 async function refresh(): Promise<void> {
   [sessions, history] = await Promise.all([loadSessions(), loadHistory()]);
+  await refreshHudToggle();
   if (selectedId) {
     if (sessions.some((session) => session.id === selectedId)) void openDetail(selectedId);
     else showMain();
@@ -390,9 +425,11 @@ async function refresh(): Promise<void> {
 
 async function init(): Promise<void> {
   [sessions, history] = await Promise.all([loadSessions(), loadHistory()]);
+  showHud = (await loadSettings()).showHud;
   $('version').textContent = `V${chrome.runtime.getManifest().version}`;
   bind();
   renderMain();
+  renderHudToggle();
 }
 
 void init();

@@ -1,1 +1,13 @@
 @import '../entrypoints/popup/style.css';
+
+/* Screenshot harness: the real popup scrolls; the capture should not show a
+   transient system scrollbar. */
+html,
+body {
+  scrollbar-width: none;
+  overflow: hidden;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}

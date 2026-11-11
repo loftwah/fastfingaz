@@ -1,9 +1,15 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Thinktype</title>
+    <style>
+      html {
+        background: #111110;
+        color-scheme: dark;
+      }
+    </style>
     <link rel="stylesheet" href="/fonts.css" />
     <link rel="stylesheet" href="./style.css" />
   </head>
@@ -24,6 +30,13 @@
           </button>
         </div>
       </header>
+
+      <button id="toggle-hud" class="hud-toggle" type="button" aria-pressed="true"
+              aria-keyshortcuts="Alt+Shift+T" title="Show or hide the HUD (Alt+Shift+T)">
+        <span class="hud-dot" aria-hidden="true"></span>
+        <span id="hud-toggle-label">HIDE HUD</span>
+        <span class="hud-toggle-key">ALT+SHIFT+T</span>
+      </button>
 
       <main id="view-main">
         <section class="device" aria-label="Today's readings">

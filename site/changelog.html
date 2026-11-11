@@ -6,7 +6,7 @@
     <title>Changelog — Thinktype</title>
     <meta
       name="description"
-      content="Thinktype release notes: the v0.3.2 draggable, resizable WPM orb, the v0.3.1 live counter fix, the v0.3.0 pause and hold, honest best and average history, three share card formats, and the static site."
+      content="Thinktype release notes: the v0.3.3 dark popup and HUD restore, the v0.3.2 draggable WPM orb, the v0.3.1 live counter fix, the v0.3.0 pause and hold, and the static site."
     />
     <link rel="canonical" href="https://thinktype.loftwah.com/changelog" />
     <meta name="theme-color" content="#f2efe6" />
@@ -81,13 +81,14 @@
           <div>
             <h1>Build notes, not marketing beats.</h1>
             <p class="meta">
-              CURRENTLY v0.3.2 / 11 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
+              CURRENTLY v0.3.3 / 11 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
             </p>
           </div>
         </header>
 
         <div class="doc-body">
           <nav class="doc-toc" aria-label="Releases">
+            <a href="#v033">v0.3.3</a>
             <a href="#v032">v0.3.2</a>
             <a href="#v031">v0.3.1</a>
             <a href="#v030">v0.3.0</a>
@@ -100,9 +101,39 @@
           </nav>
 
           <div>
+            <section class="release" id="v033">
+              <div>
+                <span class="version">v0.3.3 <span class="tag">CURRENT</span></span>
+                <span class="date">11 NOV 2026</span>
+              </div>
+              <div>
+                <h2>Dark, and easier to get back.</h2>
+                <ul>
+                  <li>
+                    The popup and settings page are now anodised black, matching the HUD. Receipts
+                    and share cards stay paper.
+                  </li>
+                  <li>
+                    A HUD toggle sits at the top of the popup: <strong>HIDE HUD</strong> /
+                    <strong>SHOW HUD</strong>. The toolbar badge reads <code>OFF</code> while the HUD
+                    is hidden, and <strong>Alt+Shift+T</strong> still toggles it on ChatGPT.
+                  </li>
+                  <li>
+                    Chart bars and scrollbars retuned for the dark palette; the light flash and muddy
+                    bars are gone.
+                  </li>
+                  <li>
+                    Scope unchanged: chatgpt.com only. A per-tab opt-in for other text boxes is on the
+                    roadmap, not in this build.
+                  </li>
+                  <li>No new permissions; 47 tests.</li>
+                </ul>
+              </div>
+            </section>
+
             <section class="release" id="v032">
               <div>
-                <span class="version">v0.3.2 <span class="tag">CURRENT</span></span>
+                <span class="version">v0.3.2</span>
                 <span class="date">11 NOV 2026</span>
               </div>
               <div>
@@ -366,7 +397,7 @@
         </div>
         <div class="footer-bottom">
           <span>THINKTYPE.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
-          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.2</span></span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.3</span></span>
         </div>
       </div>
     </footer>

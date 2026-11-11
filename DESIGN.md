@@ -157,7 +157,7 @@ A warm paper/ink neutral field with a single synthetic orange. The orange is a s
 ### Neutral
 
 - **Ink** (`ink`, #0b0b0a): device ground, primary text on paper.
-- **Paper** (`paper`, #f2efe6): documents, receipts, popup/options ground.
+- **Paper** (`paper`, #f2efe6): receipts, share cards and printed documents.
 - **Paper Deep** (`paper-deep`, #e8e3d7): paper hover and inset fields.
 - **White** (`white`, #f7f5ef): primary text on ink.
 - **Muted Dark** (`muted-dark`, #9a9488): secondary text on ink (6.5:1).
@@ -167,10 +167,10 @@ A warm paper/ink neutral field with a single synthetic orange. The orange is a s
 
 ### Named Rules
 
-**The Paper/Device Rule.** Documents are paper with ink text; instruments are ink panels with paper
-text. The live HUD and the baseline rail are instruments, so they are anodised black; the receipt,
-popup, options page and share cards are documents, so they are paper. Do not invert them for fashion,
-and do not place a paper card inside a paper card without a hairline.
+**The Paper/Device Rule.** Instruments are ink panels with paper text; paper is for things you print
+or share. The live HUD, baseline rail, popup and options page are instruments, so they are anodised
+black. The receipt and share cards are documents, so they are paper. Do not invert the instrument
+shell to paper for fashion, and do not place a paper card inside a paper card without a hairline.
 
 **The One Signal Rule.** Signal orange is reserved for live data, the meter, focus and primary
 interaction. It never becomes a background wash, a gradient, or a second decorative accent.
@@ -212,8 +212,9 @@ Documents use a 900px maximum measure with 32px gutters. Settings are a two-colu
 sheet: a 160px margin for the section heading and a 620px content column separated by 40px. Sections
 are divided by 1px hairlines, not cards.
 
-The popup is a 380×600 document: a black device panel for today, a baseline strip, a 14-day chart,
-then hairline session rows. The HUD is a tall anodised black instrument with a black LCD display,
+The popup is a 380×600 black instrument report: a near-black device panel for today, a baseline
+strip, a 14-day chart, then hairline session rows. The HUD is a tall anodised black instrument with a
+black LCD display,
 anchored to the bottom of the viewport and docked in the empty gutter beside the conversation. It
 has a fixed 680px frame and three widths — 360px full, 286px medium, 142px slim — and collapses to a
 draggable WPM orb (44–104px, resized from its corner grip) when collapsed or when no gutter fits. It
@@ -340,14 +341,14 @@ receipt and every format are drawn locally on canvas; no image model touches the
 
 ### Popup device panel
 
-The only black panel in the popup. It holds today's think/flow pair, the session count and a one-line
-summary. Everything below it is a paper document.
+The darkest panel in the popup. It holds today's think/flow pair, the session count and a one-line
+summary. Everything below it is the same black instrument shell with hairline dividers.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- **Do** keep documents paper and instruments ink; use the 1px hairline as the main divider.
+- **Do** keep instruments black and paper for receipts and share cards; use the 1px hairline as the main divider.
 - **Do** set every number and technical label in Geist Mono with tabular numerals.
 - **Do** use Signal Orange for live state, data, focus and one primary action.
 - **Do** use Signal Orange Ink for small orange text on paper and Display for large numerals.
