@@ -219,7 +219,7 @@ instrument with a black LCD display, anchored to the bottom of the viewport and 
 gutter beside the conversation. It has a fixed 680px frame and three panel widths — 360px full, 286px
 medium, 142px slim — plus the Mini orb (44–104px, resized from its corner grip). Auto fits the gutter;
 a manual size uses the chosen width and may overlap the conversation. When the left gutter allows it,
-a companion baseline rail shows LAST / BEST / AVG, a 14-day chart and the recent readings. The share
+an optional baseline rail can show LAST / BEST / AVG, a 14-day chart and the recent readings; it is off by default so the HUD remains a single display. The share
 sheet lives inside the same dark frame; the receipt is a paper print inside it, with a serial,
 barcode and a small NEW BEST stamp. Share cards are designed at 1200×630, 1080×1080 and 1080×1920,
 with 64–84px margins and a cadence chart scaled to the format.
@@ -279,7 +279,7 @@ label, a four-cell meta row (TIME / WORDS / SIGNAL / STEADY), a 38-bar cadence m
 FLOW / THINK / PEAK row. The dark baseline strip below shows BEST THINK, AVG THINK / 20, BEST FLOW,
 AVG FLOW / 20, READINGS and DRAFTS. The footer carries the state and one short line.
 
-When the left gutter is wide enough, a companion **baseline rail** docks opposite the HUD at the same
+When enabled, a **baseline rail** docks opposite the HUD at the same
 height: LAST / BEST / AVG in 54px numerals, a 14-day think WPM chart, BEST FLOW / AVG FLOW /
 READINGS / DRAFTS, and the last four readings. It is a log tape, not a second dashboard.
 

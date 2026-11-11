@@ -44,7 +44,7 @@ npm run site:deploy  # build and deploy to Cloudflare Pages
 
 - `demo/gallery.html` mounts the real HUD over a mock conversation. Query parameters:
   `state=typing|thinking|draft|idle|empty|receipt|receipt-draft|share`, `sidebar=0|1`, `wide=1`,
-  `label=0`.
+  `label=0`, `rail=1` (opt-in baseline rail; off by default).
 - `demo/artboards.html?board=og|x|github|instagram|story|promo` renders the marketing artboards at
   the exact asset sizes.
 - `demo/cards.html?format=landscape|square|story` renders the share cards; add `stress=1` or

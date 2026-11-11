@@ -61,7 +61,7 @@
 - [x] Text-free live snapshot carries held WPM and status
 - [x] 47 tests; no new permissions
 
-## v0.4.0 — Fastfingaz (current)
+## v0.4.0 — Fastfingaz
 
 - [x] Rename the product, package, manifest and every visible surface to Fastfingaz
 - [x] Pixel F icon set at 16/32/48/128/180/192/512, maskable and favicon
@@ -69,6 +69,12 @@
 - [x] GitHub repository renamed to `loftwah/fastfingaz`; old release URLs redirect
 - [x] 0.4.0 release zip, tag and Chrome Web Store copy
 - [x] No new permissions; local history preserved under the existing `tt:` keys
+
+## v0.4.1 — one instrument by default (current)
+
+- [x] Baseline rail is opt-in and off by default; the HUD is the only display
+- [x] Settings toggle restores the 14-day chart, best flow and recent sessions panel
+- [x] No new permissions; 47 tests
 
 ## v0.4.x — calibration and trust
 

@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — Fastfingaz
 
-> Last Updated: 2026-11-11
+> Last Updated: 2026-11-12
 
 ## Store Listing
 
@@ -32,6 +32,7 @@ Key features:
 • A printed receipt after every sent prompt, with a serial, barcode and a small NEW BEST stamp
 • Share cards in three designed formats — 1200×630, 1080×1080 and 1080×1920 — with a share sheet, live preview, copy and PNG download
 • Durable local history: best think/flow/peak, last eligible run, rolling average and all-time average
+• The baseline rail is optional and off by default, so the HUD is a single display; enable it in settings for the 14-day chart and recent-session panel
 • Controls for your thinking threshold, minimum message length, HUD position and privacy
 
 How to use it:
@@ -156,7 +157,8 @@ https://github.com/loftwah/fastfingaz
 
 | Version | Date | Changes | Status |
 | --- | --- | --- | --- |
-| 0.4.0 | 2026-11-11 | Renamed to Fastfingaz; Pixel F icon set at 16/32/48/128/180/192/512 plus maskable and favicon; new site host, OG/store art and 301 from the old domain; no new permissions, 47 tests | Draft — not submitted |
+| 0.4.1 | 2026-11-12 | Baseline rail is opt-in and off by default, so the HUD is a single display; settings toggle restores it; no new permissions, 47 tests | Draft — not submitted |
+| 0.4.0 | 2026-11-11 | Renamed to Fastfingaz; Pixel F icon set at 16/32/48/128/180/192/512 plus maskable and favicon; new site host, OG/store art and 301 from the old domain; no new permissions, 47 tests | Draft — superseded by 0.4.1 |
 | 0.3.4 | 2026-11-11 | Four HUD sizes (Auto/Mini/Small/Medium/Large), popup size selector, live-run popup panel, 47 tests | Draft — superseded by 0.4.0 |
 | 0.3.3 | 2026-11-11 | Dark popup and settings, HUD show/hide toggle, OFF badge when hidden, dark scrollbars and chart contrast, 47 tests | Draft — superseded by 0.3.4 |
 | 0.3.2 | 2026-11-11 | Draggable collapsed orb, 44–104 px resize grip + keyboard resizing, persisted position/size, reset control, 47 tests | Draft — superseded by 0.3.3 |

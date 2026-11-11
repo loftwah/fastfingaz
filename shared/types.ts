@@ -19,6 +19,8 @@ export interface Settings {
   hudOrbSize: number;
   /** Manual panel size; `auto` fits the conversation gutter. */
   hudSize: HudSize;
+  /** Show the companion baseline rail at wide widths. Off by default. */
+  showRail: boolean;
   /** Last dragged position, in CSS pixels from the viewport's top-left. */
   hudPos: { x: number; y: number } | null;
   /** Gaps longer than this are treated as thinking, not typing. */

@@ -167,6 +167,7 @@ async function boot(): Promise<void> {
     pos: null,
     orbSize,
     size,
+    showRail: params.get('rail') === '1',
     fontFacesCss: FONT_FACE_CSS,
     getComposerRect: () => composer.getBoundingClientRect(),
     getMainRect: () => document.querySelector('main')?.getBoundingClientRect() ?? null,

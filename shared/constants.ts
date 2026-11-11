@@ -28,6 +28,7 @@ export const DEFAULT_SETTINGS: Settings = {
   hudOrbSize: 60,
   hudSize: 'auto',
   hudPos: null,
+  showRail: false,
   idleThresholdMs: 2000,
   minSessionChars: 32,
   storeText: false,

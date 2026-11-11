@@ -46,6 +46,8 @@ export interface OverlayOptions {
   orbSize: number;
   /** Manual panel size; auto fits the gutter. */
   size: HudSize;
+  /** Show the companion baseline rail at wide widths. */
+  showRail: boolean;
   fontFacesCss: string;
   getComposerRect?: () => DOMRect | null;
   /** The host's main content rect. Its left edge is the sidebar width. */
@@ -508,6 +510,11 @@ export class Overlay {
 
   setSize(size: HudSize): void {
     this.size = size;
+    this.applyPosition();
+  }
+
+  setShowRail(showRail: boolean): void {
+    this.options.showRail = showRail;
     this.applyPosition();
   }
 
@@ -1003,7 +1010,8 @@ export class Overlay {
     const gap = side === 'right' ? rightGap : leftGap;
     if (gap >= minWidth + 20) {
       const width = clamp(minWidth, gap - 32, target);
-      const railVisible = !this.customPos && side === 'right' && leftGap >= 300;
+      const railVisible =
+        this.options.showRail && !this.customPos && side === 'right' && leftGap >= 300;
       const railWidth = railVisible ? clamp(240, leftGap - 40, 320) : 0;
       return { width, side, railWidth, railVisible, orb: false };
     }

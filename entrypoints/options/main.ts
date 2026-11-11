@@ -29,6 +29,7 @@ function paint(next: Settings): void {
 
   ($('minchars') as HTMLInputElement).value = String(next.minSessionChars);
   ($('show-hud') as HTMLInputElement).checked = next.showHud;
+  ($('show-rail') as HTMLInputElement).checked = next.showRail;
   ($('store-text') as HTMLInputElement).checked = next.storeText;
 }
 
@@ -56,6 +57,10 @@ function bind(): void {
 
   ($('show-hud') as HTMLInputElement).addEventListener('change', (event) => {
     void persist({ showHud: (event.target as HTMLInputElement).checked });
+  });
+
+  ($('show-rail') as HTMLInputElement).addEventListener('change', (event) => {
+    void persist({ showRail: (event.target as HTMLInputElement).checked });
   });
 
   ($('store-text') as HTMLInputElement).addEventListener('change', (event) => {
