@@ -1,5 +1,5 @@
 ---
-name: Thinktype
+name: Fastfingaz
 description: A typing instrument for thoughts — a field instrument for measuring composition speed in ChatGPT.
 colors:
   ink: "#0b0b0a"
@@ -114,7 +114,7 @@ components:
     padding: "13px 14px 12px"
 ---
 
-# Design System: Thinktype
+# Design System: Fastfingaz
 
 ## Overview
 
@@ -126,7 +126,7 @@ gamified, never glossy. The reference is Teenage Engineering's OP-1 field / TX-6
 technical labelling, density and one signature move, not a costume of hardware controls.
 
 The type is Vercel's Geist family. Geist Sans carries prose and UI; Geist Mono carries every number,
-serial and label; Geist Pixel Square appears only in the T mark and display wordmark. The signature
+serial and label; Geist Pixel Square appears only in the Pixel F mark and display wordmark. The signature
 move is the **receipt**: a sent prompt is printed as a paper record, and that same record is the share
 card.
 
@@ -203,7 +203,7 @@ display face.
 **The Mono Measures Rule.** Every number, unit, serial, timestamp and technical label is Geist Mono.
 Prose is never mono; measurement is never proportional.
 
-**The Pixel Is a Mark Rule.** Geist Pixel Square may draw the T mark or a wordmark at 18px or larger.
+**The Pixel Is a Mark Rule.** Geist Pixel Square may draw the Pixel F mark or a wordmark at 18px or larger.
 It never sets body copy, small labels, or numbers.
 
 ## Layout
@@ -241,7 +241,7 @@ shadow. No glass, no blur, no coloured halos.
 
 Tight, physical corners: 2px for controls, 6px for the popup device, 12px for the floating HUD, 0 for
 documents. The orb is the only circle. Borders are 1px; the signature orange rule is 6px. Pixel
-blocks build the T mark. The receipt's perforation is a dashed 1px line — the only dashed rule in the
+blocks build the Pixel F mark. The receipt's perforation is a dashed 1px line — the only dashed rule in the
 system.
 
 **The Tight Corner Rule.** If a rectangle needs a 16px radius to feel friendly, the composition is
@@ -273,7 +273,7 @@ doing the work wrong. Radii stay under 12px except the orb.
 ### HUD
 
 A tall anodised black instrument with a black LCD window, anchored to the bottom of the viewport in a
-fixed 680px frame. Header with orange square, `THINKTYPE`, `TT-02`, a dock/reset control, collapse and
+fixed 680px frame. Header with orange square, `FASTFINGAZ`, `FF-02`, a dock/reset control, collapse and
 hide. The LCD holds a 120px mono live WPM (100px on medium, 72px on slim) with `WPM` and a state
 label, a four-cell meta row (TIME / WORDS / SIGNAL / STEADY), a 38-bar cadence meter and a three-cell
 FLOW / THINK / PEAK row. The dark baseline strip below shows BEST THINK, AVG THINK / 20, BEST FLOW,

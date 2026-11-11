@@ -198,7 +198,7 @@ async function boot(): Promise<void> {
     });
     if (state === 'share') {
       await new Promise((resolve) => setTimeout(resolve, 250));
-      const host = document.getElementById('thinktype-hud-host');
+      const host = document.getElementById('fastfingaz-hud-host');
       host?.shadowRoot?.querySelector<HTMLButtonElement>('[data-act="share"]')?.click();
     }
   } else {

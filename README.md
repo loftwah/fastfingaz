@@ -1,24 +1,24 @@
 <div align="center">
-  <img src="docs/art/social/og-1200x630.png" alt="Thinktype — measure the speed of a thought" width="100%" />
+  <img src="docs/art/social/og-1200x630.png" alt="Fastfingaz — measure the speed of a thought" width="100%" />
 </div>
 
-<h1 align="center">thinktype</h1>
+<h1 align="center">Fastfingaz</h1>
 
 <p align="center"><strong>A typing instrument for thoughts.</strong></p>
 
 <p align="center">
-  <a href="https://thinktype.loftwah.com">Live site</a> ·
+  <a href="https://fastfingaz.loftwah.com">Live site</a> ·
   Chrome MV3 ·
   <a href="docs/METRICS.md">how the metrics work</a> ·
   <a href="DESIGN.md">design notes</a> ·
   <a href="CONTRIBUTING.md">contributing</a>
 </p>
 
-Thinktype measures how fast you compose your own words inside ChatGPT, separates thinking time from
+Fastfingaz measures how fast you compose your own words inside ChatGPT, separates thinking time from
 hands-on typing time, and prints a receipt for every prompt you send.
 
 Typing tests measure transcription: the sentence already exists. That number says very little about
-writing original thought. Thinktype has no target text, so it measures the thing you actually care
+writing original thought. Fastfingaz has no target text, so it measures the thing you actually care
 about — how quickly a finished idea becomes text — and shows both clocks:
 
 - **Think WPM** — the whole message, thinking pauses included.
@@ -26,13 +26,13 @@ about — how quickly a finished idea becomes text — and shows both clocks:
 
 The gap between them is the interesting part. The big number while typing is **live flow**; the big
 number when idle is the last session's **Think WPM**, not your typing speed. A 130 WPM Monkeytype run
-and a 100 WPM Thinktype flow can both be true: one is transcription, the other is composition. Use
+and a 100 WPM Fastfingaz flow can both be true: one is transcription, the other is composition. Use
 **Peak** for the closest thing to a typing sprint. A pause is not a reset: the HUD holds the live
 reading in THINKING, and the idle state shows your last, best and rolling average. For a deliberate
 break, the pause button (or <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) freezes both clocks,
 holds the display and excludes the pause from the final session; typing resumes automatically.
 
-**Live:** https://thinktype.loftwah.com · **Current build:** v0.3.4 (early, unpacked install)
+**Live:** https://fastfingaz.loftwah.com · **Current build:** v0.4.0 (early, unpacked install)
 
 ## The instrument
 
@@ -56,7 +56,7 @@ The type system is Vercel's **Geist** family, self-hosted under the SIL Open Fon
 | --- | --- |
 | **Geist Sans** | UI, running copy, settings prose |
 | **Geist Mono** | Every number, technical label, serial and timestamp |
-| **Geist Pixel Square** | The T mark and display wordmark only — never body copy |
+| **Geist Pixel Square** | The Pixel F mark and display wordmark only — never body copy |
 
 No gradient text, glass, glows, or serif accents. The signature move is the **receipt**: when you
 send a prompt, the HUD prints a paper receipt. That receipt is also the share card, in three designed
@@ -83,8 +83,8 @@ is the honest replacement. The formulas, eligibility gates and limitations are i
 ## Install
 
 ```bash
-git clone https://github.com/loftwah/thinktype.git
-cd thinktype
+git clone https://github.com/loftwah/fastfingaz.git
+cd fastfingaz
 npm install
 npm run dev
 ```
@@ -102,11 +102,11 @@ visible `unpacked/` folder.
 
 The raw build lives in `.output/`, which macOS hides because it starts with a dot. If you want to
 load it directly, press <kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>G</kbd> in the file picker and paste
-`/Users/YOU/gits/thinktype/.output/chrome-mv3`; <kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>.</kbd>
+`/Users/YOU/gits/fastfingaz/.output/chrome-mv3`; <kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>.</kbd>
 toggles hidden folders in Finder.
 
 Prefer a packaged download? Grab the
-[latest release](https://github.com/loftwah/thinktype/releases/latest), unzip it, and load the folder.
+[latest release](https://github.com/loftwah/fastfingaz/releases/latest), unzip it, and load the folder.
 
 Open [chatgpt.com](https://chatgpt.com), start a new chat, and type a real prompt. The HUD docks in
 the bottom gutter. Send the message to get a receipt; **Share card** opens the format sheet. Toggle
@@ -115,15 +115,15 @@ the HUD any time with <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd>.
 ## Screenshots
 
 <p align="center">
-  <img src="docs/art/hud-2048.png" alt="Thinktype vertical HUD in the right gutter of a conversation" width="100%" />
+  <img src="docs/art/hud-2048.png" alt="Fastfingaz vertical HUD in the right gutter of a conversation" width="100%" />
 </p>
 
 <p align="center">
-  <img src="docs/art/hud-receipt.png" alt="Thinktype receipt with a NEW BEST stamp" width="100%" />
+  <img src="docs/art/hud-receipt.png" alt="Fastfingaz receipt with a NEW BEST stamp" width="100%" />
 </p>
 
 <p align="center">
-  <img src="docs/art/share/thinktype-square.png" alt="Thinktype square share card" width="480" />
+  <img src="docs/art/share/fastfingaz-square.png" alt="Fastfingaz square share card" width="480" />
 </p>
 
 Sample data only. These are sample readings, not user data or a benchmark. More captures are in
@@ -160,17 +160,17 @@ PORT=4319 npm run site:serve   # http://127.0.0.1:4319
 npm run site:deploy            # needs CLOUDFLARE_* in .env
 ```
 
-The site is deployed on **Cloudflare Pages** as the `thinktype` project and served at
-**https://thinktype.loftwah.com**. The DNS record is a CNAME from `thinktype.loftwah.com` to
-`thinktype-7sb.pages.dev`. No R2 bucket is used; the Pages assets are enough.
+The site is deployed on **Cloudflare Pages** as the `fastfingaz` project and served at
+**https://fastfingaz.loftwah.com**. The DNS record is a CNAME from `fastfingaz.loftwah.com` to
+`fastfingaz-7sb.pages.dev`. No R2 bucket is used; the Pages assets are enough.
 
 SEO/OG assets:
 
-- `https://thinktype.loftwah.com/social/og-1200x630.png`
-- `https://thinktype.loftwah.com/social/x-1200x675.png`
-- `https://thinktype.loftwah.com/social/instagram-1080x1080.png`
-- `https://thinktype.loftwah.com/social/story-1080x1920.png`
-- `https://thinktype.loftwah.com/social/github-1280x640.png`
+- `https://fastfingaz.loftwah.com/social/og-1200x630.png`
+- `https://fastfingaz.loftwah.com/social/x-1200x675.png`
+- `https://fastfingaz.loftwah.com/social/instagram-1080x1080.png`
+- `https://fastfingaz.loftwah.com/social/story-1080x1920.png`
+- `https://fastfingaz.loftwah.com/social/github-1280x640.png`
 
 The site includes canonical URLs, Open Graph and Twitter tags, JSON-LD `SoftwareApplication`, a
 sitemap, robots.txt, a 404 page, a favicon, a web manifest and long-lived cache headers for fonts and
@@ -186,9 +186,9 @@ images.
   included in your export.
 - Export or clear everything from the options page.
 - Permissions: `storage`, `clipboardWrite`, and the two ChatGPT host permissions. No new permissions
-  in v0.3.4.
+  in v0.4.0.
 
-Canonical policy: https://thinktype.loftwah.com/privacy · Source: [docs/PRIVACY.md](docs/PRIVACY.md)
+Canonical policy: https://fastfingaz.loftwah.com/privacy · Source: [docs/PRIVACY.md](docs/PRIVACY.md)
 
 ## Project layout
 

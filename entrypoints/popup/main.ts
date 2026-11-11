@@ -28,7 +28,7 @@ import type { HistorySummary, HudSize, SessionRecord } from '../../shared/types'
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
   const el = document.getElementById(id);
-  if (!el) throw new Error(`Thinktype popup: missing #${id}`);
+  if (!el) throw new Error(`Fastfingaz popup: missing #${id}`);
   return el as T;
 };
 

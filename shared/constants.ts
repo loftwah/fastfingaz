@@ -1,10 +1,14 @@
 import type { Settings } from './types';
 
-export const GITHUB_URL = 'https://github.com/loftwah/thinktype';
+export const GITHUB_URL = 'https://github.com/loftwah/fastfingaz';
 export const RELEASES_URL = `${GITHUB_URL}/releases/latest`;
-export const SITE_HOST = 'thinktype.loftwah.com';
+export const SITE_HOST = 'fastfingaz.loftwah.com';
 export const SITE_URL = `https://${SITE_HOST}`;
 
+/**
+ * Internal keys keep the `tt:` prefix from the Thinktype era. Renaming them
+ * would orphan the local history of everyone who already installed 0.3.x.
+ */
 export const STORAGE_KEYS = {
   settings: 'tt:settings:v1',
   sessions: 'tt:sessions:v1',

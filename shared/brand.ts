@@ -1,5 +1,5 @@
 /**
- * Thinktype brand tokens.
+ * Fastfingaz brand tokens.
  *
  * The world: a Teenage Engineering field instrument — anodised black, warm
  * paper, one signal orange. Vercel's Geist family supplies the type.
@@ -67,7 +67,7 @@ export function serialFromId(id: string): string {
  */
 export function ensureDocumentFonts(cssText: string): void {
   if (!cssText) return;
-  const id = 'thinktype-fonts';
+  const id = 'fastfingaz-fonts';
   if (document.getElementById(id)) return;
   const style = document.createElement('style');
   style.id = id;

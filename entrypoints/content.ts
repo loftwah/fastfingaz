@@ -20,7 +20,7 @@ import { ComposerTracker, EMPTY_LIVE } from '../content/tracker';
 
 declare global {
   interface Window {
-    __thinktype?: boolean;
+    __fastfingaz?: boolean;
   }
 }
 
@@ -28,8 +28,8 @@ export default defineContentScript({
   matches: ['https://chatgpt.com/*', 'https://chat.openai.com/*'],
   runAt: 'document_idle',
   async main() {
-    if (window.top !== window || window.__thinktype) return;
-    window.__thinktype = true;
+    if (window.top !== window || window.__fastfingaz) return;
+    window.__fastfingaz = true;
     await boot();
   },
 });
@@ -93,7 +93,7 @@ async function boot(): Promise<void> {
       overlay.showReceipt(record, { newBest, firstReading, history });
       await clearLiveSnapshot();
     } catch (error) {
-      console.warn('[thinktype] could not save session', error);
+      console.warn('[fastfingaz] could not save session', error);
       // Still show the receipt: the number is real even when storage fails.
       overlay.showReceipt(record, { newBest, firstReading, history: previous });
     }
@@ -212,6 +212,6 @@ async function boot(): Promise<void> {
     chrome.storage.onChanged.removeListener(onStorage);
     tracker?.destroy();
     overlay.destroy();
-    window.__thinktype = false;
+    window.__fastfingaz = false;
   });
 }

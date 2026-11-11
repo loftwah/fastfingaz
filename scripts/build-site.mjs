@@ -9,7 +9,6 @@
 import { cp, mkdir, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import sharp from 'sharp';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = path.join(root, 'site');
@@ -67,28 +66,36 @@ await copy(
 await copy(path.join(art, 'hud-2048.png'), path.join(out, 'assets', 'hud-in-chat.png'));
 await copy(path.join(art, 'hud-receipt.png'), path.join(out, 'assets', 'receipt.png'));
 await copy(path.join(art, 'store-1280x800.png'), path.join(out, 'assets', 'store-1280x800.png'));
-await copy(path.join(art, 'share', 'thinktype-landscape.png'), path.join(out, 'assets', 'cards', 'landscape.png'));
-await copy(path.join(art, 'share', 'thinktype-square.png'), path.join(out, 'assets', 'cards', 'square.png'));
-await copy(path.join(art, 'share', 'thinktype-story.png'), path.join(out, 'assets', 'cards', 'story.png'));
+await copy(path.join(art, 'share', 'fastfingaz-landscape.png'), path.join(out, 'assets', 'cards', 'landscape.png'));
+await copy(path.join(art, 'share', 'fastfingaz-square.png'), path.join(out, 'assets', 'cards', 'square.png'));
+await copy(path.join(art, 'share', 'fastfingaz-story.png'), path.join(out, 'assets', 'cards', 'story.png'));
 
-// 5. Manifest icons, upscaled with nearest-neighbour to keep the pixel mark.
-await copy(path.join(root, 'public', 'icon', '128.png'), path.join(out, 'icon-128.png'));
-await sharp(path.join(root, 'public', 'icon', '128.png'))
-  .resize(192, 192, { kernel: 'nearest' })
-  .png()
-  .toFile(path.join(out, 'icon-192.png'));
-await sharp(path.join(root, 'public', 'icon', '128.png'))
-  .resize(512, 512, { kernel: 'nearest' })
-  .png()
-  .toFile(path.join(out, 'icon-512.png'));
+// 5. Icon set. The staged Pixel F PNGs are the source; do not upscale the
+// 128px icon, because the maskable and Apple touch art have their own margins.
+for (const [sourceName, targetName] of [
+  ['icon-16.png', 'icon-16.png'],
+  ['icon-32.png', 'icon-32.png'],
+  ['icon-48.png', 'icon-48.png'],
+  ['icon-128.png', 'icon-128.png'],
+  ['icon-192.png', 'icon-192.png'],
+  ['icon-512.png', 'icon-512.png'],
+  ['icon-180.png', 'apple-touch-icon.png'],
+  ['maskable-192.png', 'maskable-192.png'],
+  ['maskable-512.png', 'maskable-512.png'],
+]) {
+  await copy(
+    path.join(root, 'docs', 'brand', 'fastfingaz', sourceName),
+    path.join(out, targetName),
+  );
+}
 
 // 6. A tiny build note for the deploy log.
 await writeFile(
   path.join(out, 'build.txt'),
-  `thinktype site build\nbuilt: ${new Date().toISOString()}\nsource: site/\n`,
+  `fastfingaz site build\nbuilt: ${new Date().toISOString()}\nsource: site/\n`,
   'utf8',
 );
 
 const bytes = await sizeOf(out);
 console.log(`site/dist ready: ${(bytes / 1024).toFixed(1)} KB`);
-console.log('deploy with: npx wrangler pages deploy site/dist --project-name thinktype');
+console.log('deploy with: npx wrangler pages deploy site/dist --project-name fastfingaz');

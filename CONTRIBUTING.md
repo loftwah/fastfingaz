@@ -1,4 +1,4 @@
-# Contributing to Thinktype
+# Contributing to Fastfingaz
 
 Thanks for taking a look. This is a small, privacy-first instrument; the most valuable contributions
 are careful measurement work, UI polish, and resilience against ChatGPT changes.

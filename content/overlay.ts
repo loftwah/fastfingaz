@@ -171,7 +171,7 @@ export class Overlay {
     ensureDocumentFonts(options.fontFacesCss);
 
     this.host = document.createElement('div');
-    this.host.id = 'thinktype-hud-host';
+    this.host.id = 'fastfingaz-hud-host';
     this.host.style.cssText =
       'all: initial; position: fixed; top: 0; left: 0; width: 0; height: 0; z-index: 2147483647; pointer-events: none;';
 
@@ -179,13 +179,13 @@ export class Overlay {
     shadow.innerHTML = `
       <style>${css}</style>
       <div class="hud" data-state="idle" data-panel="dashboard" data-collapsed="false" data-size="full"
-           role="region" aria-label="Thinktype typing instrument">
+           role="region" aria-label="Fastfingaz typing instrument">
         <div class="topline" aria-hidden="true"><span></span></div>
 
         <div class="bar">
           <span class="mark" aria-hidden="true"></span>
-          <span class="brand">THINKTYPE</span>
-          <span class="serial">TT-02</span>
+          <span class="brand">FASTFINGAZ</span>
+          <span class="serial">FF-02</span>
           <span class="spacer"></span>
           <button class="icon pause-icon" data-act="pause" aria-label="Pause measurement (Alt+Shift+P)" title="Pause measurement (Alt+Shift+P)">
             <svg class="pause-glyph" viewBox="0 0 12 12" width="12" height="12" fill="none"
@@ -194,17 +194,17 @@ export class Overlay {
             <svg class="play-glyph" viewBox="0 0 12 12" width="12" height="12" fill="currentColor"
                  aria-hidden="true"><path d="M3.5 2.2l6 3.8-6 3.8z"/></svg>
           </button>
-          <button class="icon" data-act="dock" aria-label="Dock Thinktype to the bottom" title="Dock to the bottom">
+          <button class="icon" data-act="dock" aria-label="Dock Fastfingaz to the bottom" title="Dock to the bottom">
             <svg viewBox="0 0 12 12" width="12" height="12" fill="none"
                  stroke="currentColor" stroke-width="1.2" stroke-linecap="square"
                  aria-hidden="true"><path d="M6 1.5v6M3.5 5.5L6 8l2.5-2.5M1.5 10.5h9"/></svg>
           </button>
-          <button class="icon" data-act="collapse" aria-label="Collapse Thinktype" title="Collapse">
+          <button class="icon" data-act="collapse" aria-label="Collapse Fastfingaz" title="Collapse">
             <svg viewBox="0 0 12 12" width="12" height="12" fill="none"
                  stroke="currentColor" stroke-width="1.2" stroke-linecap="square"
                  aria-hidden="true"><path d="M2 6h8"/></svg>
           </button>
-          <button class="icon" data-act="hide" aria-label="Hide Thinktype" title="Hide (Alt+Shift+T)">
+          <button class="icon" data-act="hide" aria-label="Hide Fastfingaz" title="Hide (Alt+Shift+T)">
             <svg viewBox="0 0 12 12" width="12" height="12" fill="none"
                  stroke="currentColor" stroke-width="1.2" stroke-linecap="square"
                  aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg>
@@ -311,7 +311,7 @@ export class Overlay {
           </div>
           <div class="s-preview" data-s-preview></div>
           <div class="s-meta">
-            <span class="s-file" data-s-file>thinktype.png</span>
+            <span class="s-file" data-s-file>fastfingaz.png</span>
             <span class="s-meta-right">
               <span data-s-size>RENDERING…</span>
               <span class="s-status" data-s-status></span>
@@ -326,19 +326,19 @@ export class Overlay {
         </section>
         </div>
 
-        <button class="orb" data-act="expand" aria-label="Expand Thinktype" title="Drag to move, click to expand">
+        <button class="orb" data-act="expand" aria-label="Expand Fastfingaz" title="Drag to move, click to expand">
           <span class="orb-num" data-orb>${DASH}</span>
           <span class="orb-unit">WPM</span>
         </button>
-        <button class="orb-resize" data-act="orb-resize" aria-label="Resize Thinktype orb"
+        <button class="orb-resize" data-act="orb-resize" aria-label="Resize Fastfingaz orb"
                 title="Drag to resize, or use the arrow keys"></button>
       </div>
 
-      <aside class="rail" data-visible="false" aria-label="Thinktype baseline log">
+      <aside class="rail" data-visible="false" aria-label="Fastfingaz baseline log">
         <div class="rail-top">
           <span class="mark" aria-hidden="true"></span>
           <span class="rail-brand">BASELINE</span>
-          <span class="rail-serial">TT-02 / LOG</span>
+          <span class="rail-serial">FF-02 / LOG</span>
         </div>
         <div class="rail-rule" aria-hidden="true"></div>
         <div class="rail-stats">
@@ -365,7 +365,7 @@ export class Overlay {
 
     const pick = <T extends Element>(selector: string): T => {
       const el = shadow.querySelector<T>(selector);
-      if (!el) throw new Error(`Thinktype overlay: missing ${selector}`);
+      if (!el) throw new Error(`Fastfingaz overlay: missing ${selector}`);
       return el;
     };
 

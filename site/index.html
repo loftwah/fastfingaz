@@ -3,15 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Thinktype — measure the speed of a thought in ChatGPT</title>
+    <title>Fastfingaz — measure the speed of a thought in ChatGPT</title>
     <meta
       name="description"
-      content="Thinktype is a local-only Chrome extension that measures how fast you turn a thought into text in ChatGPT. Think WPM, flow WPM and a printed receipt."
+      content="Fastfingaz is a local-only Chrome extension that measures how fast you turn a thought into text in ChatGPT. Think WPM, flow WPM and a printed receipt."
     />
-    <link rel="canonical" href="https://thinktype.loftwah.com/" />
+    <link rel="canonical" href="https://fastfingaz.loftwah.com/" />
     <meta name="theme-color" content="#f2efe6" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/icon-16.png" type="image/png" sizes="16x16" />
     <link rel="icon" href="/icon-128.png" type="image/png" sizes="128x128" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <link
@@ -28,30 +31,30 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=0.3.4" />
+    <link rel="stylesheet" href="/assets/site.css?v=0.4.0" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Thinktype" />
-    <meta property="og:title" content="Thinktype — measure the speed of a thought" />
+    <meta property="og:site_name" content="Fastfingaz" />
+    <meta property="og:title" content="Fastfingaz — measure the speed of a thought" />
     <meta
       property="og:description"
       content="Two clocks for original composition in ChatGPT: think WPM and flow WPM. Printed as a receipt. Local-only."
     />
-    <meta property="og:url" content="https://thinktype.loftwah.com/" />
-    <meta property="og:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
+    <meta property="og:url" content="https://fastfingaz.loftwah.com/" />
+    <meta property="og:image" content="https://fastfingaz.loftwah.com/social/og-1200x630.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:alt" content="Thinktype instrument and the headline: measure the speed of a thought." />
+    <meta property="og:image:alt" content="Fastfingaz instrument and the headline: measure the speed of a thought." />
     <meta property="og:locale" content="en_GB" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Thinktype — measure the speed of a thought" />
+    <meta name="twitter:title" content="Fastfingaz — measure the speed of a thought" />
     <meta
       name="twitter:description"
       content="Two clocks for original composition in ChatGPT: think WPM and flow WPM. Printed as a receipt. Local-only."
     />
-    <meta name="twitter:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
-    <meta name="twitter:image:alt" content="Thinktype instrument and the headline: measure the speed of a thought." />
+    <meta name="twitter:image" content="https://fastfingaz.loftwah.com/social/og-1200x630.png" />
+    <meta name="twitter:image:alt" content="Fastfingaz instrument and the headline: measure the speed of a thought." />
 
     <script type="application/ld+json">
       {
@@ -59,42 +62,42 @@
         "@graph": [
           {
             "@type": "WebSite",
-            "@id": "https://thinktype.loftwah.com/#website",
-            "url": "https://thinktype.loftwah.com/",
-            "name": "Thinktype",
+            "@id": "https://fastfingaz.loftwah.com/#website",
+            "url": "https://fastfingaz.loftwah.com/",
+            "name": "Fastfingaz",
             "description": "A local-only Chrome extension that measures how fast you turn a thought into text in ChatGPT.",
             "inLanguage": "en-GB",
-            "publisher": { "@id": "https://thinktype.loftwah.com/#dean-lofts" }
+            "publisher": { "@id": "https://fastfingaz.loftwah.com/#dean-lofts" }
           },
           {
             "@type": "Person",
-            "@id": "https://thinktype.loftwah.com/#dean-lofts",
+            "@id": "https://fastfingaz.loftwah.com/#dean-lofts",
             "name": "Dean Lofts",
             "url": "https://github.com/loftwah",
             "sameAs": ["https://github.com/loftwah"]
           },
           {
             "@type": "SoftwareApplication",
-            "@id": "https://thinktype.loftwah.com/#app",
-            "name": "Thinktype",
+            "@id": "https://fastfingaz.loftwah.com/#app",
+            "name": "Fastfingaz",
             "applicationCategory": "ProductivityApplication",
             "applicationSubCategory": "Writing",
             "operatingSystem": "Chrome",
             "browserRequirements": "Chrome 116 or newer",
-            "softwareVersion": "0.3.4",
+            "softwareVersion": "0.4.0",
             "description": "A local-only Chrome extension that measures how fast you turn a thought into text in ChatGPT. Think WPM, flow WPM and a printed receipt.",
-            "url": "https://thinktype.loftwah.com/",
-            "downloadUrl": "https://github.com/loftwah/thinktype/releases/latest",
-            "codeRepository": "https://github.com/loftwah/thinktype",
-            "privacyPolicy": "https://thinktype.loftwah.com/privacy",
-            "softwareHelp": "https://thinktype.loftwah.com/metrics",
-            "license": "https://github.com/loftwah/thinktype/blob/main/LICENSE",
-            "screenshot": "https://thinktype.loftwah.com/assets/hud-typing.png",
+            "url": "https://fastfingaz.loftwah.com/",
+            "downloadUrl": "https://github.com/loftwah/fastfingaz/releases/latest",
+            "codeRepository": "https://github.com/loftwah/fastfingaz",
+            "privacyPolicy": "https://fastfingaz.loftwah.com/privacy",
+            "softwareHelp": "https://fastfingaz.loftwah.com/metrics",
+            "license": "https://github.com/loftwah/fastfingaz/blob/main/LICENSE",
+            "screenshot": "https://fastfingaz.loftwah.com/assets/hud-typing.png",
             "isAccessibleForFree": true,
             "inLanguage": "en-GB",
             "dateModified": "2026-11-11",
-            "author": { "@id": "https://thinktype.loftwah.com/#dean-lofts" },
-            "publisher": { "@id": "https://thinktype.loftwah.com/#dean-lofts" },
+            "author": { "@id": "https://fastfingaz.loftwah.com/#dean-lofts" },
+            "publisher": { "@id": "https://fastfingaz.loftwah.com/#dean-lofts" },
             "offers": {
               "@type": "Offer",
               "price": "0",
@@ -111,14 +114,14 @@
           },
           {
             "@type": "FAQPage",
-            "@id": "https://thinktype.loftwah.com/#faq",
+            "@id": "https://fastfingaz.loftwah.com/#faq",
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "Is Thinktype a typing test?",
+                "name": "Is Fastfingaz a typing test?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "No. A typing test gives you the words and starts a timer. Thinktype gives you a blank ChatGPT composer, so it measures how quickly you turn your own thought into text. Flow and peak are the numbers to compare with a typing test; think WPM is deliberately slower because it includes the thinking."
+                  "text": "No. A typing test gives you the words and starts a timer. Fastfingaz gives you a blank ChatGPT composer, so it measures how quickly you turn your own thought into text. Flow and peak are the numbers to compare with a typing test; think WPM is deliberately slower because it includes the thinking."
                 }
               },
               {
@@ -131,7 +134,7 @@
               },
               {
                 "@type": "Question",
-                "name": "Does Thinktype store my prompt text?",
+                "name": "Does Fastfingaz store my prompt text?",
                 "acceptedAnswer": {
                   "@type": "Answer",
                   "text": "Not by default. It stores WPM, word counts, timings and confidence locally. The optional Store text setting keeps the sent prompt on your machine only; nothing is sent to a server."
@@ -165,16 +168,18 @@
 
     <header class="site-header">
       <div class="wrap header-inner">
-        <a class="brand" href="/" aria-label="Thinktype home">
+        <a class="brand" href="/" aria-label="Fastfingaz home">
           <svg viewBox="0 0 40 40" aria-hidden="true">
             <g fill="#ff4d00">
               <rect x="0" y="0" width="6" height="6" /><rect x="8" y="0" width="6" height="6" />
               <rect x="16" y="0" width="6" height="6" /><rect x="24" y="0" width="6" height="6" />
-              <rect x="32" y="0" width="6" height="6" /><rect x="16" y="8" width="6" height="6" />
-              <rect x="16" y="16" width="6" height="6" /><rect x="16" y="24" width="6" height="6" />
+              <rect x="32" y="0" width="6" height="6" /><rect x="0" y="8" width="6" height="6" />
+              <rect x="0" y="16" width="6" height="6" /><rect x="8" y="16" width="6" height="6" />
+              <rect x="16" y="16" width="6" height="6" /><rect x="0" y="24" width="6" height="6" />
+              <rect x="0" y="32" width="6" height="6" />
             </g>
           </svg>
-          <span class="wordmark">THINKTYPE</span>
+          <span class="wordmark">FASTFINGAZ</span>
         </a>
         <nav class="nav" aria-label="Primary">
           <a href="#how">How it works</a>
@@ -183,8 +188,8 @@
           <a href="/changelog">Changelog</a>
         </nav>
         <div class="header-actions">
-          <a class="button ghost" href="https://github.com/loftwah/thinktype">GitHub ↗</a>
-          <a class="button" href="https://github.com/loftwah/thinktype/releases/latest"
+          <a class="button ghost" href="https://github.com/loftwah/fastfingaz">GitHub ↗</a>
+          <a class="button" href="https://github.com/loftwah/fastfingaz/releases/latest"
             >Get the extension <span class="arrow">↓</span></a
           >
         </div>
@@ -197,18 +202,18 @@
           <div>
             <h1 id="hero-title">Measure the speed of a thought.</h1>
             <p class="lede">
-              Thinktype times how fast you turn a thought into text inside ChatGPT. Two clocks —
+              Fastfingaz times how fast you turn a thought into text inside ChatGPT. Two clocks —
               think WPM and flow WPM — printed as a receipt. Every number stays on your machine.
             </p>
             <div class="status-line">
               <span class="dot" aria-hidden="true"></span>
               <span>CHROME MV3</span>
-              <span>v0.3.4</span>
+              <span>v0.4.0</span>
               <span>EARLY BUILD</span>
               <span>LOCAL ONLY</span>
             </div>
             <div class="actions">
-              <a class="button" href="https://github.com/loftwah/thinktype/releases/latest"
+              <a class="button" href="https://github.com/loftwah/fastfingaz/releases/latest"
                 >Download the extension <span class="arrow">↓</span></a
               >
               <a class="button ghost" href="/metrics">Read the method <span class="arrow">→</span></a>
@@ -227,7 +232,7 @@
                   sizes="360px"
                   width="360"
                   height="680"
-                  alt="Thinktype HUD showing 78 live WPM, think 63, flow 78, peak 96 and a personal best of 74."
+                  alt="Fastfingaz HUD showing 78 live WPM, think 63, flow 78, peak 96 and a personal best of 74."
                   fetchpriority="high"
                 />
               </picture>
@@ -244,7 +249,7 @@
           <div>
             <h2 id="model-title">Two numbers, one finished thought.</h2>
             <p class="intro">
-              A typing test measures transcription: the sentence already exists. Thinktype has no
+              A typing test measures transcription: the sentence already exists. Fastfingaz has no
               target text, so it measures the composition — and keeps the pause in the reading.
             </p>
           </div>
@@ -396,7 +401,7 @@
             </div>
             <p class="formats-note">
               Read the full <a href="/privacy">privacy policy</a> or the
-              <a href="https://github.com/loftwah/thinktype/blob/main/docs/METRICS.md">measurement notes</a>.
+              <a href="https://github.com/loftwah/fastfingaz/blob/main/docs/METRICS.md">measurement notes</a>.
             </p>
           </div>
         </div>
@@ -414,9 +419,9 @@
           <div aria-hidden="true"></div>
           <div class="faq">
           <details>
-            <summary>Is Thinktype a typing test?</summary>
+            <summary>Is Fastfingaz a typing test?</summary>
             <p>
-              No. A typing test gives you the words and starts a timer. Thinktype gives you a blank
+              No. A typing test gives you the words and starts a timer. Fastfingaz gives you a blank
               ChatGPT composer, so it measures how quickly you turn your own thought into text. Flow
               and peak are the numbers to compare with a typing test; think WPM is deliberately
               slower because it includes the thinking.
@@ -431,7 +436,7 @@
             </p>
           </details>
           <details>
-            <summary>Does Thinktype store my prompt text?</summary>
+            <summary>Does Fastfingaz store my prompt text?</summary>
             <p>
               Not by default. It stores WPM, word counts, timings and confidence locally. The optional
               Store text setting keeps the sent prompt on your machine only; nothing is sent to a
@@ -462,7 +467,7 @@
           <div>
             <h2 id="install-title">An early build, measured honestly.</h2>
             <p class="intro">
-              v0.3.4 is an early build. Load it unpacked from the release zip; the Chrome Web Store
+              v0.4.0 is an early build. Load it unpacked from the release zip; the Chrome Web Store
               listing is being prepared. There are no testimonials or benchmarks on this page
               because there are no users to quote yet.
             </p>
@@ -477,14 +482,14 @@
             </p>
           </div>
           <div class="actions">
-            <a class="button" href="https://github.com/loftwah/thinktype/releases/latest"
-              >Download v0.3.4 <span class="arrow">↓</span></a
+            <a class="button" href="https://github.com/loftwah/fastfingaz/releases/latest"
+              >Download v0.4.0 <span class="arrow">↓</span></a
             >
             <a class="button ghost" href="/changelog">Changelog <span class="arrow">→</span></a>
           </div>
         </div>
         <p class="install-note">
-          Requires Chrome 116 or newer. Source: github.com/loftwah/thinktype. MIT licensed. Geist is
+          Requires Chrome 116 or newer. Source: github.com/loftwah/fastfingaz. MIT licensed. Geist is
           bundled under the SIL Open Font License.
         </p>
       </section>
@@ -494,7 +499,7 @@
       <div class="wrap">
         <div class="footer-top">
           <div class="footer-brand">
-            <span class="wordmark">THINKTYPE</span>
+            <span class="wordmark">FASTFINGAZ</span>
             <p>
               A typing instrument for thoughts. Measure the composition, not the transcription.
               Local-only by construction.
@@ -504,13 +509,13 @@
             <a href="/metrics">The method</a>
             <a href="/privacy">Privacy</a>
             <a href="/changelog">Changelog</a>
-            <a href="https://github.com/loftwah/thinktype">GitHub</a>
-            <a href="https://github.com/loftwah/thinktype/issues">Issues</a>
+            <a href="https://github.com/loftwah/fastfingaz">GitHub</a>
+            <a href="https://github.com/loftwah/fastfingaz/issues">Issues</a>
           </nav>
         </div>
         <div class="footer-bottom">
-          <span>THINKTYPE.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
-          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.4</span></span>
+          <span>FASTFINGAZ.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.4.0</span></span>
         </div>
       </div>
     </footer>

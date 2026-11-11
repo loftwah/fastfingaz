@@ -1,6 +1,7 @@
 # Fastfingaz icon set (staged)
 
-Approved mark: **Pixel F**. Do not replace the live Thinktype icons until the rename release.
+Approved mark: **Pixel F**, shipped in Fastfingaz v0.4.0. These files are the source of truth for
+the extension, site and store icons.
 
 | File | Destination |
 | --- | --- |

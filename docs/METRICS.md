@@ -1,6 +1,6 @@
-# How Thinktype measures typing
+# How Fastfingaz measures typing
 
-The short version: standard WPM measures transcription. Thinktype measures composition. That requires
+The short version: standard WPM measures transcription. Fastfingaz measures composition. That requires
 two clocks, an explicit idle model, and an honest signal score.
 
 > v0.2 adds durable history and eligibility rules. The formulas below are the ones the extension
@@ -59,7 +59,7 @@ word so the numbers are comparable across tools.
 ## Active time and the thinking threshold
 
 A naive "time between first and last key" makes a thoughtful writer look slow. Ignoring pauses
-entirely makes a distracted session look fast. Thinktype clamps each gap instead:
+entirely makes a distracted session look fast. Fastfingaz clamps each gap instead:
 
 ```text
 for every gap between editing keys (and the final gap to send):
@@ -221,7 +221,7 @@ prevents a one-line "thanks" from moving the average.
 ## Comparing with Monkeytype
 
 Monkeytype gives you the words and a short timer, so its WPM is sustained transcription.
-Thinktype gives you a blank composer, so the numbers answer a different question:
+Fastfingaz gives you a blank composer, so the numbers answer a different question:
 
 - **FLOW** is the fair comparison: characters over active typing time.
 - **PEAK** is the closest thing to a typing sprint: your best five seconds.
@@ -236,7 +236,7 @@ to see the finished thought.
 
 The first version is a measurement instrument, and instruments need calibration:
 
-1. **Baseline against a known test.** Type a 60-second Monkeytype run and a Thinktype prompt of
+1. **Baseline against a known test.** Type a 60-second Monkeytype run and a Fastfingaz prompt of
    similar length. Flow WPM should land in the same neighbourhood; a large gap means the idle model
    or character accounting needs work.
 2. **Threshold sweep.** Run the same three prompts at 1s, 2s and 3s thresholds. Pick the threshold

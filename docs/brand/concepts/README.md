@@ -1,7 +1,7 @@
 # Fastfingaz mark study
 
-Not live. Thinktype remains the shipping name until the rename is approved. The direction is in
-`docs/BRAND.md`.
+Shipped in v0.4.0 as Fastfingaz. The live icons come from the Pixel F study in
+`docs/brand/fastfingaz/`. The direction is in `docs/BRAND.md`.
 
 ## Files
 

@@ -1,7 +1,7 @@
 import { defineConfig } from 'wxt';
 
 /**
- * Thinktype — a local-only typing instrument for ChatGPT.
+ * Fastfingaz — a local-only typing instrument for ChatGPT.
  *
  * WXT owns the manifest and the build; this file only records what the
  * extension needs from Chrome. Icons live in public/icon and are picked up by
@@ -10,8 +10,8 @@ import { defineConfig } from 'wxt';
 export default defineConfig({
   manifestVersion: 3,
   manifest: {
-    name: 'Thinktype — real typing speed',
-    short_name: 'Thinktype',
+    name: 'Fastfingaz — real typing speed',
+    short_name: 'Fastfingaz',
     description:
       'Measure your real typing speed while you think out loud with ChatGPT. Think WPM, flow WPM, shareable receipts. All local.',
     permissions: ['storage', 'clipboardWrite'],
@@ -24,7 +24,7 @@ export default defineConfig({
       128: 'icon/128.png',
     },
     action: {
-      default_title: 'Thinktype',
+      default_title: 'Fastfingaz',
     },
     options_ui: {
       open_in_tab: true,
@@ -34,13 +34,13 @@ export default defineConfig({
         suggested_key: {
           default: 'Alt+Shift+T',
         },
-        description: 'Show or hide the Thinktype HUD',
+        description: 'Show or hide the Fastfingaz HUD',
       },
       'pause-run': {
         suggested_key: {
           default: 'Alt+Shift+P',
         },
-        description: 'Pause or resume the Thinktype run',
+        description: 'Pause or resume the Fastfingaz run',
       },
     },
   },

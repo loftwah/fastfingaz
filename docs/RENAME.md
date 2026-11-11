@@ -1,7 +1,8 @@
 # Fastfingaz rename runbook
 
-Approved 11 November 2026. The target name is **Fastfingaz**. The live product stays Thinktype until
-the coordinated rename lands in one clean release. Tracked in issue #6.
+Approved 11 November 2026 and **executed in v0.4.0** the same day. The target name is
+**Fastfingaz**. The product moved in one clean release; this runbook is kept as the migration
+record. Tracked in issue #6.
 
 Read `docs/BRAND.md`, `docs/NAMES.md` and `docs/brand/concepts/README.md` before starting.
 
@@ -14,8 +15,7 @@ Read `docs/BRAND.md`, `docs/NAMES.md` and `docs/brand/concepts/README.md` before
 - Wordmark: `FASTFINGAZ` in Geist Pixel
 - Palette: anodised black, signal orange, newsprint cream, flat chrome
 - Release: **0.4.0**
-- Domain: `fastfingaz.com` if the price is approved; otherwise use
-  `fastfingaz.loftwah.com` now and redirect later. Do not buy a domain without a price check.
+- Domain: `fastfingaz.loftwah.com`. The owner declined the separate `.com`; no domain was bought.
 
 ## Non-negotiables
 
@@ -84,17 +84,17 @@ The final art must be code/vector-rendered. Do not depend on an image model.
 ### 3. Site
 
 - `site/index.html`, `metrics.html`, `privacy.html`, `changelog.html`, `404.html`:
-  titles, descriptions, OG/Twitter, JSON-LD names/URLs, visible wordmark, footer.
+  titles, descriptions, OG/Twitter, JSON-LD names/URLs, visible wordmark, footer. — done
 - `site/sitemap.xml`, `site/robots.txt`, `site/manifest.webmanifest`, canonical URLs.
-- Add a 301 from `https://thinktype.loftwah.com/*` to `https://fastfingaz.com/*` (or the chosen
-  fallback domain) at Cloudflare.
+- Add a 301 from `https://thinktype.loftwah.com/*` to `https://fastfingaz.loftwah.com/*` at
+  Cloudflare.
 - Version the CSS query string (e.g. `?v=0.4.0`) so the old immutable cache cannot stick.
 - Keep the FAQ; update the “Does it work outside ChatGPT?” answer only if that feature ships.
 
 ### 4. GitHub
 
 ```bash
-gh repo rename fastfingaz --repo loftwah/thinktype
+gh repo rename fastfingaz --repo loftwah/thinktype   # executed
 git remote set-url origin https://github.com/loftwah/fastfingaz.git
 ```
 
@@ -103,9 +103,10 @@ GitHub redirects the old repository URL. Verify old release asset URLs still res
 
 ### 5. Cloudflare Pages and domain
 
-- Check the `fastfingaz.com` price. Only buy with explicit price approval.
+- ~~Check the `fastfingaz.com` price. Only buy with explicit price approval.~~ Declined by the
+  owner; the project uses the loftwah subdomain.
 - Create/point the Pages project and custom domain; DNS-only CNAME as needed.
-- If the domain is not bought, deploy to `fastfingaz.loftwah.com` and leave a redirect TODO.
+- Deploy to `fastfingaz.loftwah.com`; keep `thinktype.loftwah.com` as a 301.
 - Configure the old `thinktype.loftwah.com` 301 to the new domain (Cloudflare Redirect Rule or a
   small Pages project). Test with `curl -I`.
 

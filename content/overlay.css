@@ -1394,6 +1394,17 @@
   padding: 8px 8px;
 }
 
+/* At medium width the longer Fastfingaz wordmark shares the bar with four
+   controls. The serial is catalogue decoration, so it goes first. */
+.hud[data-size='medium'] .brand {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+}
+
+.hud[data-size='medium'] .serial {
+  display: none;
+}
+
 .hud[data-size='slim'] {
   padding: 8px 8px 9px;
 }
@@ -1403,8 +1414,7 @@
 }
 
 .hud[data-size='slim'] .brand {
-  font-size: 8px;
-  letter-spacing: 0.15em;
+  display: none;
 }
 
 .hud[data-size='slim'] .serial,

@@ -1,5 +1,5 @@
 /**
- * Thinktype data model.
+ * Fastfingaz data model.
  *
  * Everything here is intentionally plain JSON: it goes into chrome.storage.local,
  * can be exported, and never needs a server.

@@ -1,4 +1,4 @@
-# Chrome Web Store Listing — Thinktype
+# Chrome Web Store Listing — Fastfingaz
 
 > Last Updated: 2026-11-11
 
@@ -6,7 +6,7 @@
 
 **Extension Name** [REQUIRED]
 
-Thinktype — real typing speed
+Fastfingaz — real typing speed
 
 **Short Description** [REQUIRED]
 
@@ -14,7 +14,7 @@ Measure how fast you turn a thought into text in ChatGPT. Think WPM, flow WPM, p
 
 **Detailed Description** [REQUIRED]
 
-Thinktype measures how fast you compose your own words in ChatGPT — not how fast you can copy a sentence from a typing test.
+Fastfingaz measures how fast you compose your own words in ChatGPT — not how fast you can copy a sentence from a typing test.
 
 Every prompt gives you two readings. Think WPM is the whole message, thinking pauses included. Flow WPM is your hands-only cadence: the speed you type when the words are already there. The gap between them is the interesting part.
 
@@ -35,15 +35,15 @@ Key features:
 • Controls for your thinking threshold, minimum message length, HUD position and privacy
 
 How to use it:
-1. Install Thinktype and open chatgpt.com.
+1. Install Fastfingaz and open chatgpt.com.
 2. Start a new chat and type a real prompt. The HUD sits in the bottom gutter and measures from the first keystroke.
-3. Send the message. Thinktype prints a receipt.
+3. Send the message. Fastfingaz prints a receipt.
 4. Open SHARE CARD to choose a format, or open the popup for your history.
 
 Privacy:
-Thinktype has no server, no account and no analytics. Your prompt text is not stored by default; the optional Store text setting keeps it on this machine only. Your typing metrics live in Chrome's local extension storage and never leave the browser unless you export them yourself.
+Fastfingaz has no server, no account and no analytics. Your prompt text is not stored by default; the optional Store text setting keeps it on this machine only. Your typing metrics live in Chrome's local extension storage and never leave the browser unless you export them yourself.
 
-If you find a bug or have an idea, open an issue at https://github.com/loftwah/thinktype/issues.
+If you find a bug or have an idea, open an issue at https://github.com/loftwah/fastfingaz/issues.
 
 **Category** [REQUIRED]
 
@@ -61,7 +61,7 @@ English
 
 | Asset | Dimensions | Status | Filename |
 | --- | --- | --- | --- |
-| Store Icon [REQUIRED] | 128×128 PNG | ✅ Ready | `public/icon/128.png` |
+| Store Icon [REQUIRED] | 128×128 PNG | ✅ Ready (Pixel F) | `public/icon/128.png` |
 | Screenshot 1 [REQUIRED] | 1280×800 | ✅ Ready (sample composition) | `docs/art/store-1280x800.png` |
 | Screenshot 2 [RECOMMENDED] | 1280×800 | ✅ Ready (sample composition) | `docs/art/store-popup-1280x800.png` |
 | Screenshot 3 [RECOMMENDED] | 1280×800 | ⬜ Not created | |
@@ -91,7 +91,7 @@ image model.
 | `https://chatgpt.com/*` | host_permissions | Injects the floating HUD and reads the ChatGPT composer to measure the prompt you are writing. It does not read other tabs or other sites. |
 | `https://chat.openai.com/*` | host_permissions | Legacy ChatGPT domain. The site redirects to chatgpt.com, but the HUD must still attach for users on the old domain. |
 
-No permissions were added in v0.2.0 or v0.2.1.
+The manifest has requested only these four entries since v0.2.0. The 0.4.0 rename added no permissions, no hosts and no network code.
 
 ## Privacy & Data Use
 
@@ -121,7 +121,7 @@ No permissions were added in v0.2.0 or v0.2.1.
 
 **Privacy Policy URL** [REQUIRED]
 
-https://thinktype.loftwah.com/privacy
+https://fastfingaz.loftwah.com/privacy
 
 **Source policy:** `docs/PRIVACY.md`
 
@@ -142,21 +142,22 @@ dean@deanlofts.xyz
 
 **Support URL / Email** [RECOMMENDED]
 
-https://github.com/loftwah/thinktype/issues
+https://github.com/loftwah/fastfingaz/issues
 
 **Homepage URL** [RECOMMENDED]
 
-https://thinktype.loftwah.com/
+https://fastfingaz.loftwah.com/
 
 **Source repository**
 
-https://github.com/loftwah/thinktype
+https://github.com/loftwah/fastfingaz
 
 ## Version History
 
 | Version | Date | Changes | Status |
 | --- | --- | --- | --- |
-| 0.3.4 | 2026-11-11 | Four HUD sizes (Auto/Mini/Small/Medium/Large), popup size selector, live-run popup panel, 47 tests | Draft — not submitted |
+| 0.4.0 | 2026-11-11 | Renamed to Fastfingaz; Pixel F icon set at 16/32/48/128/180/192/512 plus maskable and favicon; new site host, OG/store art and 301 from the old domain; no new permissions, 47 tests | Draft — not submitted |
+| 0.3.4 | 2026-11-11 | Four HUD sizes (Auto/Mini/Small/Medium/Large), popup size selector, live-run popup panel, 47 tests | Draft — superseded by 0.4.0 |
 | 0.3.3 | 2026-11-11 | Dark popup and settings, HUD show/hide toggle, OFF badge when hidden, dark scrollbars and chart contrast, 47 tests | Draft — superseded by 0.3.4 |
 | 0.3.2 | 2026-11-11 | Draggable collapsed orb, 44–104 px resize grip + keyboard resizing, persisted position/size, reset control, 47 tests | Draft — superseded by 0.3.3 |
 | 0.3.1 | 2026-11-11 | Live counter fixed: last 8s of actual typing, no short-run dilution, no clock bleed, think gaps hold the reading, idle label LAST THINK, 47 tests | Draft — superseded by 0.3.2 |

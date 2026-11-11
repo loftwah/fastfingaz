@@ -68,5 +68,5 @@ createServer(async (req, res) => {
   });
   res.end(body);
 }).listen(port, '127.0.0.1', () => {
-  console.log(`thinktype site: http://127.0.0.1:${port}`);
+  console.log(`fastfingaz site: http://127.0.0.1:${port}`);
 });

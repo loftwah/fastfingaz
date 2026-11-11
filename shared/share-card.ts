@@ -119,10 +119,14 @@ function label(
 
 function mark(ctx: CanvasRenderingContext2D, x: number, y: number, cell = 6, gap = 2): void {
   ctx.fillStyle = BRAND.orange;
+  // Pixel F: top row, left stem and middle bar. The left stem is what makes it
+  // an F rather than a T at 16px.
   for (let i = 0; i < 5; i++) ctx.fillRect(x + i * (cell + gap), y, cell, cell);
-  const stemX = x + 2 * (cell + gap);
   for (let row = 1; row <= 3; row++) {
-    ctx.fillRect(stemX, y + row * (cell + gap), cell, cell);
+    ctx.fillRect(x, y + row * (cell + gap), cell, cell);
+  }
+  for (let col = 1; col <= 2; col++) {
+    ctx.fillRect(x + col * (cell + gap), y + 2 * (cell + gap), cell, cell);
   }
 }
 
@@ -263,7 +267,7 @@ function header(
   mark(ctx, margin, 48, opts.markSize, Math.round(opts.markSize / 3));
   ctx.fillStyle = BRAND.ink;
   ctx.font = `500 ${opts.wordmarkSize}px ${PIXEL}`;
-  drawTracking(ctx, 'THINKTYPE', margin + 48, 82, 0.5);
+  drawTracking(ctx, 'FASTFINGAZ', margin + 48, 82, 0.5);
 
   ctx.fillStyle = BRAND.ink;
   ctx.font = `500 11px ${MONO}`;
@@ -613,7 +617,7 @@ export function cardFileName(session: SessionRecord, format: CardFormat = 'lands
     d.getDate(),
   ).padStart(2, '0')}`;
   const spec = CARD_FORMATS[format];
-  return `thinktype-${stamp}-${formatWpm(session.wpm.think)}wpm-${spec.suffix}.png`;
+  return `fastfingaz-${stamp}-${formatWpm(session.wpm.think)}wpm-${spec.suffix}.png`;
 }
 
 export async function downloadCard(

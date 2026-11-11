@@ -19,14 +19,14 @@ who compare progress with friends and want a card worth sharing.
 
 ## Product Purpose
 
-Thinktype measures how fast a finished thought becomes text inside ChatGPT. It separates thinking
+Fastfingaz measures how fast a finished thought becomes text inside ChatGPT. It separates thinking
 time from hands-on typing time, keeps every number local, and turns each sent prompt into a
 shareable receipt. Success is a stable personal baseline the user can trust and explain, not a
 scoreboard.
 
 ## Positioning
 
-Typing tests measure transcription: the sentence already exists. Thinktype has no target text, so it
+Typing tests measure transcription: the sentence already exists. Fastfingaz has no target text, so it
 measures original composition where the thinking happens. Its two clocks — think WPM and flow WPM —
 plus an explicit signal score make the gap between thought and hands visible. A competitor can copy
 a WPM counter; it cannot truthfully copy the pause model, the local-only posture, and the
@@ -56,12 +56,12 @@ baseline live in the popup; settings in the options page. No account, no server,
 - The ChatGPT composer DOM is unstable; selectors need layered fallbacks.
 - Paste, autocorrect, undo and IMEs are flagged and lower signal rather than being hidden.
 - No real user sessions yet; the measurement defaults still need calibration.
-- Marketing site live at https://thinktype.loftwah.com on Cloudflare Pages.
-- Current version: 0.3.4.
+- Marketing site live at https://fastfingaz.loftwah.com on Cloudflare Pages.
+- Current version: 0.4.0.
 
 ## Brand Commitments
 
-- Name: **Thinktype**. Domain: **thinktype.loftwah.com**. Do not rename or buy a domain without
+- Name: **Fastfingaz**. Domain: **fastfingaz.loftwah.com**. Do not rename or buy a domain without
   explicit approval; see `docs/NAMES.md` for the screened alternatives.
 - Voice: dry, precise, never scolding. Numbers are a mirror, not a scoreboard.
 - Explicitly requested: unique branding with a specific external reference; Vercel's current Geist
@@ -74,7 +74,7 @@ baseline live in the popup; settings in the options page. No account, no server,
 
 - Working v0.2 code, 38 unit tests, green CI, real screenshots and sample data in `demo/`.
 - Live composer attachment verified against ChatGPT's ProseMirror editor.
-- Marketing site live at https://thinktype.loftwah.com with OG art, sitemap and privacy policy.
+- Marketing site live at https://fastfingaz.loftwah.com with OG art, sitemap and privacy policy.
 - No real sessions, testimonials, press or store reviews. Do not invent them.
 
 ## Product Principles

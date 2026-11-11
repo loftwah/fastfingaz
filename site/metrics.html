@@ -3,15 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>The method — how Thinktype measures typing</title>
+    <title>The method — how Fastfingaz measures typing</title>
     <meta
       name="description"
-      content="Think WPM, flow WPM, active time, peak, consistency, signal quality and the eligibility rules behind every Thinktype reading."
+      content="Think WPM, flow WPM, active time, peak, consistency, signal quality and the eligibility rules behind every Fastfingaz reading."
     />
-    <link rel="canonical" href="https://thinktype.loftwah.com/metrics" />
+    <link rel="canonical" href="https://fastfingaz.loftwah.com/metrics" />
     <meta name="theme-color" content="#f2efe6" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/icon-16.png" type="image/png" sizes="16x16" />
     <link rel="icon" href="/icon-128.png" type="image/png" sizes="128x128" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <link
@@ -21,67 +24,67 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=0.3.4" />
+    <link rel="stylesheet" href="/assets/site.css?v=0.4.0" />
 
     <meta property="og:type" content="article" />
-    <meta property="og:site_name" content="Thinktype" />
-    <meta property="og:title" content="The method — how Thinktype measures typing" />
+    <meta property="og:site_name" content="Fastfingaz" />
+    <meta property="og:title" content="The method — how Fastfingaz measures typing" />
     <meta
       property="og:description"
       content="Two clocks, an explicit idle model and honest eligibility rules. The full measurement notes."
     />
-    <meta property="og:url" content="https://thinktype.loftwah.com/metrics" />
-    <meta property="og:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
+    <meta property="og:url" content="https://fastfingaz.loftwah.com/metrics" />
+    <meta property="og:image" content="https://fastfingaz.loftwah.com/social/og-1200x630.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:alt" content="The Thinktype method: two clocks, active time, peak and the eligibility rules." />
+    <meta property="og:image:alt" content="The Fastfingaz method: two clocks, active time, peak and the eligibility rules." />
     <meta property="og:locale" content="en_GB" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="The method — how Thinktype measures typing" />
+    <meta name="twitter:title" content="The method — how Fastfingaz measures typing" />
     <meta
       name="twitter:description"
       content="Two clocks, an explicit idle model and honest eligibility rules. The full measurement notes."
     />
-    <meta name="twitter:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
-    <meta name="twitter:image:alt" content="The Thinktype method: two clocks, active time, peak and the eligibility rules." />
+    <meta name="twitter:image" content="https://fastfingaz.loftwah.com/social/og-1200x630.png" />
+    <meta name="twitter:image:alt" content="The Fastfingaz method: two clocks, active time, peak and the eligibility rules." />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@graph": [
           {
             "@type": "WebSite",
-            "@id": "https://thinktype.loftwah.com/#website",
-            "url": "https://thinktype.loftwah.com/",
-            "name": "Thinktype",
+            "@id": "https://fastfingaz.loftwah.com/#website",
+            "url": "https://fastfingaz.loftwah.com/",
+            "name": "Fastfingaz",
             "inLanguage": "en-GB",
-            "publisher": { "@id": "https://thinktype.loftwah.com/#dean-lofts" }
+            "publisher": { "@id": "https://fastfingaz.loftwah.com/#dean-lofts" }
           },
           {
             "@type": "Person",
-            "@id": "https://thinktype.loftwah.com/#dean-lofts",
+            "@id": "https://fastfingaz.loftwah.com/#dean-lofts",
             "name": "Dean Lofts",
             "url": "https://github.com/loftwah"
           },
           {
             "@type": "TechArticle",
-            "@id": "https://thinktype.loftwah.com/metrics#page",
-            "headline": "How Thinktype measures typing",
-            "name": "How Thinktype measures typing",
-            "description": "The two clocks, active time, peak, consistency and signal quality behind every Thinktype reading.",
-            "url": "https://thinktype.loftwah.com/metrics",
-            "isPartOf": { "@id": "https://thinktype.loftwah.com/#website" },
-            "author": { "@id": "https://thinktype.loftwah.com/#dean-lofts" },
-            "publisher": { "@id": "https://thinktype.loftwah.com/#dean-lofts" },
+            "@id": "https://fastfingaz.loftwah.com/metrics#page",
+            "headline": "How Fastfingaz measures typing",
+            "name": "How Fastfingaz measures typing",
+            "description": "The two clocks, active time, peak, consistency and signal quality behind every Fastfingaz reading.",
+            "url": "https://fastfingaz.loftwah.com/metrics",
+            "isPartOf": { "@id": "https://fastfingaz.loftwah.com/#website" },
+            "author": { "@id": "https://fastfingaz.loftwah.com/#dean-lofts" },
+            "publisher": { "@id": "https://fastfingaz.loftwah.com/#dean-lofts" },
             "inLanguage": "en-GB",
             "dateModified": "2026-11-11",
-            "primaryImageOfPage": "https://thinktype.loftwah.com/social/og-1200x630.png"
+            "primaryImageOfPage": "https://fastfingaz.loftwah.com/social/og-1200x630.png"
           },
           {
             "@type": "BreadcrumbList",
             "itemListElement": [
-              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://thinktype.loftwah.com/" },
-              { "@type": "ListItem", "position": 2, "name": "The method", "item": "https://thinktype.loftwah.com/metrics" }
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://fastfingaz.loftwah.com/" },
+              { "@type": "ListItem", "position": 2, "name": "The method", "item": "https://fastfingaz.loftwah.com/metrics" }
             ]
           }
         ]
@@ -94,16 +97,18 @@
 
     <header class="site-header">
       <div class="wrap header-inner">
-        <a class="brand" href="/" aria-label="Thinktype home">
+        <a class="brand" href="/" aria-label="Fastfingaz home">
           <svg viewBox="0 0 40 40" aria-hidden="true">
             <g fill="#ff4d00">
               <rect x="0" y="0" width="6" height="6" /><rect x="8" y="0" width="6" height="6" />
               <rect x="16" y="0" width="6" height="6" /><rect x="24" y="0" width="6" height="6" />
-              <rect x="32" y="0" width="6" height="6" /><rect x="16" y="8" width="6" height="6" />
-              <rect x="16" y="16" width="6" height="6" /><rect x="16" y="24" width="6" height="6" />
+              <rect x="32" y="0" width="6" height="6" /><rect x="0" y="8" width="6" height="6" />
+              <rect x="0" y="16" width="6" height="6" /><rect x="8" y="16" width="6" height="6" />
+              <rect x="16" y="16" width="6" height="6" /><rect x="0" y="24" width="6" height="6" />
+              <rect x="0" y="32" width="6" height="6" />
             </g>
           </svg>
-          <span class="wordmark">THINKTYPE</span>
+          <span class="wordmark">FASTFINGAZ</span>
         </a>
         <nav class="nav" aria-label="Primary">
           <a href="/#how">How it works</a>
@@ -112,8 +117,8 @@
           <a href="/changelog">Changelog</a>
         </nav>
         <div class="header-actions">
-          <a class="button ghost" href="https://github.com/loftwah/thinktype">GitHub ↗</a>
-          <a class="button" href="https://github.com/loftwah/thinktype/releases/latest"
+          <a class="button ghost" href="https://github.com/loftwah/fastfingaz">GitHub ↗</a>
+          <a class="button" href="https://github.com/loftwah/fastfingaz/releases/latest"
             >Get the extension <span class="arrow">↓</span></a
           >
         </div>
@@ -125,9 +130,9 @@
         <header class="doc-head">
           <span class="margin-label">The method</span>
           <div>
-            <h1>How Thinktype measures typing.</h1>
+            <h1>How Fastfingaz measures typing.</h1>
             <p class="meta">
-              TWO CLOCKS / AN EXPLICIT IDLE MODEL / AN HONEST SIGNAL SCORE / v0.3.4
+              TWO CLOCKS / AN EXPLICIT IDLE MODEL / AN HONEST SIGNAL SCORE / v0.4.0
             </p>
           </div>
         </header>
@@ -147,7 +152,7 @@
 
           <div class="doc-copy">
             <p>
-              The short version: standard WPM measures transcription. Thinktype measures
+              The short version: standard WPM measures transcription. Fastfingaz measures
               composition. That requires two clocks, an explicit idle model, and an honest signal
               score.
             </p>
@@ -206,7 +211,7 @@
             <h3>Why 130 on Monkeytype can be 100 here</h3>
             <p>
               Monkeytype gives you the words and a short timer, so its WPM is sustained
-              transcription. Thinktype gives you a blank composer. <strong>Flow</strong> is the fair
+              transcription. Fastfingaz gives you a blank composer. <strong>Flow</strong> is the fair
               comparison, <strong>peak</strong> is the closest thing to a sprint, and
               <strong>think</strong> is deliberately lower because it includes the thinking. A
               130 WPM typing test and a 100 WPM flow score are both true: one is transcription, the
@@ -216,7 +221,7 @@
             <h2 id="active">Active time and the thinking threshold</h2>
             <p>
               A naive “time between first and last key” makes a thoughtful writer look slow. Ignoring
-              pauses entirely makes a distracted session look fast. Thinktype clamps each gap
+              pauses entirely makes a distracted session look fast. Fastfingaz clamps each gap
               instead:
             </p>
             <pre><code>for every gap between editing keys (and the final gap to send):
@@ -358,7 +363,7 @@ averageFlowWpm  = sum(insertedChars) / 5 / (sum(activeMs) / 60000)</code></pre>
             <ol>
               <li>
                 <strong>Baseline against a known test.</strong> Type a 60-second Monkeytype run and a
-                Thinktype prompt of similar length. Flow WPM should land in the same neighbourhood; a
+                Fastfingaz prompt of similar length. Flow WPM should land in the same neighbourhood; a
                 large gap means the idle model or character accounting needs work.
               </li>
               <li>
@@ -394,7 +399,7 @@ averageFlowWpm  = sum(insertedChars) / 5 / (sum(activeMs) / 60000)</code></pre>
       <div class="wrap">
         <div class="footer-top">
           <div class="footer-brand">
-            <span class="wordmark">THINKTYPE</span>
+            <span class="wordmark">FASTFINGAZ</span>
             <p>
               A typing instrument for thoughts. Measure the composition, not the transcription.
               Local-only by construction.
@@ -404,13 +409,13 @@ averageFlowWpm  = sum(insertedChars) / 5 / (sum(activeMs) / 60000)</code></pre>
             <a href="/metrics">The method</a>
             <a href="/privacy">Privacy</a>
             <a href="/changelog">Changelog</a>
-            <a href="https://github.com/loftwah/thinktype">GitHub</a>
-            <a href="https://github.com/loftwah/thinktype/issues">Issues</a>
+            <a href="https://github.com/loftwah/fastfingaz">GitHub</a>
+            <a href="https://github.com/loftwah/fastfingaz/issues">Issues</a>
           </nav>
         </div>
         <div class="footer-bottom">
-          <span>THINKTYPE.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
-          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.4</span></span>
+          <span>FASTFINGAZ.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.4.0</span></span>
         </div>
       </div>
     </footer>

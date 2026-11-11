@@ -1,15 +1,15 @@
-# Thinktype Privacy Policy
+# Fastfingaz Privacy Policy
 
 **Effective date:** 11 November 2026
 
-**Published at:** https://thinktype.loftwah.com/privacy
+**Published at:** https://fastfingaz.loftwah.com/privacy
 
-Thinktype is a Chrome extension that measures how fast you compose text in ChatGPT. This policy
+Fastfingaz is a Chrome extension that measures how fast you compose text in ChatGPT. This policy
 explains what it does with your data. The short version: everything stays in your browser.
 
-## What Thinktype processes
+## What Fastfingaz processes
 
-- **Composer text.** When you are on `chatgpt.com` or `chat.openai.com`, Thinktype reads the text in
+- **Composer text.** When you are on `chatgpt.com` or `chat.openai.com`, Fastfingaz reads the text in
   the ChatGPT composer so it can calculate word counts, WPM, pauses and signal quality. This happens
   locally on your machine.
 - **Typing metrics.** It records timings, WPM, word counts, corrections and related stats for prompts
@@ -20,10 +20,10 @@ explains what it does with your data. The short version: everything stays in you
 - **Your settings.** Your threshold, minimum length, HUD position and privacy choices are stored in
   the same local extension storage.
 
-By default, Thinktype does **not** store the text of your prompts. If you turn on **Store the text of
+By default, Fastfingaz does **not** store the text of your prompts. If you turn on **Store the text of
 sent prompts**, that text is stored locally with the session and included in your export.
 
-## What Thinktype does not do
+## What Fastfingaz does not do
 
 - No server, account, analytics, telemetry or remote logging.
 - No prompt text, metrics or settings are transmitted off your device.
@@ -42,19 +42,19 @@ sent prompts**, that text is stored locally with the session and included in you
 
 ## Retention and deletion
 
-Your data stays in Chrome's local extension storage until you remove it. Open Thinktype's settings and
+Your data stays in Chrome's local extension storage until you remove it. Open Fastfingaz's settings and
 choose **Clear all sessions** to delete your history, or **Export data** to take a copy first.
 Uninstalling the extension removes its local storage.
 
 ## Security
 
-Thinktype has no backend to secure. The extension runs inside Chrome's extension sandbox and only
+Fastfingaz has no backend to secure. The extension runs inside Chrome's extension sandbox and only
 requests the permissions listed above. The optional stored text is protected by Chrome's extension
 storage, not by a separate encryption layer.
 
 ## Children
 
-Thinktype is a general-purpose productivity tool and is not directed at children under 13. It does not
+Fastfingaz is a general-purpose productivity tool and is not directed at children under 13. It does not
 knowingly collect personal information from anyone.
 
 ## Changes
@@ -65,5 +65,5 @@ public repository. Continued use after a change means you accept the updated pol
 ## Contact
 
 Questions or concerns: open an issue at
-[github.com/loftwah/thinktype/issues](https://github.com/loftwah/thinktype/issues) or email
+[github.com/loftwah/fastfingaz/issues](https://github.com/loftwah/fastfingaz/issues) or email
 [dean@deanlofts.xyz](mailto:dean@deanlofts.xyz).

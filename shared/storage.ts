@@ -186,7 +186,7 @@ export async function exportAll(): Promise<string> {
   ]);
   return JSON.stringify(
     {
-      app: 'thinktype',
+      app: 'fastfingaz',
       exportedAt: new Date().toISOString(),
       settings,
       history,

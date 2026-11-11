@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://thinktype.loftwah.com/sitemap.xml
+Sitemap: https://fastfingaz.loftwah.com/sitemap.xml

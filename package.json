@@ -1,6 +1,6 @@
 {
-  "name": "thinktype",
-  "version": "0.3.4",
+  "name": "fastfingaz",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "description": "A Chrome extension that measures your real typing speed while you think out loud with ChatGPT.",
@@ -8,11 +8,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/loftwah/thinktype.git"
+    "url": "git+https://github.com/loftwah/fastfingaz.git"
   },
-  "homepage": "https://github.com/loftwah/thinktype#readme",
+  "homepage": "https://github.com/loftwah/fastfingaz#readme",
   "bugs": {
-    "url": "https://github.com/loftwah/thinktype/issues"
+    "url": "https://github.com/loftwah/fastfingaz/issues"
   },
   "engines": {
     "node": ">=22"

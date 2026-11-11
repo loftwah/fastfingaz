@@ -3,7 +3,7 @@ import type { Settings } from '../../shared/types';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
   const el = document.getElementById(id);
-  if (!el) throw new Error(`Thinktype options: missing #${id}`);
+  if (!el) throw new Error(`Fastfingaz options: missing #${id}`);
   return el as T;
 };
 
@@ -88,7 +88,7 @@ function bind(): void {
       const date = new Date().toISOString().slice(0, 10);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `thinktype-export-${date}.json`;
+      link.download = `fastfingaz-export-${date}.json`;
       document.body.appendChild(link);
       link.click();
       link.remove();

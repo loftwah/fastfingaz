@@ -33,8 +33,9 @@ npm run site:deploy  # build and deploy to Cloudflare Pages
 
 ## Cloudflare
 
-- Pages project: `thinktype`, production branch `main`.
-- Live domain: https://thinktype.loftwah.com (CNAME to `thinktype-7sb.pages.dev`, DNS-only).
+- Pages project: `thinktype` (existing project, kept to preserve the custom domain and certs), production branch `main`.
+- Live domain: https://fastfingaz.loftwah.com (CNAME to `thinktype-7sb.pages.dev`, DNS-only).
+- `thinktype.loftwah.com` is proxied and returns a 301 to the new host via a zone Redirect Rule.
 - Cloudflare credentials live in `.env`; never print or commit them. Use `set -a; . ./.env; set +a`
   in a shell command so the token is never echoed.
 - No R2 bucket is used. The Pages assets are enough.

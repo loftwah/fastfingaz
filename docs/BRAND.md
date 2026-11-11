@@ -1,16 +1,15 @@
 # Brand direction
 
-Status: **Approved 11 November 2026.** Fastfingaz is the target name. Execution is tracked in
-issue #6. The live product remains Thinktype until the coordinated rename lands; no half-renamed
-release. The domain purchase is the only spend and still needs a price check before checkout.
+Status: **Live in v0.4.0 (11 November 2026).** Fastfingaz is the product name. The coordinated
+rename shipped in issue #6 at **https://fastfingaz.loftwah.com**; the old thinktype.loftwah.com
+301s here. No domain was purchased.
 
 ## What happened to Fastfingaz
 
 `docs/NAMES.md` screened the candidates. Fastfingaz passed on the surfaces the product actually needs:
 `.com`, `.dev`, npm and the `loftwah/fastfingaz` repository. The vanity `github.com/fastfingaz`
-handle is taken by someone else; the project does not need it. The name was recommended, not
-executed, because the live extension, site, share cards, store copy and releases all still say
-Thinktype.
+handle is taken by someone else; the project does not need it. The name was approved and executed in the 0.4.0 release across the extension, site, share cards,
+store copy and releases.
 
 ## The idea
 
@@ -82,17 +81,17 @@ Short, deadpan, technical. The joke is in the format, not in trying to sound lik
 ## Rename path (only after approval)
 
 1. Confirm the name and the domain purchase.
-2. Rename `package.json`, `wxt.config.ts` manifest `name` / `short_name` / `description`.
-3. Rename the repository to `loftwah/fastfingaz`; keep redirects from the old URL.
-4. Point `fastfingaz.com` at Cloudflare Pages; keep `thinktype.loftwah.com` as a 301.
+2. Rename `package.json`, `wxt.config.ts` manifest `name` / `short_name` / `description`. — done
+3. Rename the repository to `loftwah/fastfingaz`; keep redirects from the old URL. — done
+4. Point `fastfingaz.loftwah.com` at Cloudflare Pages; keep `thinktype.loftwah.com` as a 301. — done
 5. Update `shared/constants.ts` (`SITE_HOST`, `SITE_URL`, `GITHUB_URL`, `RELEASES_URL`).
 6. Update the HUD wordmark, popup, options, receipt, share cards, OG art and store copy.
 7. Regenerate favicons (16/32/48/128), maskable 192/512, Apple touch icon, OG 1200×630, GitHub
    1280×640, store 1280×800 and promo 440×280.
-8. Update the Chrome Web Store listing and the Discord showcase.
+8. Update the Chrome Web Store listing and the Discord showcase. — store copy done; listing not submitted
 
 ## Decision
 
 Approved by the owner on 11 November 2026: **Fastfingaz**, the white-label direction, and the
-**Pixel F** primary mark. The coordinated rename is tracked in issue #6. The domain purchase needs a
-price check before checkout; everything else in the runbook can proceed without spending money.
+**Pixel F** primary mark. The coordinated rename shipped as v0.4.0. The owner chose
+**fastfingaz.loftwah.com** over buying a separate .com; no domain spend was made.

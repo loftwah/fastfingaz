@@ -14,7 +14,7 @@
 - [x] Three designed share formats: 1200×630, 1080×1080, 1080×1920
 - [x] Share sheet in the HUD receipt and popup with format tabs, preview, file size, copy and download
 - [x] Share cards at exact social dimensions, rendered locally
-- [x] Static marketing site at https://thinktype.loftwah.com on Cloudflare Pages
+- [x] Static marketing site at https://fastfingaz.loftwah.com on Cloudflare Pages
 - [x] SEO: canonical, OG/Twitter tags, JSON-LD, sitemap, robots, 404, favicon, web manifest
 - [x] 38 unit tests; green typecheck, tests and production build
 - [x] No new manifest permissions
@@ -52,7 +52,7 @@
 - [x] Dark scrollbars and brighter chart bars
 - [x] Regression pass on orb drag/resize, full HUD drag, pause and receipt
 
-## v0.3.4 — four sizes, live popup (current)
+## v0.3.4 — four sizes, live popup
 
 - [x] Saved HUD size: Auto, Mini, Small, Medium, Large
 - [x] Popup size selector; changing size shows the HUD
@@ -61,7 +61,16 @@
 - [x] Text-free live snapshot carries held WPM and status
 - [x] 47 tests; no new permissions
 
-## v0.4 — calibration and trust
+## v0.4.0 — Fastfingaz (current)
+
+- [x] Rename the product, package, manifest and every visible surface to Fastfingaz
+- [x] Pixel F icon set at 16/32/48/128/180/192/512, maskable and favicon
+- [x] Canonical site at https://fastfingaz.loftwah.com; old domain 301
+- [x] GitHub repository renamed to `loftwah/fastfingaz`; old release URLs redirect
+- [x] 0.4.0 release zip, tag and Chrome Web Store copy
+- [x] No new permissions; local history preserved under the existing `tt:` keys
+
+## v0.4.x — calibration and trust
 
 - [ ] Per-tab opt-in for arbitrary text boxes (`activeTab` + `scripting`, generic composer adapter)
 - [ ] Calibrate the idle threshold against Monkeytype runs (see `docs/METRICS.md`)

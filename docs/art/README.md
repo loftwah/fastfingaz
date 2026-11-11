@@ -23,9 +23,9 @@ it with a static image.
 | `popup-main.png` | 380×600 | Popup history and baseline | `demo/popup-harness.html` |
 | `popup-live.png` | 380×600 | Popup live-run panel | `demo/popup-harness.html?live=1` |
 | `popup-detail.png` | 380×600 | Popup receipt detail + formats | `demo/popup-harness.html` |
-| `share/thinktype-landscape.png` | 1200×630 | Landscape receipt | `demo/cards.html?format=landscape` |
-| `share/thinktype-square.png` | 1080×1080 | Square receipt | `demo/cards.html?format=square` |
-| `share/thinktype-story.png` | 1080×1920 | Story receipt | `demo/cards.html?format=story` |
+| `share/fastfingaz-landscape.png` | 1200×630 | Landscape receipt | `demo/cards.html?format=landscape` |
+| `share/fastfingaz-square.png` | 1080×1080 | Square receipt | `demo/cards.html?format=square` |
+| `share/fastfingaz-story.png` | 1080×1920 | Story receipt | `demo/cards.html?format=story` |
 | `cards-stress.png` | contact sheet | Three-digit WPM / four-digit words | `demo/cards.html?stress=1` |
 | `cards-empty.png` | contact sheet | Dashes before a baseline | `demo/cards.html?empty=1` |
 | `social/og-1200x630.png` | 1200×630 | Site OG image | `demo/artboards.html?board=og` |
@@ -69,9 +69,9 @@ GitHub does not accept social preview images through its API. To set it:
 
 ## Icons
 
-`assets/icon.svg` is the source: a pixel T in signal orange. `npm run icons` regenerates
-`public/icon/{16,32,48,128}.png` with `sharp`. Keep the T legible at 16px; do not add detail below
-that size.
+`assets/icon.svg` is the source: the Pixel F mark in signal orange. The approved PNG set lives in
+`docs/brand/fastfingaz/`; `npm run icons` can regenerate `public/icon/{16,32,48,128}.png` from the
+vector with `sharp`. Keep the F legible at 16px; do not add detail below that size.
 
 ## Fonts
 

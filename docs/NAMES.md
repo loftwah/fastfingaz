@@ -1,7 +1,7 @@
 # Name and domain check
 
-Checked 11 November 2026. **Fastfingaz was approved later that day.** Execution is tracked in issue
-#6 and `docs/RENAME.md`. No domain, trademark, GitHub organisation or npm package was purchased or
+Checked 11 November 2026. **Fastfingaz was approved and shipped in v0.4.0 the same day.** Execution
+is recorded in issue #6 and `docs/RENAME.md`. No domain, trademark, GitHub organisation or npm package was purchased or
 registered during this screening. This is a screening pass, not legal clearance.
 
 Method:
@@ -49,11 +49,12 @@ else and is not needed to host the repository.
 **Inkmeter.com is taken**, so Inkmeter fails the “free on everything” test. **Fastfingaz** passes it
 on every surface the product actually needs.
 
-**Approved 11 November 2026: Fastfingaz.** The live site, extension, store listing and cards still
-use **Thinktype** at **thinktype.loftwah.com** until the coordinated rename lands. See
-`docs/RENAME.md` and issue #6 for the ordered migration.
+**Approved and shipped 11 November 2026: Fastfingaz.** The extension, site, store copy and cards now
+use **Fastfingaz** at **fastfingaz.loftwah.com**. The owner chose the loftwah subdomain rather than
+buying fastfingaz.com; `thinktype.loftwah.com` 301s to the new host. See `docs/RENAME.md` and issue
+#6 for the migration record.
 
-## What a rename would touch
+## What the rename touched
 
 - `package.json`, `wxt.config.ts`, manifest `name`/`short_name`/`description`.
 - Wordmark and copy in the HUD, popup, options, receipt, share cards and site.

@@ -27,7 +27,7 @@ async function updateBadge(): Promise<void> {
       await action.setBadgeTextColor?.({ color: '#0a0a0a' });
     }
   } catch (error) {
-    console.warn('[thinktype] badge update failed', error);
+    console.warn('[fastfingaz] badge update failed', error);
   }
 }
 
