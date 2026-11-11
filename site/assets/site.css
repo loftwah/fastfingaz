@@ -1188,6 +1188,9 @@ img {
     padding-bottom: 10px;
     border-bottom: 1px solid var(--line);
   }
+  .doc-toc a {
+    padding: 4px 0;
+  }
   .clock-grid {
     grid-template-columns: 1fr;
   }
