@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fastfingaz mark study</title>
+    <style>
+      @font-face {
+        font-family: 'Geist';
+        src: url('/fonts/Geist-Variable.woff2') format('woff2');
+        font-weight: 100 900;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Geist Mono';
+        src: url('/fonts/GeistMono-Variable.woff2') format('woff2');
+        font-weight: 100 900;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Geist Pixel';
+        src: url('/fonts/GeistPixel-Square.woff2') format('woff2');
+        font-weight: 400;
+        font-display: swap;
+      }
+      :root {
+        --ink: #0b0b0a;
+        --housing: #111110;
+        --paper: #f2efe6;
+        --paper-deep: #e8e3d7;
+        --orange: #ff4d00;
+        --orange-ink: #b83600;
+        --muted: #6d675c;
+        --line: #d5cfc1;
+        --line-strong: #bdb6a7;
+        --chrome: #c8c4b8;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1200px;
+        height: 900px;
+        overflow: hidden;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+      .top { height: 6px; background: var(--orange); }
+      .wrap { padding: 34px 56px 0; }
+      .head { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+      .kicker {
+        font-family: 'Geist Mono', monospace;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        color: var(--muted);
+      }
+      h1 { margin: 8px 0 0; font-size: 46px; font-weight: 600; letter-spacing: -0.045em; line-height: 1; }
+      .status {
+        max-width: 360px;
+        padding-top: 4px;
+        font-family: 'Geist Mono', monospace;
+        font-size: 9px;
+        line-height: 1.6;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        text-align: right;
+      }
+      .status b { color: var(--orange-ink); font-weight: 600; }
+      .rule { margin-top: 24px; height: 1px; background: var(--line-strong); }
+      .marks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 26px; }
+      .mark { border-top: 1px solid var(--line); padding-top: 14px; }
+      .mark-head { display: flex; justify-content: space-between; align-items: baseline; }
+      .mark-head span:first-child { font-family: 'Geist Mono', monospace; font-size: 9px; letter-spacing: 0.12em; }
+      .mark-head span:last-child { font-family: 'Geist Mono', monospace; font-size: 8px; color: var(--muted); }
+      .icons { display: flex; align-items: flex-end; gap: 14px; margin-top: 18px; height: 132px; }
+      .icons .big { width: 128px; height: 128px; }
+      .icons .mid { width: 48px; height: 48px; }
+      .icons .small { width: 32px; height: 32px; }
+      .icons .tiny { width: 16px; height: 16px; }
+      .icons svg { display: block; width: 100%; height: 100%; }
+      .wordmark {
+        margin-top: 18px;
+        font-family: 'Geist Pixel', 'Geist Mono', monospace;
+        font-size: 26px;
+        line-height: 1;
+        letter-spacing: 0.01em;
+      }
+      .mark p { margin: 10px 0 0; max-width: 32ch; color: var(--muted); font-size: 12px; line-height: 1.5; }
+      .bottom { display: grid; grid-template-columns: 380px 1fr; gap: 42px; margin-top: 34px; align-items: start; }
+      .sleeve {
+        position: relative;
+        width: 380px;
+        height: 380px;
+        background: var(--ink);
+        color: var(--paper);
+        padding: 18px;
+      }
+      .sleeve .catalog {
+        font-family: 'Geist Mono', monospace;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        color: var(--chrome);
+      }
+      .sleeve .label {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 178px;
+        height: 178px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: var(--ink);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        text-align: center;
+      }
+      .sleeve .label b { font-family: 'Geist Pixel', monospace; font-size: 34px; font-weight: 400; letter-spacing: 0.02em; }
+      .sleeve .label span { font-family: 'Geist Mono', monospace; font-size: 8px; letter-spacing: 0.14em; }
+      .sleeve .side {
+        position: absolute;
+        bottom: 18px;
+        left: 18px;
+        right: 18px;
+        display: flex;
+        justify-content: space-between;
+        font-family: 'Geist Mono', monospace;
+        font-size: 8px;
+        letter-spacing: 0.12em;
+        color: var(--chrome);
+      }
+      .notes { padding-top: 2px; }
+      .notes h2 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.03em; }
+      .notes p { max-width: 58ch; margin: 10px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+      .notes .row { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 11px; }
+      .notes .row span { font-family: 'Geist Mono', monospace; font-size: 8px; letter-spacing: 0.1em; color: var(--muted); padding-top: 2px; }
+      .foot {
+        position: absolute;
+        left: 56px;
+        right: 56px;
+        bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid var(--line);
+        padding-top: 8px;
+        font-family: 'Geist Mono', monospace;
+        font-size: 8px;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top"></div>
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <div class="kicker">FASTFINGAZ / MARK STUDY 01 / 11 NOV 2026</div>
+          <h1>White-label fingers.</h1>
+        </div>
+        <div class="status">
+          <b>NOT LIVE.</b> Thinktype remains the shipping name until the rename is approved.
+          The direction: 1990s NYC white-label sleeves and sampler pads, with West Coast chrome and
+          sun-faded paper. No graffiti, boomboxes or gold chains.
+        </div>
+      </div>
+
+      <div class="rule"></div>
+
+      <div class="marks">
+        <section class="mark">
+          <div class="mark-head"><span>01 / PIXEL F</span><span>FITS 16PX</span></div>
+          <div class="icons">
+            <div class="big">
+              <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect width="128" height="128" rx="26" fill="#0b0b0a"/>
+                <g fill="#ff4d00" shape-rendering="crispEdges">
+                  <rect x="21" y="21" width="14" height="14"/><rect x="39" y="21" width="14" height="14"/><rect x="57" y="21" width="14" height="14"/><rect x="75" y="21" width="14" height="14"/><rect x="93" y="21" width="14" height="14"/>
+                  <rect x="21" y="57" width="14" height="14"/><rect x="39" y="57" width="14" height="14"/><rect x="57" y="57" width="14" height="14"/>
+                  <rect x="21" y="21" width="14" height="14"/><rect x="21" y="39" width="14" height="14"/><rect x="21" y="57" width="14" height="14"/><rect x="21" y="75" width="14" height="14"/><rect x="21" y="93" width="14" height="14"/>
+                </g>
+              </svg>
+            </div>
+            <div class="mid"><svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="128" height="128" rx="26" fill="#0b0b0a"/><g fill="#ff4d00" shape-rendering="crispEdges"><rect x="21" y="21" width="14" height="14"/><rect x="39" y="21" width="14" height="14"/><rect x="57" y="21" width="14" height="14"/><rect x="75" y="21" width="14" height="14"/><rect x="93" y="21" width="14" height="14"/><rect x="21" y="57" width="14" height="14"/><rect x="39" y="57" width="14" height="14"/><rect x="57" y="57" width="14" height="14"/><rect x="21" y="21" width="14" height="14"/><rect x="21" y="39" width="14" height="14"/><rect x="21" y="57" width="14" height="14"/><rect x="21" y="75" width="14" height="14"/><rect x="21" y="93" width="14" height="14"/></g></svg></div>
+            <div class="small"><svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="128" height="128" rx="26" fill="#0b0b0a"/><g fill="#ff4d00" shape-rendering="crispEdges"><rect x="21" y="21" width="14" height="14"/><rect x="39" y="21" width="14" height="14"/><rect x="57" y="21" width="14" height="14"/><rect x="75" y="21" width="14" height="14"/><rect x="93" y="21" width="14" height="14"/><rect x="21" y="57" width="14" height="14"/><rect x="39" y="57" width="14" height="14"/><rect x="57" y="57" width="14" height="14"/><rect x="21" y="21" width="14" height="14"/><rect x="21" y="39" width="14" height="14"/><rect x="21" y="57" width="14" height="14"/><rect x="21" y="75" width="14" height="14"/><rect x="21" y="93" width="14" height="14"/></g></svg></div>
+            <div class="tiny"><svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="128" height="128" rx="26" fill="#0b0b0a"/><g fill="#ff4d00" shape-rendering="crispEdges"><rect x="21" y="21" width="14" height="14"/><rect x="39" y="21" width="14" height="14"/><rect x="57" y="21" width="14" height="14"/><rect x="75" y="21" width="14" height="14"/><rect x="93" y="21" width="14" height="14"/><rect x="21" y="57" width="14" height="14"/><rect x="39" y="57" width="14" height="14"/><rect x="57" y="57" width="14" height="14"/><rect x="21" y="21" width="14" height="14"/><rect x="21" y="39" width="14" height="14"/><rect x="21" y="57" width="14" height="14"/><rect x="21" y="75" width="14" height="14"/><rect x="21" y="93" width="14" height="14"/></g></svg></div>
+          </div>
+          <div class="wordmark">FASTFINGAZ</div>
+          <p>A sampler-pad F. It keeps the pixel-grid language from the current icon and stays legible at 16px.</p>
+        </section>
+
+        <section class="mark">
+          <div class="mark-head"><span>02 / FOUR FINGERS</span><span>METER / HAND</span></div>
+          <div class="icons">
+            <div class="big"><svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="128" height="128" rx="26" fill="#0b0b0a"/><g fill="#ff4d00"><rect x="19" y="60" width="18" height="42"/><rect x="43" y="28" width="18" height="74"/><rect x="67" y="44" width="18" height="58"/><rect x="91" y="72" width="18" height="30"/></g><rect x="19" y="102" width="90" height="3" fill="#ff4d00"/></svg></div>
+            <div class="mid"><svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="128" height="128" rx="26" fill="#0b0b0a"/><g fill="#ff4d00"><rect x="19" y="60" width="18" height="42"/><rect x="43" y="28" width="18" height="74"/><rect x="67" y="44" width="18" height="58"/><rect x="91" y="72" width="18" height="30"/></g><rect x="19" y="102" width="90" height="3" fill="#ff4d00"/></svg></div>
+            <div class="small"><svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="128" height="128" rx="26" fill="#0b0b0a"/><g fill="#ff4d00"><rect x="19" y="60" width="18" height="42"/><rect x="43" y="28" width="18" height="74"/><rect x="67" y="44" width="18" height="58"/><rect x="91" y="72" width="18" height="30"/></g><rect x="19" y="102" width="90" height="3" fill="#ff4d00"/></svg></div>
+            <div class="tiny"><svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="128" height="128" rx="26" fill="#0b0b0a"/><g fill="#ff4d00"><rect x="19" y="60" width="18" height="42"/><rect x="43" y="28" width="18" height="74"/><rect x="67" y="44" width="18" height="58"/><rect x="91" y="72" width="18" height="30"/></g><rect x="19" y="102" width="90" height="3" fill="#ff4d00"/></svg></div>
+          </div>
+          <div class="wordmark">FASTFINGAZ</div>
+          <p>Four fingers and a VU meter. It ties the mark to the cadence bars in the HUD, but reads as an equalizer at small sizes.</p>
+        </section>
+
+        <section class="mark">
+          <div class="mark-head"><span>03 / WHITE LABEL</span><span>RECORD / STAMP</span></div>
+          <div class="icons">
+            <div class="big"><svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="128" height="128" rx="26" fill="#0b0b0a"/><circle cx="64" cy="64" r="44" fill="none" stroke="#ff4d00" stroke-width="5"/><circle cx="64" cy="64" r="19" fill="#f2efe6"/><circle cx="64" cy="64" r="4" fill="#0b0b0a"/><g fill="#ff4d00" shape-rendering="crispEdges"><rect x="57" y="58" width="4" height="4"/><rect x="61" y="58" width="4" height="4"/><rect x="65" y="58" width="4" height="4"/><rect x="57" y="62" width="4" height="4"/><rect x="61" y="62" width="4" height="4"/><rect x="57" y="66" width="4" height="4"/><rect x="57" y="70" width="4" height="4"/></g></svg></div>
+            <div class="mid"><svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="128" height="128" rx="26" fill="#0b0b0a"/><circle cx="64" cy="64" r="44" fill="none" stroke="#ff4d00" stroke-width="5"/><circle cx="64" cy="64" r="19" fill="#f2efe6"/><circle cx="64" cy="64" r="4" fill="#0b0b0a"/><g fill="#ff4d00" shape-rendering="crispEdges"><rect x="57" y="58" width="4" height="4"/><rect x="61" y="58" width="4" height="4"/><rect x="65" y="58" width="4" height="4"/><rect x="57" y="62" width="4" height="4"/><rect x="61" y="62" width="4" height="4"/><rect x="57" y="66" width="4" height="4"/><rect x="57" y="70" width="4" height="4"/></g></svg></div>
+            <div class="small"><svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="128" height="128" rx="26" fill="#0b0b0a"/><circle cx="64" cy="64" r="44" fill="none" stroke="#ff4d00" stroke-width="5"/><circle cx="64" cy="64" r="19" fill="#f2efe6"/><circle cx="64" cy="64" r="4" fill="#0b0b0a"/><g fill="#ff4d00" shape-rendering="crispEdges"><rect x="57" y="58" width="4" height="4"/><rect x="61" y="58" width="4" height="4"/><rect x="65" y="58" width="4" height="4"/><rect x="57" y="62" width="4" height="4"/><rect x="61" y="62" width="4" height="4"/><rect x="57" y="66" width="4" height="4"/><rect x="57" y="70" width="4" height="4"/></g></svg></div>
+            <div class="tiny"><svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="128" height="128" rx="26" fill="#0b0b0a"/><circle cx="64" cy="64" r="44" fill="none" stroke="#ff4d00" stroke-width="5"/><circle cx="64" cy="64" r="19" fill="#f2efe6"/><circle cx="64" cy="64" r="4" fill="#0b0b0a"/><g fill="#ff4d00" shape-rendering="crispEdges"><rect x="57" y="58" width="4" height="4"/><rect x="61" y="58" width="4" height="4"/><rect x="65" y="58" width="4" height="4"/><rect x="57" y="62" width="4" height="4"/><rect x="61" y="62" width="4" height="4"/><rect x="57" y="66" width="4" height="4"/><rect x="57" y="70" width="4" height="4"/></g></svg></div>
+          </div>
+          <div class="wordmark">FASTFINGAZ</div>
+          <p>The record reads as a white-label sleeve, but the detail collapses at 16px. Keep it for the sleeve and OG art, not the toolbar.</p>
+        </section>
+      </div>
+
+      <div class="bottom">
+        <div class="sleeve">
+          <div class="catalog">FF-001 / 120 WPM / STEREO</div>
+          <div class="label">
+            <b>FF</b>
+            <span>ORIGINAL WORDS</span>
+            <span>SIDE A / COMPOSITION</span>
+          </div>
+          <div class="side"><span>SIDE A / THINK</span><span>SIDE B / FLOW</span></div>
+        </div>
+        <div class="notes">
+          <h2>The reference is the format, not the costume.</h2>
+          <p>
+            New York underground gives us the white label, the catalog number, the Xerox flyer, the
+            run-out etching. The West Coast gives us chrome, sun-faded paper and a studio meter. The
+            product stays an instrument; the branding is the sleeve it ships in.
+          </p>
+          <div class="row"><span>TYPE</span><div>Geist Pixel wordmark, Geist Mono data, Geist body. No novelty graffiti face.</div></div>
+          <div class="row"><span>COLOUR</span><div>Signal orange, anodised black, newsprint cream, flat chrome. No gold, gradients or glow.</div></div>
+          <div class="row"><span>VOICE</span><div>Liner notes and run-out text: “THINK FAST / TYPE SLOW”, “SIDE A / COMPOSITION”. Never “yo”, “phat” or fake street talk.</div></div>
+          <div class="row"><span>NEXT</span><div>Approve the name, then produce the 16/32/48/128 favicons, maskable icon, OG art and store captures.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>MARK STUDY / NOT A RELEASE</span><span>THINKTYPE.LOFTAH.COM / LOCAL ONLY</span></div>
+  </body>
+</html>

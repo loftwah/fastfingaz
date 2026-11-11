@@ -681,6 +681,53 @@ img {
   color: var(--orange-ink);
 }
 
+/* FAQ ------------------------------------------------------------------- */
+
+.faq {
+  border-top: 1px solid var(--line-strong);
+}
+
+.faq details {
+  border-bottom: 1px solid var(--line);
+  padding: 18px 0;
+}
+
+.faq summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  flex: none;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--orange-ink);
+}
+
+.faq details[open] summary::after {
+  content: '−';
+}
+
+.faq p {
+  max-width: 70ch;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 /* Install --------------------------------------------------------------- */
 
 .install {
@@ -825,6 +872,15 @@ img {
   grid-template-columns: 180px minmax(0, 760px);
   gap: 40px;
   padding: 34px 0 40px;
+}
+
+.doc-body > * {
+  min-width: 0;
+}
+
+.doc-copy {
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .doc-toc {

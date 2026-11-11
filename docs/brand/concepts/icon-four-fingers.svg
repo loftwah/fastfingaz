@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Fastfingaz four-finger meter mark">
+  <rect width="128" height="128" rx="26" fill="#0b0b0a"/>
+  <g fill="#ff4d00">
+    <rect x="19" y="60" width="18" height="42"/>
+    <rect x="43" y="28" width="18" height="74"/>
+    <rect x="67" y="44" width="18" height="58"/>
+    <rect x="91" y="72" width="18" height="30"/>
+  </g>
+  <rect x="19" y="102" width="90" height="3" fill="#ff4d00"/>
+</svg>

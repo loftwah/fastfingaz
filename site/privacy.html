@@ -21,7 +21,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css" />
+    <link rel="stylesheet" href="/assets/site.css?v=0.3.4" />
 
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="Thinktype" />
@@ -34,6 +34,9 @@
     <meta property="og:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content="Thinktype privacy: local-only storage, no server, no account, no analytics." />
+    <meta property="og:locale" content="en_GB" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Thinktype privacy policy" />
     <meta
@@ -41,6 +44,48 @@
       content="No server, no account, no analytics. Prompt text is not stored by default."
     />
     <meta name="twitter:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
+    <meta name="twitter:image:alt" content="Thinktype privacy: local-only storage, no server, no account, no analytics." />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://thinktype.loftwah.com/#website",
+            "url": "https://thinktype.loftwah.com/",
+            "name": "Thinktype",
+            "inLanguage": "en-GB",
+            "publisher": { "@id": "https://thinktype.loftwah.com/#dean-lofts" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://thinktype.loftwah.com/#dean-lofts",
+            "name": "Dean Lofts",
+            "url": "https://github.com/loftwah"
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://thinktype.loftwah.com/privacy#page",
+            "name": "Thinktype privacy policy",
+            "description": "Thinktype has no server, no account and no analytics. Prompt text is not stored by default.",
+            "url": "https://thinktype.loftwah.com/privacy",
+            "isPartOf": { "@id": "https://thinktype.loftwah.com/#website" },
+            "author": { "@id": "https://thinktype.loftwah.com/#dean-lofts" },
+            "publisher": { "@id": "https://thinktype.loftwah.com/#dean-lofts" },
+            "inLanguage": "en-GB",
+            "dateModified": "2026-11-11",
+            "primaryImageOfPage": "https://thinktype.loftwah.com/social/og-1200x630.png"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://thinktype.loftwah.com/" },
+              { "@type": "ListItem", "position": 2, "name": "Privacy", "item": "https://thinktype.loftwah.com/privacy" }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <a class="skip" href="#main">SKIP TO CONTENT</a>

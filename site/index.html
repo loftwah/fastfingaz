@@ -28,7 +28,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css" />
+    <link rel="stylesheet" href="/assets/site.css?v=0.3.4" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Thinktype" />
@@ -41,7 +41,9 @@
     <meta property="og:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:alt" content="Thinktype instrument and the headline: measure the speed of a thought." />
+    <meta property="og:locale" content="en_GB" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Thinktype — measure the speed of a thought" />
     <meta
@@ -49,31 +51,110 @@
       content="Two clocks for original composition in ChatGPT: think WPM and flow WPM. Printed as a receipt. Local-only."
     />
     <meta name="twitter:image" content="https://thinktype.loftwah.com/social/og-1200x630.png" />
+    <meta name="twitter:image:alt" content="Thinktype instrument and the headline: measure the speed of a thought." />
 
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Thinktype",
-        "applicationCategory": "ProductivityApplication",
-        "applicationSubCategory": "Writing",
-        "operatingSystem": "Chrome",
-        "softwareVersion": "0.3.4",
-        "description": "A local-only Chrome extension that measures how fast you turn a thought into text in ChatGPT. Think WPM, flow WPM and a printed receipt.",
-        "url": "https://thinktype.loftwah.com/",
-        "downloadUrl": "https://github.com/loftwah/thinktype/releases/latest",
-        "codeRepository": "https://github.com/loftwah/thinktype",
-        "privacyPolicy": "https://thinktype.loftwah.com/privacy",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "featureList": [
-          "Think WPM and flow WPM",
-          "Local-only storage",
-          "Share cards in landscape, square and story formats",
-          "No account, server or analytics"
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://thinktype.loftwah.com/#website",
+            "url": "https://thinktype.loftwah.com/",
+            "name": "Thinktype",
+            "description": "A local-only Chrome extension that measures how fast you turn a thought into text in ChatGPT.",
+            "inLanguage": "en-GB",
+            "publisher": { "@id": "https://thinktype.loftwah.com/#dean-lofts" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://thinktype.loftwah.com/#dean-lofts",
+            "name": "Dean Lofts",
+            "url": "https://github.com/loftwah",
+            "sameAs": ["https://github.com/loftwah"]
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://thinktype.loftwah.com/#app",
+            "name": "Thinktype",
+            "applicationCategory": "ProductivityApplication",
+            "applicationSubCategory": "Writing",
+            "operatingSystem": "Chrome",
+            "browserRequirements": "Chrome 116 or newer",
+            "softwareVersion": "0.3.4",
+            "description": "A local-only Chrome extension that measures how fast you turn a thought into text in ChatGPT. Think WPM, flow WPM and a printed receipt.",
+            "url": "https://thinktype.loftwah.com/",
+            "downloadUrl": "https://github.com/loftwah/thinktype/releases/latest",
+            "codeRepository": "https://github.com/loftwah/thinktype",
+            "privacyPolicy": "https://thinktype.loftwah.com/privacy",
+            "softwareHelp": "https://thinktype.loftwah.com/metrics",
+            "license": "https://github.com/loftwah/thinktype/blob/main/LICENSE",
+            "screenshot": "https://thinktype.loftwah.com/assets/hud-typing.png",
+            "isAccessibleForFree": true,
+            "inLanguage": "en-GB",
+            "dateModified": "2026-11-11",
+            "author": { "@id": "https://thinktype.loftwah.com/#dean-lofts" },
+            "publisher": { "@id": "https://thinktype.loftwah.com/#dean-lofts" },
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "featureList": [
+              "Think WPM and flow WPM",
+              "Four HUD sizes: Mini, Small, Medium and Large",
+              "Live run panel in the popup",
+              "Local-only storage",
+              "Share cards in landscape, square and story formats",
+              "No account, server or analytics"
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://thinktype.loftwah.com/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Is Thinktype a typing test?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. A typing test gives you the words and starts a timer. Thinktype gives you a blank ChatGPT composer, so it measures how quickly you turn your own thought into text. Flow and peak are the numbers to compare with a typing test; think WPM is deliberately slower because it includes the thinking."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the difference between think WPM and flow WPM?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Think WPM is the finished message divided by total wall time, including every pause, re-read and rewrite. Flow WPM is inserted characters divided by active typing time, with long gaps clamped. The gap between them is the cost of choosing the words."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does Thinktype store my prompt text?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Not by default. It stores WPM, word counts, timings and confidence locally. The optional Store text setting keeps the sent prompt on your machine only; nothing is sent to a server."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does it work outside ChatGPT?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Not yet. The 0.3.x builds attach to chatgpt.com. A per-tab mode for other text boxes is on the roadmap; it needs a separate permission and a generic end-of-run adapter."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is it free?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. The early build is free and MIT licensed. There is no account, subscription or server."
+                }
+              }
+            ]
+          }
         ]
       }
     </script>
@@ -318,6 +399,60 @@
               <a href="https://github.com/loftwah/thinktype/blob/main/docs/METRICS.md">measurement notes</a>.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section class="wrap section" aria-labelledby="faq-title">
+        <div class="section-head">
+          <span class="margin-label">Questions</span>
+          <div>
+            <h2 id="faq-title">The short answers.</h2>
+            <p class="intro">What the two clocks mean, and what happens to your words.</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div aria-hidden="true"></div>
+          <div class="faq">
+          <details>
+            <summary>Is Thinktype a typing test?</summary>
+            <p>
+              No. A typing test gives you the words and starts a timer. Thinktype gives you a blank
+              ChatGPT composer, so it measures how quickly you turn your own thought into text. Flow
+              and peak are the numbers to compare with a typing test; think WPM is deliberately
+              slower because it includes the thinking.
+            </p>
+          </details>
+          <details>
+            <summary>What is the difference between think WPM and flow WPM?</summary>
+            <p>
+              Think WPM is the finished message divided by total wall time, including every pause,
+              re-read and rewrite. Flow WPM is inserted characters divided by active typing time,
+              with long gaps clamped. The gap between them is the cost of choosing the words.
+            </p>
+          </details>
+          <details>
+            <summary>Does Thinktype store my prompt text?</summary>
+            <p>
+              Not by default. It stores WPM, word counts, timings and confidence locally. The optional
+              Store text setting keeps the sent prompt on your machine only; nothing is sent to a
+              server.
+            </p>
+          </details>
+          <details>
+            <summary>Does it work outside ChatGPT?</summary>
+            <p>
+              Not yet. The 0.3.x builds attach to chatgpt.com. A per-tab mode for other text boxes is
+              on the roadmap; it needs a separate permission and a generic end-of-run adapter.
+            </p>
+          </details>
+          <details>
+            <summary>Is it free?</summary>
+            <p>
+              Yes. The early build is free and MIT licensed. There is no account, subscription or
+              server.
+            </p>
+          </details>
+        </div>
         </div>
       </section>
 
