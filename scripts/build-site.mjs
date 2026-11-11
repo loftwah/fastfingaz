@@ -9,6 +9,7 @@
 import { cp, mkdir, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import sharp from 'sharp';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = path.join(root, 'site');
@@ -69,6 +70,19 @@ await copy(path.join(art, 'store-1280x800.png'), path.join(out, 'assets', 'store
 await copy(path.join(art, 'share', 'fastfingaz-landscape.png'), path.join(out, 'assets', 'cards', 'landscape.png'));
 await copy(path.join(art, 'share', 'fastfingaz-square.png'), path.join(out, 'assets', 'cards', 'square.png'));
 await copy(path.join(art, 'share', 'fastfingaz-story.png'), path.join(out, 'assets', 'cards', 'story.png'));
+
+// Small WebP previews for the on-page format examples. The full-size PNGs
+// remain the download/source assets; the preview is displayed at 140–340px.
+for (const [sourceName, targetName, width] of [
+  ['landscape.png', 'landscape-preview.webp', 960],
+  ['square.png', 'square-preview.webp', 640],
+  ['story.png', 'story-preview.webp', 360],
+]) {
+  await sharp(path.join(out, 'assets', 'cards', sourceName))
+    .resize({ width })
+    .webp({ quality: 82 })
+    .toFile(path.join(out, 'assets', 'cards', targetName));
+}
 
 // 5. Icon set. The staged Pixel F PNGs are the source; do not upscale the
 // 128px icon, because the maskable and Apple touch art have their own margins.
