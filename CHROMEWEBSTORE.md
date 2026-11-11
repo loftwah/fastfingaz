@@ -64,7 +64,7 @@ English
 | Store Icon [REQUIRED] | 128×128 PNG | ✅ Ready (Pixel F) | `public/icon/128.png` |
 | Screenshot 1 [REQUIRED] | 1280×800 | ✅ Ready (sample composition) | `docs/art/store-1280x800.png` |
 | Screenshot 2 [RECOMMENDED] | 1280×800 | ✅ Ready (sample composition) | `docs/art/store-popup-1280x800.png` |
-| Screenshot 3 [RECOMMENDED] | 1280×800 | ⬜ Not created | |
+| Screenshot 3 [RECOMMENDED] | 1280×800 | ✅ Ready (sample composition) | `docs/art/store-receipt-1280x800.png` |
 | Screenshot 4 | 1280×800 | ⬜ Not created | |
 | Screenshot 5 | 1280×800 | ⬜ Not created | |
 | Small Promo Tile [RECOMMENDED] | 440×280 | ✅ Ready | `docs/art/promo-440x280.png` |
@@ -74,8 +74,8 @@ English
 
 - **Screenshot 1:** the vertical HUD beside a sample ChatGPT conversation, with the live reading, cadence meter and baseline. This is a designed sample composition, not a capture of a real user session.
 - **Screenshot 2:** the popup showing the HUD size selector, today's numbers, the baseline, the 14-day chart and recent sessions. A designed sample composition, not a real account.
-- **Screenshot 3:** the printed receipt close-up with think/flow/peak, words/time/signal, serial and barcode. Needed before submission.
-- **Screenshot 4:** the three share formats side by side (1200×630, 1080×1080, 1080×1920) with the file-size row. Needed before submission.
+- **Screenshot 3:** the printed receipt close-up with think/flow/peak, words/time/signal, serial and barcode. A designed sample composition; ready.
+- **Screenshot 4:** the three share formats side by side (1200×630, 1080×1080, 1080×1920) with the file-size row. Optional; not required for submission.
 - **Screenshot 5:** the draft state (`DRAFT / TYPE TO MEASURE`) and the settings threshold. Needed before submission.
 
 The social and OG art lives in `docs/art/social/`; the three card formats live in
@@ -177,7 +177,7 @@ https://github.com/loftwah/fastfingaz
 - ChatGPT UI changes can break composer detection until the selector fallbacks are updated.
 - Share cards are generated locally at 1200×630, 1080×1080 and 1080×1920; no image service is used.
 - The HUD docks in the empty gutter beside the conversation. At narrow widths it uses a slim strip; if the sidebar is open and there is no gutter, it may use the sidebar space. It can be dragged, and Reset HUD position restores the dock.
-- The 1280×800 store screenshot is a sample composition; replace it with real captures before submission.
+- The 1280×800 store screenshots are designed sample compositions using the real HUD and mock conversation; replace them with real captures after the first install if preferred.
 - The Chrome Web Store listing has not been submitted for review.
 
 ### Rejection History

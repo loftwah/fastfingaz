@@ -819,6 +819,18 @@
   color: var(--ink);
 }
 
+/* Receipts are paper: the ghost control needs ink, not the dark-surface white. */
+.receipt .share.ghost {
+  border-color: var(--line-paper);
+  color: var(--ink);
+}
+
+.receipt .share.ghost:hover {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
 /* Share sheet ------------------------------------------------------------ */
 
 .sheet {
