@@ -88,14 +88,56 @@ export function peakWpm(keys: number[], windowMs = 5000, minSpanMs = 1500): numb
   return best;
 }
 
-/** Rolling WPM over the last `windowMs`, for the live HUD. */
-export function rollingWpm(keys: number[], now: number, windowMs = 5000): number {
-  let count = 0;
-  for (let i = keys.length - 1; i >= 0; i--) {
-    if (keys[i]! < now - windowMs) break;
-    count++;
+/** How much of `[from, to]` was spent in an explicit manual pause. */
+function pausedOverlap(
+  from: number,
+  to: number,
+  pauses: ReadonlyArray<{ start: number; end: number }>,
+): number {
+  let overlap = 0;
+  for (const pause of pauses) {
+    const start = Math.max(from, pause.start);
+    const end = Math.min(to, pause.end);
+    if (end > start) overlap += end - start;
   }
-  return wpmFrom(count, windowMs);
+  return overlap;
+}
+
+/**
+ * Rolling WPM over the last `windowMs` of typing, for the live HUD.
+ *
+ * - The denominator is the typing span of the sampled keys, so a short prompt
+ *   is not diluted by seconds it never used.
+ * - A gap longer than `idleGapMs` is not typing time: it is skipped, not
+ *   counted. That is what lets the reading hold across a think pause.
+ * - Explicit manual pauses are removed from the gap entirely.
+ */
+export function rollingWpm(
+  keys: number[],
+  now: number,
+  windowMs = 5000,
+  idleGapMs = Number.POSITIVE_INFINITY,
+  pauses: ReadonlyArray<{ start: number; end: number }> = [],
+): number {
+  if (!keys.length || !Number.isFinite(now)) return 0;
+
+  let chars = 0;
+  let span = 0;
+  let prev = now;
+  for (let i = keys.length - 1; i >= 0; i--) {
+    const t = keys[i]!;
+    const gap = Math.max(0, prev - t - pausedOverlap(t, prev, pauses));
+    prev = t;
+    if (gap <= 0 || gap > idleGapMs) continue;
+    if (span + gap > windowMs) break;
+    span += gap;
+    chars++;
+  }
+
+  if (!chars) return 0;
+  // The floor keeps a two-key burst (key repeat, a paste) from reading as
+  // hundreds of words per minute. Real typing clears it in half a second.
+  return wpmFrom(chars, Math.max(500, span));
 }
 
 /**

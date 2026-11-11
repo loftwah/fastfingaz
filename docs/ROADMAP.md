@@ -19,13 +19,22 @@
 - [x] 38 unit tests; green typecheck, tests and production build
 - [x] No new manifest permissions
 
-## v0.3 — pause and hold (current)
+## v0.3 — pause and hold
 
 - [x] Manual pause button in the HUD header and `Alt+Shift+P` shortcut
 - [x] Paused time excluded from wall and active time; typing resumes automatically
 - [x] Amber/play state and `PAUSED` labels in the header and footer
 - [x] 8-second rolling live window and a held number through short gaps
 - [x] 42 unit tests (pause intervals, wall/active exclusion, auto-resume)
+
+## v0.3.1 — honest live counter (current)
+
+- [x] Live window counts only actual typing; think gaps no longer drag the reading down
+- [x] Short runs use their own typing span, not a full eight-second denominator
+- [x] The reading updates on keydown only, so the UI clock cannot bleed it down
+- [x] Manual pauses are removed from the live window
+- [x] Idle big number labelled `LAST THINK`; FLOW and PEAK are the Monkeytype comparisons
+- [x] 47 unit tests
 
 ## v0.4 — calibration and trust
 

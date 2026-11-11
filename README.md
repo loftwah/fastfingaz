@@ -24,12 +24,15 @@ about — how quickly a finished idea becomes text — and shows both clocks:
 - **Think WPM** — the whole message, thinking pauses included.
 - **Flow WPM** — your hands-only cadence when the words are already there.
 
-The gap between them is the interesting part. A pause is not a reset: the HUD holds the live reading
-in THINKING, and the idle state shows your last, best and rolling average. For a deliberate break, the
-pause button (or <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) freezes both clocks, holds the
-display and excludes the pause from the final session; typing resumes automatically.
+The gap between them is the interesting part. The big number while typing is **live flow**; the big
+number when idle is the last session's **Think WPM**, not your typing speed. A 130 WPM Monkeytype run
+and a 100 WPM Thinktype flow can both be true: one is transcription, the other is composition. Use
+**Peak** for the closest thing to a typing sprint. A pause is not a reset: the HUD holds the live
+reading in THINKING, and the idle state shows your last, best and rolling average. For a deliberate
+break, the pause button (or <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) freezes both clocks,
+holds the display and excludes the pause from the final session; typing resumes automatically.
 
-**Live:** https://thinktype.loftwah.com · **Current build:** v0.3.0 (early, unpacked install)
+**Live:** https://thinktype.loftwah.com · **Current build:** v0.3.1 (early, unpacked install)
 
 ## The instrument
 
@@ -180,7 +183,7 @@ images.
   included in your export.
 - Export or clear everything from the options page.
 - Permissions: `storage`, `clipboardWrite`, and the two ChatGPT host permissions. No new permissions
-  in v0.3.0.
+  in v0.3.1.
 
 Canonical policy: https://thinktype.loftwah.com/privacy · Source: [docs/PRIVACY.md](docs/PRIVACY.md)
 

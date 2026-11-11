@@ -81,7 +81,7 @@
           <div>
             <h1>How Thinktype measures typing.</h1>
             <p class="meta">
-              TWO CLOCKS / AN EXPLICIT IDLE MODEL / AN HONEST SIGNAL SCORE / v0.3.0
+              TWO CLOCKS / AN EXPLICIT IDLE MODEL / AN HONEST SIGNAL SCORE / v0.3.1
             </p>
           </div>
         </header>
@@ -140,6 +140,31 @@
               Five characters per word is the conventional definition used by Monkeytype and most
               typing tools. Spaces count. A separate word count is shown for humans, but all WPM
               math uses the five-character word so the numbers are comparable across tools.
+            </p>
+
+            <h3>Live WPM — the big number</h3>
+            <p>
+              The big number while typing is a live flow reading, not think. It is the last eight
+              seconds of <em>actual</em> typing; a gap longer than the thinking threshold is skipped
+              rather than wiping the window, while the session flow score still charges the clamped
+              gap. Before the run is eight seconds old, the denominator is the typing span it
+              actually used, so a short burst is not diluted by seconds that never happened. Manual
+              pauses are removed entirely. The reading updates only when a key lands, so it holds
+              through a pause instead of bleeding down with the clock.
+            </p>
+            <p>
+              The big number at idle is <strong>LAST THINK</strong>: the last sent prompt’s think
+              WPM, including every pause. It is not your typing speed.
+            </p>
+
+            <h3>Why 130 on Monkeytype can be 100 here</h3>
+            <p>
+              Monkeytype gives you the words and a short timer, so its WPM is sustained
+              transcription. Thinktype gives you a blank composer. <strong>Flow</strong> is the fair
+              comparison, <strong>peak</strong> is the closest thing to a sprint, and
+              <strong>think</strong> is deliberately lower because it includes the thinking. A
+              130 WPM typing test and a 100 WPM flow score are both true: one is transcription, the
+              other is composition.
             </p>
 
             <h2 id="active">Active time and the thinking threshold</h2>
@@ -339,7 +364,7 @@ averageFlowWpm  = sum(insertedChars) / 5 / (sum(activeMs) / 60000)</code></pre>
         </div>
         <div class="footer-bottom">
           <span>THINKTYPE.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
-          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.0</span></span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.1</span></span>
         </div>
       </div>
     </footer>

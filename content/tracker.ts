@@ -52,8 +52,9 @@ export class ComposerTracker {
   private ime = false;
   private lastKeyAt = 0;
   private lastNonEmpty = '';
-  /** Last non-zero rolling reading. A pause holds it instead of snapping to 0. */
+  /** Last measured cadence. Updated only when a new key lands, never by the clock. */
   private heldWpm = 0;
+  private heldKeyCount = 0;
   private pollTimer: number | null = null;
   private clearTimer: number | null = null;
   private listeners: Array<() => void> = [];
@@ -86,19 +87,30 @@ export class ComposerTracker {
 
     const paused = this.session.isPaused;
     const now = paused ? (this.session.pausedAt ?? performance.now()) : performance.now();
+    const threshold = this.settings.idleThresholdMs;
     const text = getComposerText(this.el);
     const keys = [...this.session.keyTimes];
     const wallMs = Math.max(0, now - this.session.startedAt - this.session.pausedTotal(now));
-    const activeMs = Math.max(1, this.session.activeMs(now, this.settings.idleThresholdMs));
+    const activeMs = Math.max(1, this.session.activeMs(now, threshold));
     const sinceKey = now - this.lastKeyAt;
-    const active = !paused && sinceKey <= Math.max(1800, this.settings.idleThresholdMs);
-    const liveWpm = rollingWpm(keys, now, 8000);
-    if (liveWpm > 0 && !paused) this.heldWpm = liveWpm;
-    // Hold the last measured cadence through a short pause instead of letting
-    // the rolling window bleed the number down key by key.
-    const displayWpm = sinceKey > 700 ? this.heldWpm : liveWpm;
+    const active = !paused && sinceKey <= Math.max(1800, threshold);
+
+    // Recompute the held reading only when a new key has landed. Running this
+    // on every 250 ms UI tick let the clock bleed the number down while the
+    // user was thinking, which is exactly what the hold is meant to prevent.
+    if (!paused && keys.length > this.heldKeyCount) {
+      this.heldKeyCount = keys.length;
+      this.heldWpm = rollingWpm(
+        keys,
+        this.lastKeyAt,
+        8000,
+        threshold,
+        this.session.getPauseIntervals(),
+      );
+    }
 
     const flow = wpmFrom(this.session.insertedCount, activeMs);
+
     // A resumed draft measures the characters typed after tracking began.
     const thinkSource =
       this.session.prefilledChars > 0 ? this.session.insertedCount : text.length;
@@ -111,11 +123,11 @@ export class ComposerTracker {
 
     return {
       active: true,
-      wpm: paused ? this.heldWpm : active ? displayWpm : this.heldWpm,
+      wpm: this.heldWpm,
       thinkWpm: think,
       flowWpm: flow,
       peakWpm: peakWpm(keys),
-      consistency: consistencyScore(keys, this.settings.idleThresholdMs),
+      consistency: consistencyScore(keys, threshold),
       signal: Math.min(1, netTyped / attributable),
       words: countWords(text),
       ms: wallMs,
@@ -214,6 +226,7 @@ export class ComposerTracker {
     this.lastNonEmpty = text.trim() ? text : '';
     this.lastKeyAt = now;
     this.heldWpm = 0;
+    this.heldKeyCount = 0;
     return true;
   }
 
@@ -348,6 +361,7 @@ export class ComposerTracker {
     this.pendingSend = null;
     this.lastNonEmpty = '';
     this.heldWpm = 0;
+    this.heldKeyCount = 0;
     this.clearTimers();
 
     const stats = computeStats(raw, this.settings.idleThresholdMs);
@@ -384,6 +398,7 @@ export class ComposerTracker {
     this.pendingSend = null;
     this.lastNonEmpty = '';
     this.heldWpm = 0;
+    this.heldKeyCount = 0;
     this.clearTimers();
   }
 

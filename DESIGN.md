@@ -287,7 +287,7 @@ content changes.
 
 States: `LIVE FLOW` while typing; `THINKING` with the live number held; `DRAFT / TYPE TO MEASURE`
 when text already exists; `PAUSED` with frozen clocks for a manual pause; `PAUSED / NOT RECORDED` after
-a reload; idle `LAST SESSION` with LAST / BEST / AVG on the instrument. A dash, never a zero, means
+a reload; idle `LAST THINK` with LAST / BEST / AVG on the instrument. A dash, never a zero, means
 no reading yet. The receipt state removes the LCD, prints down in five steps, and shows
 think/flow/peak, words/time/signal, best and average, a serial, a barcode, a small **NEW BEST** stamp
 and **SHARE CARD / DONE**.
@@ -306,7 +306,13 @@ gutter on either side, it may use the sidebar area rather than cover the convers
 position returns it to the dock.
 
 **The Hold Rule.** A pause is not a reset. The live number holds in THINKING; only the cadence meter
-dims. Never snap the big number to zero while the run is alive.
+dims. Never snap the big number to zero while the run is alive. The reading is updated only when a key
+lands, not on the UI tick, so the clock cannot bleed it down.
+
+**The Live Rule.** The big number is live flow, not think: the last eight seconds of active typing,
+measured against the run's active age until that window fills. Thinking gaps are clamped to the idle
+threshold; manual pauses are removed. Idle is `LAST THINK`, and the receipt's FLOW and PEAK are the
+numbers to compare with a typing test.
 
 **The Pause Rule.** Automatic THINKING still counts the pause as part of the run. A manual pause
 freezes both clocks and excludes the break from the session. The pause button and `Alt+Shift+P` are

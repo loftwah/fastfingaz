@@ -678,7 +678,7 @@ export class Overlay {
       series = this.paused.series;
     } else if (last) {
       primary = read(idle.last);
-      mode = 'LAST SESSION';
+      mode = 'LAST THINK';
       status = 'IDLE';
       flowValue = read(last.flowWpm);
       thinkValue = read(last.thinkWpm);

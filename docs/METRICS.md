@@ -32,6 +32,26 @@ flowWpm = (insertedCharacters / 5) / (activeMs / 60000)
 - `activeMs` is wall time with long gaps clamped (see below).
 - This is close to what a typing test measures, except the text is yours.
 
+### Live WPM — the big number
+
+The big number while typing is a live flow reading, not think:
+
+```text
+liveWpm = typing intervals / 5 / (last 8s of active typing / 60000)
+```
+
+- It uses the last 8 seconds of **actual typing**. A gap longer than the idle threshold is not
+  typing time, so it is skipped; that is what lets the reading hold across a think pause. The
+  session's FLOW score still clamps that gap, so the receipt pays for thinking.
+- Before the run is 8 seconds old, the denominator is the typing span it actually used, not a
+  full eight seconds. A three-second burst is not diluted by five seconds that never happened.
+- An explicit manual pause is removed from the window entirely.
+- The number is recomputed only when a new key lands. It holds through a think gap and
+  never bleeds down just because the clock advanced.
+- This is composition cadence, not transcription speed. It will sit below a Monkeytype
+  sprint if you pause between words to decide what to say, and it is not the session's
+  THINK score.
+
 Five characters per word is the conventional definition used by Monkeytype and most typing tools.
 Spaces count. A separate word count is shown for humans, but all WPM math uses the five-character
 word so the numbers are comparable across tools.
@@ -56,12 +76,12 @@ but it does not swallow the whole session.
 ### A pause is not a reset
 
 The threshold also defines "thinking" for the live HUD. If no key has arrived for
-`max(1200ms, threshold)`, the HUD switches to **THINKING**. The live WPM reading is held at its last
-non-zero value; it does not drop to zero. The run is still alive, the timer and word count keep
-moving, and the final sent prompt is measured as one run.
+`max(1800ms, threshold)`, the HUD switches to **THINKING**. The live WPM reading is held at its last
+measured value; it does not drop to zero and it does not decay with the clock. The run is still alive,
+the timer and word count keep moving, and the final sent prompt is measured as one run.
 
-The idle HUD (no active run) shows the last eligible session, the best think WPM and the rolling
-average. Before the first reading it shows dashes, never zero.
+The idle HUD (no active run) shows the last eligible session's **think** WPM, labelled `LAST THINK`,
+plus the best think WPM and the rolling average. Before the first reading it shows dashes, never zero.
 
 ### Manual pause
 
@@ -196,6 +216,20 @@ prevents a one-line "thanks" from moving the average.
   loaded. Think of it as "how fast does a thought become text once you start writing it".
 - **Speech, dictation, AI autocomplete.** Not typing; paste/dictation paths lower signal.
 - **Absolute skill.** These numbers are most useful against your own baseline, on your own topics.
+
+## Comparing with Monkeytype
+
+Monkeytype gives you the words and a short timer, so its WPM is sustained transcription.
+Thinktype gives you a blank composer, so the numbers answer a different question:
+
+- **FLOW** is the fair comparison: characters over active typing time.
+- **PEAK** is the closest thing to a typing sprint: your best five seconds.
+- **THINK** is deliberately lower: it includes every pause, re-read and rewrite.
+- **LIVE** is your current composition cadence, held through think gaps.
+
+A 130 WPM Monkeytype score with 100 WPM FLOW is not a contradiction. It is the cost of
+choosing the words. Use PEAK to see the hands, FLOW to see the writing session, and THINK
+to see the finished thought.
 
 ## Validation plan
 

@@ -6,7 +6,7 @@
     <title>Changelog — Thinktype</title>
     <meta
       name="description"
-      content="Thinktype release notes: the v0.3.0 pause and hold, honest best and average history, three share card formats, and the static site."
+      content="Thinktype release notes: the v0.3.1 live counter fix, the v0.3.0 pause and hold, honest best and average history, three share card formats, and the static site."
     />
     <link rel="canonical" href="https://thinktype.loftwah.com/changelog" />
     <meta name="theme-color" content="#f2efe6" />
@@ -81,13 +81,14 @@
           <div>
             <h1>Build notes, not marketing beats.</h1>
             <p class="meta">
-              CURRENTLY v0.3.0 / 11 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
+              CURRENTLY v0.3.1 / 11 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
             </p>
           </div>
         </header>
 
         <div class="doc-body">
           <nav class="doc-toc" aria-label="Releases">
+            <a href="#v031">v0.3.1</a>
             <a href="#v030">v0.3.0</a>
             <a href="#v022">v0.2.2</a>
             <a href="#v021">v0.2.1</a>
@@ -98,9 +99,40 @@
           </nav>
 
           <div>
+            <section class="release" id="v031">
+              <div>
+                <span class="version">v0.3.1 <span class="tag">CURRENT</span></span>
+                <span class="date">11 NOV 2026</span>
+              </div>
+              <div>
+                <h2>The live number tells the truth.</h2>
+                <ul>
+                  <li>
+                    The big live number now uses only the last eight seconds of <em>actual</em>
+                    typing. A think gap is skipped, not averaged in, so the reading holds instead of
+                    crashing when you pause to choose a word.
+                  </li>
+                  <li>
+                    Fixed the bleed: the reading is recomputed only when a key lands. The 250 ms UI
+                    tick can no longer slide it down while you think.
+                  </li>
+                  <li>
+                    A short run is no longer divided by a full eight seconds. A three-second burst
+                    reads as a three-second burst.
+                  </li>
+                  <li>
+                    The idle big number is now labelled <code>LAST THINK</code>, so it is not
+                    mistaken for a typing score. Use <strong>FLOW</strong> and <strong>PEAK</strong>
+                    to compare with Monkeytype.
+                  </li>
+                  <li>No new permissions; 47 tests.</li>
+                </ul>
+              </div>
+            </section>
+
             <section class="release" id="v030">
               <div>
-                <span class="version">v0.3.0 <span class="tag">CURRENT</span></span>
+                <span class="version">v0.3.0</span>
                 <span class="date">11 NOV 2026</span>
               </div>
               <div>
@@ -305,7 +337,7 @@
         </div>
         <div class="footer-bottom">
           <span>THINKTYPE.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
-          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.0</span></span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.3.1</span></span>
         </div>
       </div>
     </footer>

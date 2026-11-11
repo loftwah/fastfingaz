@@ -38,6 +38,10 @@ export class TypingSession {
     return this.pauseStartedAt;
   }
 
+  getPauseIntervals(): ReadonlyArray<{ start: number; end: number }> {
+    return this.pauseIntervals;
+  }
+
   /** Freeze the measurement clocks until `resume` or the next keystroke. */
   pause(timestamp: number): void {
     if (this.ended || this.pauseStartedAt !== null) return;

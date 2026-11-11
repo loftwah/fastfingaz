@@ -13,6 +13,7 @@ import {
   isEligible,
   isNewBest,
   median,
+  rollingWpm,
   shouldRecord,
   thinkRatio,
   wpmFrom,
@@ -67,6 +68,44 @@ describe('countWords / median', () => {
     expect(median([3, 1, 2])).toBe(2);
     expect(median([1, 2, 3, 4])).toBe(2.5);
     expect(median([])).toBe(0);
+  });
+});
+
+describe('rollingWpm', () => {
+  it('uses the typing span of a young run instead of the full window', () => {
+    const keys = [0, 100, 200, 300, 400, 500];
+    // Five 100 ms intervals = 120 WPM. An eight-second denominator would
+    // have reported 7.5 WPM for the same burst.
+    expect(rollingWpm(keys, 500, 8000, 2000)).toBeCloseTo(wpmFrom(5, 500), 5);
+  });
+
+  it('uses a full eight-second window once the run is old enough', () => {
+    const keys = Array.from({ length: 101 }, (_, i) => i * 100);
+    expect(rollingWpm(keys, 10_000, 8000, 2000)).toBeCloseTo(wpmFrom(80, 8000), 5);
+  });
+
+  it('skips a long think gap and keeps the typing cadence', () => {
+    const keys = Array.from({ length: 21 }, (_, i) => i * 100);
+    // The 30 s gap is not typing time. The 2 s of typing before it still is.
+    expect(rollingWpm(keys, 32_000, 8000, 2000)).toBeCloseTo(wpmFrom(20, 2000), 5);
+  });
+
+  it('does not decay just because the clock advanced', () => {
+    const keys = [0, 100, 200, 300, 400, 500];
+    expect(rollingWpm(keys, 5000, 8000, 2000)).toBeCloseTo(
+      rollingWpm(keys, 500, 8000, 2000),
+      5,
+    );
+  });
+
+  it('removes an explicit manual pause from the window', () => {
+    const keys = [0, 100, 200, 300, 10_000, 10_100, 10_200, 10_300, 10_400, 10_500];
+    const pauses = [{ start: 400, end: 10_000 }];
+    // 800 ms of real typing across the pause, eight intervals.
+    expect(rollingWpm(keys, 10_500, 8000, 2000, pauses)).toBeCloseTo(
+      wpmFrom(8, 800),
+      5,
+    );
   });
 });
 
