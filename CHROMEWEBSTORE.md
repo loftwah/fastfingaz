@@ -157,7 +157,7 @@ https://github.com/loftwah/fastfingaz
 
 | Version | Date | Changes | Status |
 | --- | --- | --- | --- |
-| 0.4.3 | 2026-11-12 | Storage quota fallback, accurate long-session cadence charts, tighter composer detection and keyboard-friendly share controls | Draft — not submitted |
+| 0.4.3 | 2026-11-12 | Storage quota fallback, accurate long-session cadence charts, tighter composer detection and keyboard-friendly share controls | Submitted for review. Publish automatically after approval. |
 | 0.4.2 | 2026-11-12 | Live popup scoped to the active tab, serialized local writes, corrected manual pause accounting and send-intent handling, no new permissions | Draft — not submitted |
 | 0.4.1 | 2026-11-12 | Baseline rail is opt-in and off by default, so the HUD is a single display; settings toggle restores it; no new permissions, 47 tests | Draft — not submitted |
 | 0.4.0 | 2026-11-11 | Renamed to Fastfingaz; Pixel F icon set at 16/32/48/128/180/192/512 plus maskable and favicon; new site host, OG/store art and 301 from the old domain; no new permissions, 47 tests | Draft — superseded by 0.4.1 |
@@ -182,7 +182,7 @@ https://github.com/loftwah/fastfingaz
 - Share cards are generated locally at 1200×630, 1080×1080 and 1080×1920; no image service is used.
 - The HUD docks in the empty gutter beside the conversation. In Auto, it uses the Mini orb when no side gutter fits. It can be dragged, and Reset HUD position restores the dock.
 - The 1280×800 store screenshots are designed sample compositions using the real HUD and mock conversation; replace them with real captures after the first install if preferred.
-- The Chrome Web Store listing has not been submitted for review.
+- Google confirmed the first submission on 12 November 2026. The extension ID is `gajfdknfhdopbfnmcakkopeghfechkgb`.
 
 ### Rejection History
 
