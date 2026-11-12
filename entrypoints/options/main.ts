@@ -1,4 +1,7 @@
-import { clearSessions, exportAll, loadSettings, saveSettings } from '../../shared/storage';
+import { requestWorker, saveSettings } from '../../shared/messages';
+import { STORAGE_KEYS } from '../../shared/constants';
+import { MIN_ELIGIBLE_CHARS } from '../../shared/metrics';
+import { exportAll, loadSettings } from '../../shared/storage';
 import type { Settings } from '../../shared/types';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
@@ -7,7 +10,6 @@ const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
   return el as T;
 };
 
-let settings: Settings | null = null;
 let toastTimer: number | null = null;
 let sliderTimer: number | null = null;
 
@@ -22,19 +24,26 @@ function toast(message: string): void {
 }
 
 function paint(next: Settings): void {
-  settings = next;
   const idle = $('idle') as HTMLInputElement;
   idle.value = String(next.idleThresholdMs);
   $('idle-value').textContent = `${(next.idleThresholdMs / 1000).toFixed(1)}s`;
 
-  ($('minchars') as HTMLInputElement).value = String(next.minSessionChars);
+  const minChars = $('minchars') as HTMLInputElement;
+  minChars.min = String(MIN_ELIGIBLE_CHARS);
+  minChars.value = String(Math.max(MIN_ELIGIBLE_CHARS, next.minSessionChars));
   ($('show-hud') as HTMLInputElement).checked = next.showHud;
   ($('show-rail') as HTMLInputElement).checked = next.showRail;
   ($('store-text') as HTMLInputElement).checked = next.storeText;
 }
 
-async function persist(patch: Partial<Settings>): Promise<void> {
-  settings = await saveSettings(patch);
+async function persist(patch: Partial<Settings>, success?: string): Promise<void> {
+  try {
+    await saveSettings(patch);
+    if (success) toast(success);
+  } catch {
+    paint(await loadSettings());
+    toast('COULD NOT SAVE SETTINGS');
+  }
 }
 
 function bind(): void {
@@ -50,7 +59,7 @@ function bind(): void {
 
   const minChars = $('minchars') as HTMLInputElement;
   minChars.addEventListener('change', () => {
-    const value = Math.max(0, Math.min(200, Math.round(Number(minChars.value) || 0)));
+    const value = Math.max(MIN_ELIGIBLE_CHARS, Math.min(200, Math.round(minChars.valueAsNumber || 0)));
     minChars.value = String(value);
     void persist({ minSessionChars: value });
   });
@@ -78,11 +87,11 @@ function bind(): void {
   });
 
   $('reset-pos').addEventListener('click', () => {
-    void persist({ hudPos: null }).then(() => toast('HUD POSITION RESET'));
+    void persist({ hudPos: null }, 'HUD POSITION RESET');
   });
 
   $('reset-orb').addEventListener('click', () => {
-    void persist({ hudOrbSize: 60 }).then(() => toast('ORB SIZE RESET'));
+    void persist({ hudOrbSize: 60 }, 'ORB SIZE RESET');
   });
 
   $('export').addEventListener('click', async () => {
@@ -106,13 +115,17 @@ function bind(): void {
 
   $('clear').addEventListener('click', async () => {
     if (!window.confirm('Delete every saved session? This cannot be undone.')) return;
-    await clearSessions();
-    toast('ALL SESSIONS CLEARED');
+    try {
+      await requestWorker({ type: 'clear-sessions' });
+      toast('ALL SESSIONS CLEARED');
+    } catch {
+      toast('COULD NOT CLEAR SESSIONS');
+    }
   });
 
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== 'local') return;
-    if (!Object.keys(changes).some((key) => key.startsWith('tt:'))) return;
+    if (!changes[STORAGE_KEYS.settings]) return;
     void loadSettings().then((next) => {
       paint(next);
     });
@@ -120,8 +133,7 @@ function bind(): void {
 }
 
 async function init(): Promise<void> {
-  settings = await loadSettings();
-  paint(settings);
+  paint(await loadSettings());
   const version = chrome.runtime.getManifest().version;
   $('version').textContent = version;
   $('version-line').textContent = version;

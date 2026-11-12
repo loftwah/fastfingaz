@@ -57,7 +57,7 @@ baseline live in the popup; settings in the options page. No account, no server,
 - Paste, autocorrect, undo and IMEs are flagged and lower signal rather than being hidden.
 - No real user sessions yet; the measurement defaults still need calibration.
 - Marketing site live at https://fastfingaz.loftwah.com on Cloudflare Pages.
-- Current version: 0.4.1.
+- Current version: 0.4.2.
 
 ## Brand Commitments
 
@@ -72,7 +72,7 @@ baseline live in the popup; settings in the options page. No account, no server,
 
 ## Evidence on Hand
 
-- Working v0.2 code, 38 unit tests, green CI, real screenshots and sample data in `demo/`.
+- 47 unit tests and sample captures from the product components in `demo/`.
 - Live composer attachment verified against ChatGPT's ProseMirror editor.
 - Marketing site live at https://fastfingaz.loftwah.com with OG art, sitemap and privacy policy.
 - No real sessions, testimonials, press or store reviews. Do not invent them.

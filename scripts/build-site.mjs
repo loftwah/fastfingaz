@@ -48,7 +48,7 @@ for (const file of ['Geist-Variable.woff2', 'GeistMono-Variable.woff2', 'GeistPi
 // 3. Social art at the exact store and social sizes.
 await mkdir(path.join(out, 'social'), { recursive: true });
 for (const file of await readdir(path.join(art, 'social'))) {
-  await copy(path.join(art, 'social', file), path.join(out, 'social', file));
+  if (file.endsWith('.png')) await copy(path.join(art, 'social', file), path.join(out, 'social', file));
 }
 await copy(path.join(art, 'promo-440x280.png'), path.join(out, 'social', 'promo-440x280.png'));
 
@@ -112,4 +112,4 @@ await writeFile(
 
 const bytes = await sizeOf(out);
 console.log(`site/dist ready: ${(bytes / 1024).toFixed(1)} KB`);
-console.log('deploy with: npx wrangler pages deploy site/dist --project-name fastfingaz');
+console.log('deploy with: npm run site:deploy');

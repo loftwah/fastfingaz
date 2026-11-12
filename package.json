@@ -1,6 +1,6 @@
 {
   "name": "fastfingaz",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "private": true,
   "type": "module",
   "description": "A Chrome extension that measures your real typing speed while you think out loud with ChatGPT.",
@@ -43,7 +43,7 @@
     "sharp": "^0.35.5",
     "typescript": "^5.9.3",
     "vite": "^8.3.7",
-    "vitest": "^3.2.7",
+    "vitest": "^4.1.12",
     "wxt": "^0.21.5"
   }
 }

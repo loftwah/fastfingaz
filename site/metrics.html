@@ -24,7 +24,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=0.4.1" />
+    <link rel="stylesheet" href="/assets/site.css?v=0.4.2" />
 
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="Fastfingaz" />
@@ -132,7 +132,7 @@
           <div>
             <h1>How Fastfingaz measures typing.</h1>
             <p class="meta">
-              TWO CLOCKS / AN EXPLICIT IDLE MODEL / AN HONEST SIGNAL SCORE / v0.4.1
+              TWO CLOCKS / AN EXPLICIT IDLE MODEL / AN HONEST SIGNAL SCORE / v0.4.2
             </p>
           </div>
         </header>
@@ -225,7 +225,7 @@
               instead:
             </p>
             <pre><code>for every gap between editing keys (and the final gap to send):
-  activeMs += min(gap, idleThresholdMs)</code></pre>
+  activeMs += min(gap - manualPauseOverlap, idleThresholdMs)</code></pre>
             <p>
               Default threshold: <strong>2000 ms</strong>. A 30-second pause contributes 2 seconds of
               active time. You can set it from 1 to 5 seconds in settings.
@@ -414,8 +414,8 @@ averageFlowWpm  = sum(insertedChars) / 5 / (sum(activeMs) / 60000)</code></pre>
           </nav>
         </div>
         <div class="footer-bottom">
-          <span>FASTFINGAZ.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
-          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.4.1</span></span>
+          <span>FASTFINGAZ.LOFTWAH.COM / LOCAL ONLY / NO SERVER</span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.4.2</span></span>
         </div>
       </div>
     </footer>

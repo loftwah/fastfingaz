@@ -204,10 +204,9 @@ describe('computeStats', () => {
     );
     expect(stats.manualPauseMs).toBe(10_000);
     expect(stats.wallMs).toBe(50_000);
-    expect(stats.activeMs).toBe(1000);
+    expect(stats.activeMs).toBe(3000);
     expect(stats.wpm.think).toBeCloseTo(24, 5);
-    // The manual pause is reported separately, not as a thinking pause.
-    expect(stats.pauses.count).toBe(0);
+    expect(stats.pauses).toEqual({ count: 1, medianMs: 49_000, longestMs: 49_000 });
   });
 
   it('builds a bounded, non-negative series', () => {

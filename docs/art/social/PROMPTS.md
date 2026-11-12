@@ -3,20 +3,31 @@
 All marketing text and UI are rendered in HTML/CSS or Canvas. No text was baked into a generated
 image.
 
-## Image generation status
+## Editorial artwork
 
-A paper-texture background was attempted with the image model on 11 November 2026, but the request
-failed (`Insufficient balance`). No generated imagery is used in the final assets. The artboards use
-the flat warm paper ground from the design system; that is the intended world, not a placeholder for
-a photo.
+Generated with the built-in ImageGen tool on 12 November 2026. These are campaign artwork
+options with blank areas for separately typeset copy. They depict fictional objects and
+contain no sample readings, user data or product screenshots.
 
-If generated artwork is added later:
+| Asset | Dimensions |
+| --- | --- |
+| [field-instrument.webp](editorial/field-instrument.webp) | 1536×1024 |
+| [receipt-study.webp](editorial/receipt-study.webp) | 1254×1254 |
+| [keyboard-study.webp](editorial/keyboard-study.webp) | 1024×1536 |
 
-1. Save the exact prompt next to the asset in this folder.
-2. Render all text in HTML or Canvas on top of it.
-3. Keep the paper / ink / signal-orange palette and do not introduce gradients, glass, glows, lime or
-   violet.
-4. Note whether the asset is a placeholder.
+### Exact generation prompts
+
+**field-instrument**
+
+> Landscape 3:2 editorial product photograph for Fastfingaz, a local-first typing measurement tool. A compact unbranded matte anodised-black field instrument with a blank black LCD and one tiny signal-orange physical indicator sits next to a folded blank warm-paper receipt, on an uncoated warm paper tabletop. Camera at a low three-quarter angle, object grouped on right, generous clean area on left for separately typeset copy. Tactile industrial design, dry soft daylight, restrained art direction. Palette strictly warm ivory #f2efe6, ink #0b0b0a, tiny signal orange #ff4d00. No text, marks, numbers, charts, logos, people, glow, glass effects or gradients.
+
+**receipt-study**
+
+> Square editorial still life for Fastfingaz, a typing instrument for ChatGPT. Top-down photograph of three small blank warm-ivory thermal receipt strips, arranged like a precise field notebook on a matte black workbench. One small signal-orange registration tab at the edge of a sheet. Distinct silhouettes, slight perforation at the paper edges, flat tonal fields, subtle natural uncoated fiber texture. Keep central paper blank for real programmatic typesetting. Warm paper #f2efe6, ink #0b0b0a, orange #ff4d00 only. No text, logos, numbers, metrics, gradients, glass or glow.
+
+**keyboard-study**
+
+> Portrait editorial macro photograph for Fastfingaz social campaigns. A small crop of blank matte black mechanical keyboard keycaps at the very bottom of a warm ivory work surface, with a single orange keycap among them. Use strong vertical framing and leave upper half as empty tactile warm paper for separately typeset copy. Restrained studio daylight, sharp industrial edges, graphic composition, warm paper #f2efe6 and ink #0b0b0a, single orange #ff4d00 accent. No text, legends, people, logos, glows, gradients or glass. This is an editorial image, not a product interface screenshot.
 
 ## Assets
 

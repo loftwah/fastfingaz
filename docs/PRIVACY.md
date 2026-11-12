@@ -1,6 +1,6 @@
 # Fastfingaz Privacy Policy
 
-**Effective date:** 11 November 2026
+**Effective date:** 12 November 2026
 
 **Published at:** https://fastfingaz.loftwah.com/privacy
 
@@ -15,8 +15,9 @@ explains what it does with your data. The short version: everything stays in you
 - **Typing metrics.** It records timings, WPM, word counts, corrections and related stats for prompts
   you send. These are stored in `chrome.storage.local` in your browser.
 - **In-progress snapshots.** While a run is active, a short-lived, text-free snapshot of its numbers
-  is kept in `chrome.storage.session`. It lets a reload show `PAUSED / NOT RECORDED` instead of
-  pretending the run survived. It is cleared when the run ends and is never saved as history.
+  is kept in `chrome.storage.session` with the tab and ChatGPT page path. It lets the same page in
+  that tab show `PAUSED / NOT RECORDED` after a reload. It is cleared when the run ends or the tab
+  closes and never enters history.
 - **Your settings.** Your threshold, minimum length, HUD position and privacy choices are stored in
   the same local extension storage.
 

@@ -25,8 +25,7 @@ const MIME = {
 };
 
 async function resolveFile(urlPath) {
-  const clean = decodeURIComponent(urlPath.split('?')[0]);
-  const safe = path.normalize(clean).replace(/^(\.\.[/\\])+/, '');
+  const safe = path.posix.normalize('/' + urlPath.replace(/^\/+/, '')).replace(/\/$/, '');
   const candidates = [];
 
   if (safe === '/' || safe === '') candidates.push('index.html');
@@ -40,7 +39,7 @@ async function resolveFile(urlPath) {
 
   for (const candidate of candidates) {
     const full = path.join(root, candidate);
-    if (!full.startsWith(root)) continue;
+    if (!full.startsWith(root + path.sep)) continue;
     try {
       const info = await stat(full);
       if (info.isFile()) return full;
@@ -53,14 +52,23 @@ async function resolveFile(urlPath) {
 
 createServer(async (req, res) => {
   const url = req.url || '/';
-  const file = await resolveFile(url);
-  if (!file) {
+  let pathname;
+  try {
+    pathname = decodeURIComponent(url.split('?')[0]);
+  } catch {
+    res.writeHead(400, { 'content-type': 'text/plain; charset=utf-8' });
+    res.end('Bad request');
+    return;
+  }
+
+  const file = await resolveFile(pathname);
+  const body = file && await readFile(file).catch(() => null);
+  if (!body) {
     const notFound = await readFile(path.join(root, '404.html')).catch(() => null);
     res.writeHead(404, { 'content-type': 'text/html; charset=utf-8' });
     res.end(notFound || 'Not found');
     return;
   }
-  const body = await readFile(file);
   res.writeHead(200, {
     'content-type': MIME[path.extname(file)] || 'application/octet-stream',
     'cache-control': 'no-cache',

@@ -24,7 +24,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=0.4.1" />
+    <link rel="stylesheet" href="/assets/site.css?v=0.4.2" />
 
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="Fastfingaz" />
@@ -131,7 +131,7 @@
           <div>
             <h1>Everything stays in your browser.</h1>
             <p class="meta">
-              EFFECTIVE 11 NOVEMBER 2026 / FASTFINGAZ v0.4.1 / CHROME MV3 / LOCAL ONLY
+              EFFECTIVE 12 NOVEMBER 2026 / FASTFINGAZ v0.4.2 / CHROME MV3 / LOCAL ONLY
             </p>
           </div>
         </header>
@@ -161,6 +161,11 @@
                 <strong>Typing metrics.</strong> It records timings, WPM, word counts, corrections
                 and related stats for prompts you send. These are stored in
                 <code>chrome.storage.local</code> in your browser.
+              </li>
+              <li>
+                <strong>In-progress metrics.</strong> A short-lived snapshot of the numbers is kept
+                in Chrome's session storage with the tab and ChatGPT page path. The same page can
+                show its last reading as paused after a reload. The snapshot contains no prompt text.
               </li>
               <li>
                 <strong>Your settings.</strong> Your threshold, minimum length, HUD position and
@@ -271,8 +276,8 @@
           </nav>
         </div>
         <div class="footer-bottom">
-          <span>FASTFINGAZ.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
-          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.4.1</span></span>
+          <span>FASTFINGAZ.LOFTWAH.COM / LOCAL ONLY / NO SERVER</span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.4.2</span></span>
         </div>
       </div>
     </footer>

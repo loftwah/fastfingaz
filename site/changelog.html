@@ -6,7 +6,7 @@
     <title>Changelog — Fastfingaz</title>
     <meta
       name="description"
-      content="Fastfingaz release notes: the 0.4.1 single-display default and optional baseline rail, the 0.4.0 rename and Pixel F icons, four HUD sizes and share formats."
+      content="Fastfingaz release notes, including active-tab live readings, more reliable local history and corrected manual pause timing in 0.4.2."
     />
     <link rel="canonical" href="https://fastfingaz.loftwah.com/changelog" />
     <meta name="theme-color" content="#f2efe6" />
@@ -24,30 +24,30 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=0.4.1" />
+    <link rel="stylesheet" href="/assets/site.css?v=0.4.2" />
 
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="Fastfingaz" />
     <meta property="og:title" content="Fastfingaz changelog" />
     <meta
       property="og:description"
-      content="Fastfingaz release notes: the 0.4.1 single-display default, the 0.4.0 rename and Pixel F icon set, four HUD sizes and share formats."
+      content="Fastfingaz release notes, including active-tab live readings, more reliable local history and corrected manual pause timing in 0.4.2."
     />
     <meta property="og:url" content="https://fastfingaz.loftwah.com/changelog" />
     <meta property="og:image" content="https://fastfingaz.loftwah.com/social/og-1200x630.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:alt" content="Fastfingaz changelog: the 0.4.1 single-display default, the 0.4.0 rename and the Pixel F icon set." />
+    <meta property="og:image:alt" content="Fastfingaz typing receipt with a sample reading on warm paper." />
     <meta property="og:locale" content="en_GB" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Fastfingaz changelog" />
     <meta
       name="twitter:description"
-      content="Fastfingaz release notes: the 0.4.1 single-display default, the 0.4.0 rename and Pixel F icon set, four HUD sizes and share formats."
+      content="Fastfingaz release notes, including active-tab live readings, more reliable local history and corrected manual pause timing in 0.4.2."
     />
     <meta name="twitter:image" content="https://fastfingaz.loftwah.com/social/og-1200x630.png" />
-    <meta name="twitter:image:alt" content="Fastfingaz changelog: the 0.4.1 single-display default, the 0.4.0 rename and the Pixel F icon set." />
+    <meta name="twitter:image:alt" content="Fastfingaz typing receipt with a sample reading on warm paper." />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -70,7 +70,7 @@
             "@type": "WebPage",
             "@id": "https://fastfingaz.loftwah.com/changelog#page",
             "name": "Fastfingaz changelog",
-            "description": "Release notes for Fastfingaz: the 0.4.1 single-display default and optional baseline rail, the 0.4.0 rename, the live counter, pause and hold, and four HUD sizes.",
+            "description": "Fastfingaz release notes, including active-tab live readings, more reliable local history and corrected manual pause timing in 0.4.2.",
             "url": "https://fastfingaz.loftwah.com/changelog",
             "isPartOf": { "@id": "https://fastfingaz.loftwah.com/#website" },
             "author": { "@id": "https://fastfingaz.loftwah.com/#dean-lofts" },
@@ -131,13 +131,14 @@
           <div>
             <h1>Build notes, not marketing beats.</h1>
             <p class="meta">
-              CURRENTLY v0.4.1 / 12 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
+              CURRENTLY v0.4.2 / 12 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
             </p>
           </div>
         </header>
 
         <div class="doc-body">
           <nav class="doc-toc" aria-label="Releases">
+            <a href="#v042">v0.4.2</a>
             <a href="#v041">v0.4.1</a>
             <a href="#v040">v0.4.0</a>
             <a href="#v034">v0.3.4</a>
@@ -154,9 +155,25 @@
           </nav>
 
           <div>
+            <section class="release" id="v042">
+              <div>
+                <span class="version">v0.4.2 <span class="tag">CURRENT</span></span>
+                <span class="date">12 NOV 2026</span>
+              </div>
+              <div>
+                <h2>Live readings follow the active tab.</h2>
+                <ul>
+                  <li>The popup shows the active ChatGPT tab. Reloading that tab can show its last reading as paused.</li>
+                  <li>Simultaneous sessions from multiple tabs save without overwriting each other.</li>
+                  <li>Manual pauses are removed before capping the time between keystrokes.</li>
+                  <li>No new permissions.</li>
+                </ul>
+              </div>
+            </section>
+
             <section class="release" id="v041">
               <div>
-                <span class="version">v0.4.1 <span class="tag">CURRENT</span></span>
+                <span class="version">v0.4.1</span>
                 <span class="date">12 NOV 2026</span>
               </div>
               <div>
@@ -188,7 +205,7 @@
                   <li>
                     <strong>The rename is complete.</strong> The extension, manifest, popup, settings,
                     receipts, share cards, site and repository are now Fastfingaz. The receipt footer
-                    prints <code>FASTFINGAZ.LOFTAH.COM</code>.
+                    prints <code>FASTFINGAZ.LOFTWAH.COM</code>.
                   </li>
                   <li>
                     <strong>Pixel F.</strong> The toolbar, store and favicon set use the approved
@@ -528,8 +545,8 @@
           </nav>
         </div>
         <div class="footer-bottom">
-          <span>FASTFINGAZ.LOFTAH.COM / LOCAL ONLY / NO SERVER</span>
-          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.4.1</span></span>
+          <span>FASTFINGAZ.LOFTWAH.COM / LOCAL ONLY / NO SERVER</span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.4.2</span></span>
         </div>
       </div>
     </footer>

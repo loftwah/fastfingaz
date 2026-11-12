@@ -242,11 +242,15 @@
       };
       window.chrome = {
         runtime: {
-          getManifest: () => ({ version: '0.4.0' }),
+          getManifest: () => ({ version: '0.4.2' }),
           openOptionsPage: () => {},
-          sendMessage: () => Promise.resolve(),
+          sendMessage: async ({ patch }) => ({ ok: true, data: patch }),
         },
-        tabs: { create: () => {} },
+        tabs: {
+          create: () => {},
+          query: async () => [{ id: 1, url: 'https://chatgpt.com/' }],
+          sendMessage: async () => (withLive ? { ...live, endedAt: Date.now() } : null),
+        },
         storage: {
           local: {
             get: async (key) => {
@@ -262,14 +266,6 @@
             set: async () => {},
             remove: async () => {},
             clear: async () => {},
-          },
-          session: {
-            get: async (key) =>
-              withLive && key === 'tt:live:v1'
-                ? { 'tt:live:v1': { ...live, endedAt: Date.now() } }
-                : {},
-            set: async () => {},
-            remove: async () => {},
           },
           onChanged: { addListener: () => {}, removeListener: () => {} },
         },

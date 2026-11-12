@@ -87,11 +87,12 @@ describe('TypingSession', () => {
     session.pause(1000);
     expect(session.isPaused).toBe(true);
     expect(session.pausedTotal(4000)).toBe(3000);
+    expect(session.activeMs(4000, 2000)).toBe(1000);
     session.resume(4000);
     session.noteKey(4100);
     session.noteInsert(4200, 20);
 
-    expect(session.activeMs(5000, 2000)).toBe(900);
+    expect(session.activeMs(5000, 2000)).toBe(2000);
     const raw = session.finish(5000, 'a'.repeat(40));
     expect(raw.pauseIntervals).toEqual([{ start: 1000, end: 4000 }]);
   });

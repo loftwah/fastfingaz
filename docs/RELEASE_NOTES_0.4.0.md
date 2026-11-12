@@ -7,7 +7,7 @@ Same instrument, new label. Thinktype is now **Fastfingaz**, shipping as 0.4.0.
 - The extension, manifest, popup, settings page, HUD, receipts, share cards and site all read
   **Fastfingaz**.
 - Wordmark: `FASTFINGAZ` in Geist Pixel. Catalog marks use `FF-` instead of `TT-`.
-- The share-card footer prints `FASTFINGAZ.LOFTAH.COM`.
+- The share-card footer prints `FASTFINGAZ.LOFTWAH.COM`.
 - Local history survives: the internal `tt:` storage keys were deliberately kept so an installed
   0.3.x user keeps their baseline, best and session list.
 - No new permissions, no network code. Prompt text is still opt-in. Typing is still passive.

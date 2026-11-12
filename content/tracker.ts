@@ -51,7 +51,6 @@ export class ComposerTracker {
   private settings: Settings;
   private ime = false;
   private lastKeyAt = 0;
-  private lastNonEmpty = '';
   /** Last measured cadence. Updated only when a new key lands, never by the clock. */
   private heldWpm = 0;
   private heldKeyCount = 0;
@@ -69,6 +68,10 @@ export class ComposerTracker {
     this.settings = settings;
     this.observer = new MutationObserver(() => this.handleDomChange());
     this.attach();
+  }
+
+  get hasRun(): boolean {
+    return this.session !== null;
   }
 
   updateSettings(settings: Settings): void {
@@ -148,12 +151,12 @@ export class ComposerTracker {
   }
 
   /** A text-free snapshot for chrome.storage.session. */
-  snapshot(): LiveSnapshot | null {
-    if (!this.session || this.session.isEnded) return null;
-    const live = this.liveStats();
+  snapshot(live = this.liveStats()): LiveSnapshot | null {
+    if (!live.active) return null;
+    const now = Date.now();
     return {
-      startedAt: Date.now() - live.ms,
-      endedAt: Date.now(),
+      startedAt: performance.timeOrigin + (this.session?.startedAt ?? performance.now()),
+      endedAt: now,
       wallMs: live.ms,
       words: live.words,
       thinkWpm: live.thinkWpm,
@@ -180,6 +183,7 @@ export class ComposerTracker {
     const paste = (event: Event) => this.handlePaste(event as ClipboardEvent);
     const input = () => this.handleDomChange();
     const compositionStart = () => {
+      this.pendingSend = null;
       this.ime = true;
       this.session?.noteComposition();
     };
@@ -187,16 +191,20 @@ export class ComposerTracker {
       this.ime = false;
     };
     const sendClick = (event: Event) => {
-      if (isSendControl(event.target)) this.armSend(performance.now());
+      const form = this.el.closest('form');
+      if (isSendControl(event.target) && (!form || form.contains(event.target as Node))) {
+        this.armSend(performance.now());
+      }
     };
 
-    this.el.addEventListener('keydown', keydown, true);
-    this.el.addEventListener('beforeinput', beforeinput, true);
-    this.el.addEventListener('paste', paste, true);
-    this.el.addEventListener('input', input, true);
-    this.el.addEventListener('compositionstart', compositionStart, true);
-    this.el.addEventListener('compositionend', compositionEnd, true);
-    document.addEventListener('click', sendClick, true);
+    const passiveCapture = { capture: true, passive: true };
+    this.el.addEventListener('keydown', keydown, passiveCapture);
+    this.el.addEventListener('beforeinput', beforeinput, passiveCapture);
+    this.el.addEventListener('paste', paste, passiveCapture);
+    this.el.addEventListener('input', input, passiveCapture);
+    this.el.addEventListener('compositionstart', compositionStart, passiveCapture);
+    this.el.addEventListener('compositionend', compositionEnd, passiveCapture);
+    document.addEventListener('click', sendClick, passiveCapture);
 
     this.listeners.push(
       () => this.el.removeEventListener('keydown', keydown, true),
@@ -219,17 +227,15 @@ export class ComposerTracker {
     return this.text().trim() === '';
   }
 
-  /** Only start on a genuinely empty composer: editing a saved draft is not a run. */
-  private begin(now: number): boolean {
-    if (this.session) return true;
+  /** Remember any text that existed before the first observed edit. */
+  private begin(now: number): void {
+    if (this.session) return;
     const text = this.text();
     this.session = new TypingSession(now, text.length);
-    this.ime = false;
-    this.lastNonEmpty = text.trim() ? text : '';
+    if (this.ime) this.session.noteComposition();
     this.lastKeyAt = now;
     this.heldWpm = 0;
     this.heldKeyCount = 0;
-    return true;
   }
 
   private handleKeyDown(event: KeyboardEvent): void {
@@ -242,7 +248,7 @@ export class ComposerTracker {
     const editing = printable || key === 'Backspace' || key === 'Delete';
 
     if (editing) {
-      if (!this.session && !this.begin(now)) return;
+      this.begin(now);
       this.session?.noteKey(now);
       this.lastKeyAt = now;
     }
@@ -255,11 +261,13 @@ export class ComposerTracker {
   private handleBeforeInput(event: InputEvent): void {
     if (this.destroyed) return;
     const type = event.inputType || '';
+    // Enter can insert a newline. Subsequent edits invalidate that send intent.
+    if (type) this.pendingSend = null;
     const now = performance.now();
     const data = event.data ?? '';
 
     if (type.startsWith('insert') && !type.startsWith('insertFrom')) {
-      if (!this.session && !this.begin(now)) return;
+      this.begin(now);
       if (type === 'insertCompositionText') {
         this.session?.noteComposition();
       }
@@ -274,7 +282,7 @@ export class ComposerTracker {
     }
 
     if (type === 'insertFromDrop' || type === 'insertFromYank') {
-      if (!this.session && !this.begin(now)) return;
+      this.begin(now);
       this.session?.noteInsert(now, data.length || 1, 'paste');
       this.lastKeyAt = now;
       return;
@@ -296,8 +304,9 @@ export class ComposerTracker {
     if (this.destroyed) return;
     const text = event.clipboardData?.getData('text') ?? '';
     if (!text) return;
+    this.pendingSend = null;
     const now = performance.now();
-    if (!this.session && !this.begin(now)) return;
+    this.begin(now);
     this.session?.noteInsert(now, text.length, 'paste');
     this.lastKeyAt = now;
   }
@@ -306,7 +315,6 @@ export class ComposerTracker {
     if (this.destroyed) return;
     const text = this.text();
     if (text.trim()) {
-      this.lastNonEmpty = text;
       if (this.clearTimer) {
         window.clearTimeout(this.clearTimer);
         this.clearTimer = null;
@@ -328,8 +336,7 @@ export class ComposerTracker {
 
   private armSend(at: number): void {
     if (!this.session) return;
-    const live = this.text();
-    const text = live.trim() ? live : this.lastNonEmpty;
+    const text = this.text();
     if (!text.trim()) return;
     this.pendingSend = { at, text };
     this.pollForSend(at);
@@ -361,7 +368,6 @@ export class ComposerTracker {
     const raw = session.finish(pending.at, pending.text);
     this.session = null;
     this.pendingSend = null;
-    this.lastNonEmpty = '';
     this.heldWpm = 0;
     this.heldKeyCount = 0;
     this.clearTimers();
@@ -381,13 +387,12 @@ export class ComposerTracker {
       return;
     }
 
-    const endedAt = Date.now();
     const record: SessionRecord = {
       ...stats,
       id: makeId(),
       v: SCHEMA_VERSION,
-      startedAt: endedAt - stats.wallMs,
-      endedAt,
+      startedAt: performance.timeOrigin + raw.startedAt,
+      endedAt: performance.timeOrigin + raw.endedAt,
       host: location.host,
       ...(this.settings.storeText ? { text: pending.text } : {}),
     };
@@ -398,7 +403,6 @@ export class ComposerTracker {
   private reset(): void {
     this.session = null;
     this.pendingSend = null;
-    this.lastNonEmpty = '';
     this.heldWpm = 0;
     this.heldKeyCount = 0;
     this.clearTimers();

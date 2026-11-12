@@ -58,18 +58,21 @@ export function median(values: number[]): number {
  * a long pause still costs something without swallowing the session.
  */
 export function computeActiveMs(
-  keys: number[],
+  keys: readonly number[],
   startedAt: number,
   endedAt: number,
   idleThresholdMs: number,
+  manualPauses: ReadonlyArray<{ start: number; end: number }> = [],
 ): number {
+  const activeGap = (from: number, to: number) =>
+    Math.min(Math.max(0, to - from - pausedOverlap(from, to, manualPauses)), idleThresholdMs);
   let active = 0;
   let prev = startedAt;
   for (const t of keys) {
-    if (t > prev) active += Math.min(t - prev, idleThresholdMs);
+    if (t > prev) active += activeGap(prev, t);
     prev = Math.max(prev, t);
   }
-  if (endedAt > prev) active += Math.min(endedAt - prev, idleThresholdMs);
+  if (endedAt > prev) active += activeGap(prev, endedAt);
   return active;
 }
 
@@ -145,7 +148,7 @@ export function rollingWpm(
  * so the sparkline reads as "how fast was I moving here", not raw char counts.
  */
 export function buildSeries(
-  keys: number[],
+  keys: readonly number[],
   startedAt: number,
   endedAt: number,
   maxPoints = 64,
@@ -194,7 +197,7 @@ export function consistencyScore(keys: number[], idleThresholdMs: number): numbe
 }
 
 export function pauseStats(
-  keys: number[],
+  keys: readonly number[],
   startedAt: number,
   endedAt: number,
   idleThresholdMs: number,
@@ -202,11 +205,8 @@ export function pauseStats(
 ): { count: number; medianMs: number; longestMs: number } {
   const gaps: number[] = [];
   const addGap = (from: number, to: number) => {
-    if (to - from <= idleThresholdMs) return;
-    // A declared manual pause is not a thinking pause; it is reported
-    // separately as manualPauseMs.
-    const manual = manualPauses.some((pause) => pause.end > from && pause.start < to);
-    if (!manual) gaps.push(to - from);
+    const gap = to - from - pausedOverlap(from, to, manualPauses);
+    if (gap > idleThresholdMs) gaps.push(gap);
   };
   let prev = startedAt;
   for (const t of keys) {
@@ -228,15 +228,8 @@ export function computeStats(raw: RawSession, idleThresholdMs = 2000): SessionSt
     (sum, pause) => sum + Math.max(0, pause.end - pause.start),
     0,
   );
-  const pausedActiveMs = pauseIntervals.reduce(
-    (sum, pause) => sum + Math.min(Math.max(0, pause.end - pause.start), idleThresholdMs),
-    0,
-  );
   const wallMs = Math.max(0, raw.endedAt - raw.startedAt - manualPauseMs);
-  const activeMs = Math.max(
-    0,
-    computeActiveMs(keys, raw.startedAt, raw.endedAt, idleThresholdMs) - pausedActiveMs,
-  );
+  const activeMs = computeActiveMs(keys, raw.startedAt, raw.endedAt, idleThresholdMs, pauseIntervals);
   const finalText = raw.finalText ?? '';
   const chars = finalText.length;
   const words = countWords(finalText);

@@ -61,15 +61,6 @@ export class TypingSession {
     return completed + current;
   }
 
-  private pausedActiveTotal(now: number, idleThresholdMs: number): number {
-    const sum = (pause: { start: number; end: number }) =>
-      Math.min(Math.max(0, pause.end - pause.start), idleThresholdMs);
-    const completed = this.pauseIntervals.reduce((total, pause) => total + sum(pause), 0);
-    const current =
-      this.pauseStartedAt === null ? 0 : Math.min(Math.max(0, now - this.pauseStartedAt), idleThresholdMs);
-    return completed + current;
-  }
-
   get keyTimes(): readonly number[] {
     return this.keys;
   }
@@ -120,11 +111,10 @@ export class TypingSession {
   }
 
   activeMs(now: number, idleThresholdMs: number): number {
-    return Math.max(
-      0,
-      computeActiveMs(this.keys, this.startedAt, now, idleThresholdMs) -
-        this.pausedActiveTotal(now, idleThresholdMs),
-    );
+    const pauses = this.pauseStartedAt === null
+      ? this.pauseIntervals
+      : [...this.pauseIntervals, { start: this.pauseStartedAt, end: now }];
+    return computeActiveMs(this.keys, this.startedAt, now, idleThresholdMs, pauses);
   }
 
   finish(endedAt: number, finalText: string): RawSession {

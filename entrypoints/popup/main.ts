@@ -22,7 +22,8 @@ import {
   type CardContext,
   type CardFormat,
 } from '../../shared/share-card';
-import { loadHistory, loadLiveSnapshot, loadSessions, loadSettings, saveSettings } from '../../shared/storage';
+import { saveSettings } from '../../shared/messages';
+import { loadHistory, loadSessions, loadSettings } from '../../shared/storage';
 import type { LiveSnapshot } from '../../shared/storage';
 import type { HistorySummary, HudSize, SessionRecord } from '../../shared/types';
 
@@ -103,7 +104,15 @@ function renderLive(snapshot: LiveSnapshot | null): void {
 }
 
 async function refreshLive(): Promise<void> {
-  renderLive(await loadLiveSnapshot());
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const snapshot: LiveSnapshot | null = tab?.id === undefined
+      ? null
+      : await chrome.tabs.sendMessage(tab.id, { type: 'live-run' }, { frameId: 0 });
+    renderLive(snapshot);
+  } catch {
+    renderLive(null);
+  }
 }
 
 function renderMain(): void {
@@ -113,9 +122,11 @@ function renderMain(): void {
 
   $('today-think').textContent = stats.sessions ? formatWpm(stats.thinkWpm) : '—';
   $('today-flow').textContent = stats.sessions ? formatWpm(stats.flowWpm) : '—';
-  $('today-count').textContent = stats.sessions
-    ? `${pluralSessions(stats.sessions)}${drafts ? ` / ${drafts} DRAFT` : ''}`
-    : 'NO SESSIONS';
+  const counts = [
+    stats.sessions ? pluralSessions(stats.sessions) : '',
+    drafts ? pluralize(drafts, 'draft').toUpperCase() : '',
+  ].filter(Boolean);
+  $('today-count').textContent = counts.join(' / ') || 'NO SESSIONS';
 
   $('today-summary').textContent = stats.sessions
     ? `${formatWords(stats.words)} words / ${formatDuration(stats.activeMs)} hands-on${
@@ -192,7 +203,7 @@ function renderSessions(): void {
       const badge = badges.join('');
       return `
         <li>
-          <button class="row" data-id="${session.id}">
+          <button class="row" data-id="${escapeHtml(session.id)}">
             <span class="row-serial">${serialFromId(session.id)}</span>
             <span class="row-wpm">${formatWpm(session.wpm.think)}<em>WPM</em></span>
             <span class="row-mid">
@@ -361,10 +372,21 @@ function currentSession(): SessionRecord | null {
 }
 
 function bind(): void {
+  const persist = async (patch: Parameters<typeof saveSettings>[0]): Promise<boolean> => {
+    try {
+      await saveSettings(patch);
+      return true;
+    } catch {
+      await refreshHudState();
+      toast('COULD NOT SAVE SETTINGS');
+      return false;
+    }
+  };
+
   $('toggle-hud').addEventListener('click', async () => {
     showHud = !showHud;
     renderHudToggle();
-    await saveSettings({ showHud });
+    if (!(await persist({ showHud }))) return;
     if (!showHud) {
       toast('HUD HIDDEN — ALT+SHIFT+T TO SHOW');
       return;
@@ -380,15 +402,14 @@ function bind(): void {
   });
 
   document.querySelectorAll<HTMLButtonElement>('[data-hud-size]').forEach((button) => {
-    button.addEventListener('click', () => {
+    button.addEventListener('click', async () => {
       const choice = button.dataset.hudSize;
       if (choice === 'mini') {
         showHud = true;
         hudCollapsed = true;
         renderHudToggle();
         renderHudSize();
-        void saveSettings({ showHud: true, hudCollapsed: true });
-        toast('HUD: MINI');
+        if (await persist({ showHud: true, hudCollapsed: true })) toast('HUD: MINI');
         return;
       }
       if (
@@ -402,8 +423,9 @@ function bind(): void {
         hudSize = choice;
         renderHudToggle();
         renderHudSize();
-        void saveSettings({ showHud: true, hudCollapsed: false, hudSize: choice });
-        toast(`HUD: ${choice.toUpperCase()}`);
+        if (await persist({ showHud: true, hudCollapsed: false, hudSize: choice })) {
+          toast(`HUD: ${choice.toUpperCase()}`);
+        }
       }
     });
   });
@@ -476,10 +498,6 @@ function bind(): void {
   });
 
   chrome.storage.onChanged.addListener((_changes, area) => {
-    if (area === 'session') {
-      void refreshLive();
-      return;
-    }
     if (area !== 'local') return;
     void refresh();
   });
@@ -508,6 +526,7 @@ async function init(): Promise<void> {
   renderHudToggle();
   renderHudSize();
   void refreshLive();
+  window.setInterval(refreshLive, 1000);
 }
 
 void init();

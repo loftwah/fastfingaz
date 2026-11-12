@@ -1,17 +1,9 @@
 import { defineContentScript } from 'wxt/utils/define-content-script';
 import { STORAGE_KEYS } from '../shared/constants';
-import { isNewBest } from '../shared/metrics';
-import {
-  appendSession,
-  clearLiveSnapshot,
-  loadHistory,
-  loadLiveSnapshot,
-  loadSessions,
-  loadSettings,
-  onSettingsChanged,
-  saveLiveSnapshot,
-  saveSettings,
-} from '../shared/storage';
+import { appendSession, requestWorker, saveSettings } from '../shared/messages';
+import { loadHistory, loadSessions, loadSettings, onSettingsChanged } from '../shared/storage';
+import type { LiveSnapshot } from '../shared/storage';
+import type { ContentScriptContext } from 'wxt/utils/content-script-context';
 import type { HistorySummary, SessionRecord, Settings } from '../shared/types';
 import { findComposer } from '../content/composer';
 import { CONTENT_FONT_FACES } from '../content/font-faces';
@@ -27,20 +19,27 @@ declare global {
 export default defineContentScript({
   matches: ['https://chatgpt.com/*', 'https://chat.openai.com/*'],
   runAt: 'document_idle',
-  async main() {
+  async main(ctx) {
     if (window.top !== window || window.__fastfingaz) return;
     window.__fastfingaz = true;
-    await boot();
+    await boot(ctx);
   },
 });
 
-async function boot(): Promise<void> {
+async function boot(ctx: ContentScriptContext): Promise<void> {
   let settings: Settings = await loadSettings();
   let history: HistorySummary = await loadHistory();
-  let sessions: SessionRecord[] = await loadSessions();
+  const sessions = await loadSessions();
+  if (ctx.isInvalid) return;
 
   let currentEl: HTMLElement | null = null;
   let tracker: ComposerTracker | null = null;
+  const persist = (patch: Partial<Settings>): void => {
+    void saveSettings(patch).catch(() => console.warn('[fastfingaz] could not save settings'));
+  };
+  const saveSnapshot = (snapshot: LiveSnapshot | null): void => {
+    void requestWorker({ type: 'save-snapshot', snapshot }).catch(() => undefined);
+  };
 
   const overlay = new Overlay({
     collapsed: settings.hudCollapsed,
@@ -53,20 +52,20 @@ async function boot(): Promise<void> {
     getMainRect: () => document.querySelector('main')?.getBoundingClientRect() ?? null,
     onMove: (pos) => {
       settings = { ...settings, hudPos: pos };
-      void saveSettings({ hudPos: pos });
+      persist({ hudPos: pos });
     },
     onOrbSize: (size) => {
       settings = { ...settings, hudOrbSize: size };
-      void saveSettings({ hudOrbSize: size });
+      persist({ hudOrbSize: size });
     },
 
     onCollapse: (collapsed) => {
       settings = { ...settings, hudCollapsed: collapsed };
-      void saveSettings({ hudCollapsed: collapsed });
+      persist({ hudCollapsed: collapsed });
     },
     onHide: () => {
       settings = { ...settings, showHud: false };
-      void saveSettings({ showHud: false });
+      persist({ showHud: false });
     },
     onPause: () => {
       tracker?.togglePause();
@@ -76,33 +75,18 @@ async function boot(): Promise<void> {
   overlay.setHistory(history);
   overlay.setSessions(sessions);
 
+  let composerVisible = false;
   const syncVisibility = (): void => {
-    overlay.setVisible(settings.showHud && !!currentEl?.isConnected);
+    overlay.setVisible(settings.showHud && composerVisible && !!currentEl?.isConnected);
   };
 
   const handleSession = async (record: SessionRecord): Promise<void> => {
-    const previous = history;
-    const newBest = isNewBest(record, previous.best);
-    const firstReading = previous.totals.recorded === 0;
-
     try {
-      await appendSession(record);
-      history = await loadHistory();
-      sessions = await loadSessions();
-      overlay.setHistory(history);
-      overlay.setSessions(sessions);
-      overlay.showReceipt(record, { newBest, firstReading, history });
-      await clearLiveSnapshot();
-    } catch (error) {
-      console.warn('[fastfingaz] could not save session', error);
-      // Still show the receipt: the number is real even when storage fails.
-      overlay.showReceipt(record, { newBest, firstReading, history: previous });
-    }
-
-    try {
-      void chrome.runtime.sendMessage({ type: 'session-saved' }).catch(() => undefined);
+      const saved = await appendSession(record);
+      overlay.showReceipt(record, saved);
     } catch {
-      // Extension was reloaded; the page keeps working until refresh.
+      console.warn('[fastfingaz] could not save session');
+      overlay.showReceipt(record, { newBest: false, firstReading: false, history });
     }
   };
 
@@ -116,7 +100,13 @@ async function boot(): Promise<void> {
       overlay.refreshPosition();
     }
     const el = findComposer();
+    composerVisible = !!el;
     if (!el) {
+      if (currentEl && !currentEl.isConnected) {
+        tracker?.destroy();
+        tracker = null;
+        currentEl = null;
+      }
       syncVisibility();
       return;
     }
@@ -134,39 +124,38 @@ async function boot(): Promise<void> {
 
   ensureComposer();
 
-  // A tab reload cannot restore the in-progress keystroke clock. Show the last
-  // snapshot from chrome.storage.session, clearly marked as paused and never
-  // recorded, so a stale number is not passed off as a live run.
-  const paused = await loadLiveSnapshot();
-  if (paused) overlay.setPaused(paused);
+  // A reload can show the last reading, but it cannot restore the keystroke clock.
+  const [navigation] = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
+  if (navigation?.type === 'reload') {
+    void requestWorker<LiveSnapshot | null>({ type: 'load-snapshot' })
+      .then((snapshot) => {
+        if (!ctx.isInvalid && !tracker?.hasRun) overlay.setPaused(snapshot);
+      })
+      .catch(() => undefined);
+  } else {
+    saveSnapshot(null);
+  }
 
   let lastSnapshotAt = 0;
   let hadLiveSnapshot = false;
   const scanTimer = window.setInterval(ensureComposer, 1200);
+  ctx.addEventListener(window, 'wxt:locationchange', ensureComposer);
   const uiTimer = window.setInterval(() => {
     const live = tracker ? tracker.liveStats() : EMPTY_LIVE;
     overlay.update(live);
     if (live.active) {
-      hadLiveSnapshot = true;
-      if (Date.now() - lastSnapshotAt < 1000) return;
-      const snapshot = tracker?.snapshot();
+      if (hadLiveSnapshot && Date.now() - lastSnapshotAt < 1000) return;
+      const snapshot = tracker?.snapshot(live);
       if (snapshot) {
-        lastSnapshotAt = Date.now();
-        void saveLiveSnapshot(snapshot);
+        hadLiveSnapshot = true;
+        lastSnapshotAt = snapshot.endedAt;
+        saveSnapshot(snapshot);
       }
     } else if (hadLiveSnapshot) {
       hadLiveSnapshot = false;
-      void clearLiveSnapshot();
+      saveSnapshot(null);
     }
   }, 250);
-
-  let lastUrl = location.href;
-  const urlTimer = window.setInterval(() => {
-    if (location.href !== lastUrl) {
-      lastUrl = location.href;
-      ensureComposer();
-    }
-  }, 1000);
 
   const unsubscribe = onSettingsChanged((next) => {
     settings = next;
@@ -192,7 +181,6 @@ async function boot(): Promise<void> {
     }
     void Promise.all([loadHistory(), loadSessions()]).then(([nextHistory, nextSessions]) => {
       history = nextHistory;
-      sessions = nextSessions;
       overlay.setHistory(nextHistory);
       overlay.setSessions(nextSessions);
       overlay.refreshPosition();
@@ -200,19 +188,25 @@ async function boot(): Promise<void> {
   };
   chrome.storage.onChanged.addListener(onStorage);
 
-  chrome.runtime.onMessage.addListener((message: unknown) => {
-    if (typeof message !== 'object' || message === null) return;
+  const onMessage = (
+    message: unknown,
+    sender: chrome.runtime.MessageSender,
+    sendResponse: (response: LiveSnapshot | null) => void,
+  ): void => {
+    if (sender.id !== chrome.runtime.id || typeof message !== 'object' || message === null) return;
     const type = (message as { type?: string }).type;
-    if (type === 'toggle-hud') void saveSettings({ showHud: !settings.showHud });
+    if (type === 'toggle-hud') persist({ showHud: !settings.showHud });
     if (type === 'pause-run') tracker?.togglePause();
-  });
+    if (type === 'live-run') sendResponse(tracker?.snapshot() ?? null);
+  };
+  chrome.runtime.onMessage.addListener(onMessage);
 
-  window.addEventListener('pagehide', () => {
+  ctx.onInvalidated(() => {
     window.clearInterval(scanTimer);
     window.clearInterval(uiTimer);
-    window.clearInterval(urlTimer);
     unsubscribe();
     chrome.storage.onChanged.removeListener(onStorage);
+    chrome.runtime.onMessage.removeListener(onMessage);
     tracker?.destroy();
     overlay.destroy();
     window.__fastfingaz = false;

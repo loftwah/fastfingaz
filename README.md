@@ -32,7 +32,7 @@ reading in THINKING, and the idle state shows your last, best and rolling averag
 break, the pause button (or <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) freezes both clocks,
 holds the display and excludes the pause from the final session; typing resumes automatically.
 
-**Live:** https://fastfingaz.loftwah.com · **Current build:** v0.4.1 (early, unpacked install)
+**Live:** https://fastfingaz.loftwah.com · **Current build:** v0.4.2 (early, unpacked install)
 
 ## The instrument
 
@@ -138,14 +138,14 @@ Sample data only. These are sample readings, not user data or a benchmark. More 
 - It listens to `keydown`, `beforeinput`, `paste` and input events. It never intercepts or rewrites a
   keystroke.
 - On send — Enter or the send button, followed by the composer clearing — it computes stats from the
-  final text plus keystroke timings and writes a text-free record.
+  final text plus keystroke timings and writes a record. Prompt text is saved only when the setting is on.
 - `shared/metrics.ts` owns the measurement and eligibility rules. A session needs a sent prompt, 3s
   wall time, the minimum characters, 50% signal and less than 50% paste. Resumed drafts go to a
   draft bucket; IME bests need 85% signal.
 - Durable history in `chrome.storage.local`: best think/flow/peak, last eligible run, a weighted
   20-session rolling average, all-time average and totals. A lower run never overwrites a best.
-- An in-progress snapshot in `chrome.storage.session` contains no text and is shown as
-  `PAUSED / NOT RECORDED` after a reload.
+- The popup reads live metrics from the active ChatGPT tab. A text-free snapshot in
+  `chrome.storage.session` can show `PAUSED / NOT RECORDED` when that tab reloads.
 - The HUD lives in a shadow root; the share cards are drawn on Canvas at 1200×630, 1080×1080 and
   1080×1920. There is no network code in the extension.
 
@@ -157,7 +157,7 @@ The static site lives in `site/` and is built into `site/dist` by
 ```bash
 npm run site:build
 PORT=4319 npm run site:serve   # http://127.0.0.1:4319
-npm run site:deploy            # needs CLOUDFLARE_* in .env
+(set -a; . ./.env; set +a; npm run site:deploy)
 ```
 
 The site is deployed on **Cloudflare Pages** as the existing `thinktype` project and served at
@@ -187,7 +187,7 @@ images.
   included in your export.
 - Export or clear everything from the options page.
 - Permissions: `storage`, `clipboardWrite`, and the two ChatGPT host permissions. No new permissions
-  in v0.4.1.
+  in v0.4.2.
 
 Canonical policy: https://fastfingaz.loftwah.com/privacy · Source: [docs/PRIVACY.md](docs/PRIVACY.md)
 
@@ -195,7 +195,7 @@ Canonical policy: https://fastfingaz.loftwah.com/privacy · Source: [docs/PRIVAC
 
 ```text
 entrypoints/
-  background.ts          service worker: badge + keyboard command
+  background.ts          service worker: serialized writes, badge and shortcuts
   content.ts             content-script bootstrap, history sync, live snapshots
   popup/                 history, baseline, chart, receipt detail, share sheet
   options/               measurement, HUD, privacy settings
@@ -208,7 +208,8 @@ content/
 shared/
   metrics.ts             pure WPM / history / eligibility math (tested)
   share-card.ts          three canvas receipt formats
-  storage.ts             chrome.storage.local/session helpers
+  storage.ts             local history, settings and tab snapshots
+  messages.ts            extension-internal storage requests
   brand.ts               palette, type, font faces, serials
 site/                    static marketing site (HTML/CSS)
 docs/
@@ -217,9 +218,9 @@ docs/
   art/                   social, store and share art
 public/
   fonts/                 Geist Sans / Mono / Pixel + OFL
-  icon/                  16/32/48/128 pixel-T icons
+  icon/                  16/32/48/128 Pixel F icons
 demo/                    Vite visual preview, gallery, artboards, card exporter
-tests/                   38 unit tests for the state machine and metrics
+tests/                   47 unit tests for the state machine and metrics
 wxt.config.ts            manifest and permissions
 ```
 
@@ -245,7 +246,7 @@ wxt.config.ts            manifest and permissions
 > **zsh note:** interactive comments are off by default, so a trailing `# comment` is passed to the
 > command as arguments. Run commands on their own, or add `setopt interactivecomments` to `~/.zshrc`.
 
-## Limitations (v0.2)
+## Limitations
 
 - ChatGPT ships UI changes often. Selectors have layered fallbacks, but a redesign can still break
   attachment until the selector list is updated.
@@ -255,13 +256,11 @@ wxt.config.ts            manifest and permissions
   counted; the HUD shows `DRAFT` until you start typing. Resumed drafts are excluded from best and
   averages.
 - Autocorrect, undo and paste lower confidence rather than pretending to be precise.
-- The HUD can only be as large as the side gutter allows. At 1440 with the sidebar open it is a slim
-  142px strip; at 1280 with the sidebar open it may use the sidebar area. Hide the sidebar for the
-  full 300px instrument.
+- Auto fits the HUD to the side gutter and uses the Mini orb when the gutter is too narrow.
+  Manual sizes may overlap the conversation.
 - Chrome only for now. The measurement core is host-agnostic; WXT makes Firefox a realistic next
   target.
-- The Chrome Web Store listing has not been submitted. Store screenshots 2–5 still need real
-  captures.
+- The Chrome Web Store listing has not been submitted. Three sample captures are ready for review. Real ChatGPT captures still need an install and a recording pass.
 
 ## Roadmap
 

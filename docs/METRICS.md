@@ -63,7 +63,7 @@ entirely makes a distracted session look fast. Fastfingaz clamps each gap instea
 
 ```text
 for every gap between editing keys (and the final gap to send):
-  activeMs += min(gap, idleThresholdMs)
+  activeMs += min(gap - manualPauseOverlap, idleThresholdMs)
 ```
 
 Default threshold: **2000 ms**. A 30-second pause contributes 2 seconds of active time. You can set
@@ -87,7 +87,7 @@ plus the best think WPM and the rolling average. Before the first reading it sho
 
 The pause button in the HUD header (or **Alt+Shift+P**) freezes the run explicitly. The display shows
 `PAUSED`, the big number holds, and the wall and active clocks stop. The paused duration is excluded
-from `wallMs` and from the clamped `activeMs`; typing resumes automatically. This is different from
+from `wallMs` and removed from each gap before applying the idle threshold. Typing resumes automatically. This is different from
 the automatic THINKING state, where the pause is still counted as part of the run. A manual pause is
 a declared break, not a failed run, and it never creates a receipt on its own.
 

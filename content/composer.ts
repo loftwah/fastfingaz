@@ -63,5 +63,8 @@ export function selectionLength(el: HTMLElement): number {
 
 export function isSendControl(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false;
-  return SEND_SELECTORS.some((selector) => !!target.closest(selector));
+  return SEND_SELECTORS.some((selector) => {
+    const button = target.closest<HTMLButtonElement>(selector);
+    return !!button && !button.disabled && button.getAttribute('aria-disabled') !== 'true';
+  });
 }

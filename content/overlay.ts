@@ -453,7 +453,7 @@ export class Overlay {
 
     this.setCollapsed(options.collapsed, false);
     this.bind();
-    this.update(EMPTY);
+    this.renderDashboard(EMPTY);
   }
 
   mount(): void {
@@ -526,7 +526,11 @@ export class Overlay {
   }
 
   update(live: LiveStats): void {
+    const previous = this.lastLive;
     this.lastLive = live;
+    if (!live.active && !previous.active && live.draft === previous.draft && live.words === previous.words) {
+      return;
+    }
     if (live.active) this.paused = null;
 
     if (this.panel !== 'dashboard') {
