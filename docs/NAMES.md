@@ -50,9 +50,9 @@ else and is not needed to host the repository.
 on every surface the product actually needs.
 
 **Approved and shipped 11 November 2026: Fastfingaz.** The extension, site, store copy and cards now
-use **Fastfingaz** at **fastfingaz.loftwah.com**. The owner chose the loftwah subdomain rather than
-buying fastfingaz.com; `thinktype.loftwah.com` 301s to the new host. See `docs/RENAME.md` and issue
-#6 for the migration record.
+use **Fastfingaz** at **fastfingaz.loftwah.com**. No external domain is planned;
+`thinktype.loftwah.com` 301s to the new host. See `docs/RENAME.md` and issue #6 for the migration
+record.
 
 ## What the rename touched
 

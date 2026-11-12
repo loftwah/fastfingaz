@@ -80,7 +80,7 @@ Short, deadpan, technical. The joke is in the format, not in trying to sound lik
 
 ## Rename path (only after approval)
 
-1. Confirm the name and the domain purchase.
+1. Confirm the name and the live host.
 2. Rename `package.json`, `wxt.config.ts` manifest `name` / `short_name` / `description`. — done
 3. Rename the repository to `loftwah/fastfingaz`; keep redirects from the old URL. — done
 4. Point `fastfingaz.loftwah.com` at Cloudflare Pages; keep `thinktype.loftwah.com` as a 301. — done
@@ -94,4 +94,4 @@ Short, deadpan, technical. The joke is in the format, not in trying to sound lik
 
 Approved by the owner on 11 November 2026: **Fastfingaz**, the white-label direction, and the
 **Pixel F** primary mark. The coordinated rename shipped as v0.4.0. The owner chose
-**fastfingaz.loftwah.com** over buying a separate .com; no domain spend was made.
+**fastfingaz.loftwah.com**. No external domain is planned.

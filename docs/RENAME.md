@@ -103,11 +103,10 @@ GitHub redirects the old repository URL. Verify old release asset URLs still res
 
 ### 5. Cloudflare Pages and domain
 
-- ~~Check the `fastfingaz.com` price. Only buy with explicit price approval.~~ Declined by the
-  owner; the project uses the loftwah subdomain.
-- Create/point the Pages project and custom domain; DNS-only CNAME as needed.
+- **No `.com` purchase.** The live host is `fastfingaz.loftwah.com`; do not add domain spend.
+- The existing `thinktype` Pages project keeps the custom domain and certificates.
 - Deploy to `fastfingaz.loftwah.com`; keep `thinktype.loftwah.com` as a 301.
-- Configure the old `thinktype.loftwah.com` 301 to the new domain (Cloudflare Redirect Rule or a
+- Configure the old `thinktype.loftwah.com` 301 to the new host (Cloudflare Redirect Rule or a
   small Pages project). Test with `curl -I`.
 
 ### 6. Chrome Web Store
