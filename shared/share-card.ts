@@ -1,7 +1,7 @@
 import { BRAND, FONT, serialFromId } from './brand';
 import { SITE_HOST } from './constants';
 import { cardDate, formatClock, formatWpm, formatWords } from './format';
-import { thinkRatio } from './metrics';
+import { compressCadence, thinkRatio } from './metrics';
 import type { SessionRecord } from './types';
 
 export type CardFormat = 'landscape' | 'square' | 'story';
@@ -160,7 +160,7 @@ function cadence(
   gap: number,
 ): void {
   const barWidth = (width - gap * (count - 1)) / count;
-  const values = series.slice(-count);
+  const values = compressCadence(series, count);
   const max = Math.max(60, ...values);
   const offset = count - values.length;
 
@@ -380,7 +380,7 @@ function landscape(ctx: CanvasRenderingContext2D, session: SessionRecord, card: 
 
   chip(ctx, card, 64, 402, 38);
 
-  label(ctx, 'CADENCE / 5 SEC', 64, 470, 1.6);
+  label(ctx, 'CADENCE', 64, 470, 1.6);
   cadence(ctx, session.series, 64, 484, 576, 54, 48, 8);
 
   ctx.fillStyle = BRAND.linePaper;
@@ -443,7 +443,7 @@ function square(ctx: CanvasRenderingContext2D, session: SessionRecord, card: Car
 
   chip(ctx, card, 72, 528, 44);
 
-  label(ctx, 'CADENCE / 5 SEC', 72, 620, 1.8);
+  label(ctx, 'CADENCE', 72, 620, 1.8);
   cadence(ctx, session.series, 72, 640, 936, 120, 64, 6);
 
   const readingY = 830;
@@ -498,7 +498,7 @@ function story(ctx: CanvasRenderingContext2D, session: SessionRecord, card: Card
 
   chip(ctx, card, 84, 654, 52);
 
-  label(ctx, 'CADENCE / 5 SEC', 84, 780, 2);
+  label(ctx, 'CADENCE', 84, 780, 2);
   cadence(ctx, session.series, 84, 802, 912, 170, 64, 8);
 
   ctx.fillStyle = BRAND.ink;

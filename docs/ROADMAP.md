@@ -70,7 +70,7 @@
 - [x] 0.4.0 release zip, tag and Chrome Web Store copy
 - [x] No new permissions; local history preserved under the existing `tt:` keys
 
-## v0.4.1 — one instrument by default (current)
+## v0.4.1 — one instrument by default
 
 - [x] Baseline rail is opt-in and off by default; the HUD is the only display
 - [x] Settings toggle restores the 14-day chart, best flow and recent sessions panel
@@ -83,7 +83,7 @@
 - [ ] Threshold presets: "fast hands", "balanced", "deep thinking"
 - [ ] Better IME accounting: derive characters from final text and composition spans
 - [ ] Harden send detection against editor changes (observe the send button state as another signal)
-- [ ] Session detail: delete one session, re-open card, copy summary
+- [ ] Delete one session from its detail view
 - [ ] Import an export file (restore history)
 - [ ] 30-day view and a weekly recap line
 - [ ] Surface metric definitions in the popup (hover/tap)
@@ -93,7 +93,6 @@
 
 - [ ] "This week" recap card with a small trend
 - [ ] Optional comparison card: this session vs your baseline
-- [ ] Copy a compact text block for posts and DMs
 - [ ] Theme lock for cards (paper, ink, transparent)
 - [ ] Better empty states and first-run onboarding
 - [ ] A real Chrome Web Store submission with five captures

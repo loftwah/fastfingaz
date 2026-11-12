@@ -42,10 +42,7 @@ export const DEFAULT_SETTINGS: Settings = {
 export const COMPOSER_SELECTORS = [
   '[data-composer-markdown][contenteditable="true"]',
   '#prompt-textarea',
-  'form .ProseMirror[contenteditable="true"]',
   'textarea[data-testid="prompt-textarea"]',
-  'textarea[placeholder*="Message"]',
-  'div[contenteditable="true"][role="textbox"]',
 ];
 
 export const SEND_SELECTORS = ['button[aria-label="Send"]', 'button[data-testid="send-button"]'];

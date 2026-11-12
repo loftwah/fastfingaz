@@ -8,10 +8,10 @@ the extension, site and store icons.
 | `icon-16.png` | `public/icon/16.png` |
 | `icon-32.png` | `public/icon/32.png` |
 | `icon-48.png` | `public/icon/48.png` |
-| `icon-128.png` | `public/icon/128.png` and `site/icon-128.png` |
-| `icon-192.png` | `site/icon-192.png` |
-| `icon-512.png` | `site/icon-512.png` |
-| `icon-180.png` | Apple touch icon |
+| `icon-128.png` | `public/icon/128.png` and `site/dist/icon-128.png` |
+| `icon-192.png` | `site/dist/icon-192.png` |
+| `icon-512.png` | `site/dist/icon-512.png` |
+| `icon-180.png` | `site/dist/apple-touch-icon.png` |
 | `maskable-192.png` | `site/manifest.webmanifest` maskable icon |
 | `maskable-512.png` | `site/manifest.webmanifest` maskable icon |
 | `favicon.svg` | `site/favicon.svg` |

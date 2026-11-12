@@ -75,14 +75,15 @@ const CONTEXT: CardContext = {
 
 async function boot(): Promise<void> {
   const params = new URLSearchParams(location.search);
-  const requested = params.get('format');
+  const formatParam = params.get('format');
+  const requested = Object.values(CARD_FORMATS).find(({ id }) => id === formatParam);
   const formats: CardFormat[] = requested
-    ? [requested as CardFormat]
+    ? [requested.id]
     : ['landscape', 'square', 'story'];
-  if (requested && CARD_FORMATS[requested as CardFormat]) {
+  if (requested) {
     document.body.classList.add('single');
-    document.body.style.width = `${CARD_FORMATS[requested as CardFormat].width}px`;
-    document.body.style.height = `${CARD_FORMATS[requested as CardFormat].height}px`;
+    document.body.style.width = `${requested.width}px`;
+    document.body.style.height = `${requested.height}px`;
   }
 
   const stress = params.get('stress') === '1';

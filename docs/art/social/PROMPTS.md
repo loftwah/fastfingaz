@@ -78,3 +78,25 @@ Canvas at exact social dimensions, not stretched.
 `docs/art/store-1280x800.png` is a designed sample composition using the real HUD and a mock
 conversation. It is not a capture of a real ChatGPT account. Replace it with real captures before
 submitting to the Chrome Web Store.
+
+## Additional campaign artwork
+
+These fictional editorial images were generated with the built-in ImageGen tool on 12 November 2026. They contain no product screenshots, readings or user data.
+
+### keycap-tray
+
+[keycap-tray.webp](editorial/keycap-tray.webp) · 1254×1254
+
+> Square editorial product photograph for Fastfingaz, a typing measurement instrument. Four unlettered matte black mechanical keycaps neatly arranged in the shallow compartments of a warm ivory archival sample tray, one signal orange registration mark on the tray. Precise top-down framing, hard industrial edges, gentle daylight, restrained photographic material texture. Palette warm paper #f2efe6, ink #0b0b0a and one small #ff4d00 accent. No typography, logos, digits, people, gradients, glow or glass. Fictional objects for campaign art.
+
+### receipt-dispenser
+
+[receipt-dispenser.webp](editorial/receipt-dispenser.webp) · 1536×1024
+
+> Landscape 3:2 campaign photograph for Fastfingaz. A fictional compact matte black receipt dispenser on an uncoated warm ivory workbench, a single blank warm paper strip coming out through a narrow slit and one tiny signal orange mechanical switch. Three-quarter framing with the subject on the right and usable blank space on the left. Crisp anodised metal and tactile paper. Palette #0b0b0a, #f2efe6, #ff4d00 only. No text, marks, numbers, logos, people, gradients, glow or glass.
+
+### typing-desk
+
+[typing-desk.webp](editorial/typing-desk.webp) · 1024×1536
+
+> Vertical 2:3 editorial campaign photograph for Fastfingaz. Overhead view of a pair of adult hands resting naturally on a compact matte black mechanical keyboard along the bottom third of a warm paper-colored work surface, one small orange keycap. Leave upper half free for separately typeset campaign copy. Warm ivory #f2efe6, ink #0b0b0a, one orange #ff4d00 detail, natural soft side light, real photographic texture. Physically plausible anatomy, blank keycaps, no readable text, logos, screens, glow or gradients.

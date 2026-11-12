@@ -77,7 +77,7 @@ export function computeActiveMs(
 }
 
 /** Best N-second burst, measured against the real span of the window. */
-export function peakWpm(keys: number[], windowMs = 5000, minSpanMs = 1500): number {
+export function peakWpm(keys: readonly number[], windowMs = 5000, minSpanMs = 1500): number {
   if (keys.length < 2) return 0;
   let best = 0;
   let j = 1;
@@ -116,7 +116,7 @@ function pausedOverlap(
  * - Explicit manual pauses are removed from the gap entirely.
  */
 export function rollingWpm(
-  keys: number[],
+  keys: readonly number[],
   now: number,
   windowMs = 5000,
   idleGapMs = Number.POSITIVE_INFINITY,
@@ -155,7 +155,7 @@ export function buildSeries(
 ): number[] {
   const duration = endedAt - startedAt;
   if (!keys.length || duration <= 0) return [];
-  const bucketMs = Math.max(250, Math.min(1000, duration / maxPoints));
+  const bucketMs = Math.max(250, duration / maxPoints);
   const n = Math.min(maxPoints, Math.max(1, Math.ceil(duration / bucketMs)));
   const counts = new Array<number>(n).fill(0);
 
@@ -179,8 +179,18 @@ export function buildSeries(
   return series;
 }
 
+/** Fit a finished run into fewer bars while retaining the peak in each time interval. */
+export function compressCadence(series: number[], bars: number): number[] {
+  if (series.length <= bars) return series;
+  return Array.from({ length: bars }, (_, index) => {
+    const start = Math.floor(index * series.length / bars);
+    const end = Math.floor((index + 1) * series.length / bars);
+    return Math.max(...series.slice(start, end));
+  });
+}
+
 /** Monkeytype-ish consistency: 100 minus the coefficient of variation. */
-export function consistencyScore(keys: number[], idleThresholdMs: number): number {
+export function consistencyScore(keys: readonly number[], idleThresholdMs: number): number {
   if (keys.length < 5) return 0;
   const intervals: number[] = [];
   for (let i = 1; i < keys.length; i++) {

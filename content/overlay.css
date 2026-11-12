@@ -883,7 +883,7 @@
   cursor: pointer;
 }
 
-.s-tabs button[aria-selected='true'] {
+.s-tabs button[aria-pressed='true'] {
   border-color: var(--orange);
   background: var(--orange);
   color: var(--ink);

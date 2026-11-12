@@ -32,7 +32,7 @@ reading in THINKING, and the idle state shows your last, best and rolling averag
 break, the pause button (or <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) freezes both clocks,
 holds the display and excludes the pause from the final session; typing resumes automatically.
 
-**Live:** https://fastfingaz.loftwah.com · **Current build:** v0.4.2 (early, unpacked install)
+**Live:** https://fastfingaz.loftwah.com · **Current build:** v0.4.3 (early, unpacked install)
 
 ## The instrument
 
@@ -74,7 +74,7 @@ formats.
 | **Thinking overhead** | `1 − think/flow`; the share of raw cadence consumed by thinking. |
 | **Signal** | How much of the final text is attributable to observed keystrokes. |
 | **Pauses** | Gaps over the idle threshold, with a median and longest. |
-| **Best / average** | Durable best think, flow and peak; last eligible run; weighted 20-session rolling average; all-time average. |
+| **Best / average** | Durable best think, flow and peak; last eligible run; weighted 20-session rolling average; retained-history average. |
 
 There is no target text, so "accuracy" is not meaningful here. Correction rate plus signal quality
 is the honest replacement. The formulas, eligibility gates and limitations are in
@@ -143,7 +143,7 @@ Sample data only. These are sample readings, not user data or a benchmark. More 
   wall time, the minimum characters, 50% signal and less than 50% paste. Resumed drafts go to a
   draft bucket; IME bests need 85% signal.
 - Durable history in `chrome.storage.local`: best think/flow/peak, last eligible run, a weighted
-  20-session rolling average, all-time average and totals. A lower run never overwrites a best.
+  20-session rolling average, retained-history average and totals. A lower run never overwrites a best.
 - The popup reads live metrics from the active ChatGPT tab. A text-free snapshot in
   `chrome.storage.session` can show `PAUSED / NOT RECORDED` when that tab reloads.
 - The HUD lives in a shadow root; the share cards are drawn on Canvas at 1200×630, 1080×1080 and
@@ -183,11 +183,12 @@ images.
 - Prompt text is **not stored** by default.
 - Stored: WPM numbers, word counts, timings, confidence, timestamp, hostname.
 - In-progress: a text-free snapshot in `chrome.storage.session`.
-- Optional: enable **Store the text of sent prompts** in settings. It stays in local storage and is
-  included in your export.
+- Optional: enable **Store the text of sent prompts** in settings. Saved text stays on this device
+  and appears in exports. When Chrome runs out of room for new text, Fastfingaz tries to save the
+  metrics alone and tells you on the receipt.
 - Export or clear everything from the options page.
 - Permissions: `storage`, `clipboardWrite`, and the two ChatGPT host permissions. No new permissions
-  in v0.4.2.
+  in v0.4.3.
 
 Canonical policy: https://fastfingaz.loftwah.com/privacy · Source: [docs/PRIVACY.md](docs/PRIVACY.md)
 

@@ -11,7 +11,6 @@ const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
 };
 
 let toastTimer: number | null = null;
-let sliderTimer: number | null = null;
 
 function toast(message: string): void {
   const el = $('toast');
@@ -49,12 +48,10 @@ async function persist(patch: Partial<Settings>, success?: string): Promise<void
 function bind(): void {
   const idle = $('idle') as HTMLInputElement;
   idle.addEventListener('input', () => {
-    const value = Number(idle.value);
-    $('idle-value').textContent = `${(value / 1000).toFixed(1)}s`;
-    if (sliderTimer) window.clearTimeout(sliderTimer);
-    sliderTimer = window.setTimeout(() => {
-      void persist({ idleThresholdMs: value });
-    }, 200);
+    $('idle-value').textContent = `${(idle.valueAsNumber / 1000).toFixed(1)}s`;
+  });
+  idle.addEventListener('change', () => {
+    void persist({ idleThresholdMs: idle.valueAsNumber });
   });
 
   const minChars = $('minchars') as HTMLInputElement;

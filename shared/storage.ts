@@ -86,6 +86,7 @@ export interface SavedSession {
   newBest: boolean;
   firstReading: boolean;
   history: HistorySummary;
+  textOmitted: boolean;
 }
 
 export function writeSession(record: SessionRecord): Promise<SavedSession> {
@@ -102,19 +103,33 @@ export function writeSession(record: SessionRecord): Promise<SavedSession> {
       stored[STORAGE_KEYS.history]?.v === 1 ? stored[STORAGE_KEYS.history] : buildHistory(saved);
     const { text, ...metrics } = record;
     const keepText = stored[STORAGE_KEYS.settings]?.storeText === true && text !== undefined;
-    const kept = [
-      keepText ? record : metrics,
-      ...saved.filter((session) => session.id !== record.id),
-    ].sort((a, b) => b.endedAt - a.endedAt).slice(0, MAX_SESSIONS);
+    const kept = [metrics, ...saved.filter((session) => session.id !== record.id)]
+      .sort((a, b) => b.endedAt - a.endedAt)
+      .slice(0, MAX_SESSIONS);
     const history = buildHistory(kept, previous);
-    await chrome.storage.local.set({
-      [STORAGE_KEYS.sessions]: kept,
-      [STORAGE_KEYS.history]: history,
-    });
+    const index = keepText ? kept.indexOf(metrics) : -1;
+    if (index >= 0) kept[index] = record;
+    const changes = { [STORAGE_KEYS.sessions]: kept, [STORAGE_KEYS.history]: history };
+    let textOmitted = false;
+    try {
+      await chrome.storage.local.set(changes);
+    } catch (error) {
+      if (
+        index < 0 ||
+        !(error instanceof Error) ||
+        (error.name !== 'QuotaExceededError' && !/\b(?:QUOTA_BYTES|kQuotaBytes)\b/.test(error.message))
+      ) {
+        throw error;
+      }
+      kept[index] = metrics;
+      await chrome.storage.local.set(changes);
+      textOmitted = true;
+    }
     return {
       newBest: isNewBest(record, previous.best),
       firstReading: previous.totals.recorded === 0,
       history,
+      textOmitted,
     };
   });
 }

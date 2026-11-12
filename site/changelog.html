@@ -6,7 +6,7 @@
     <title>Changelog — Fastfingaz</title>
     <meta
       name="description"
-      content="Fastfingaz release notes, including active-tab live readings, more reliable local history and corrected manual pause timing in 0.4.2."
+      content="Fastfingaz release notes, including clearer storage feedback, long-session cadence charts and keyboard-friendly share controls in 0.4.3."
     />
     <link rel="canonical" href="https://fastfingaz.loftwah.com/changelog" />
     <meta name="theme-color" content="#f2efe6" />
@@ -24,14 +24,14 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/assets/site.css?v=0.4.2" />
+    <link rel="stylesheet" href="/assets/site.css?v=0.4.3" />
 
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="Fastfingaz" />
     <meta property="og:title" content="Fastfingaz changelog" />
     <meta
       property="og:description"
-      content="Fastfingaz release notes, including active-tab live readings, more reliable local history and corrected manual pause timing in 0.4.2."
+      content="Fastfingaz release notes, including clearer storage feedback, long-session cadence charts and keyboard-friendly share controls in 0.4.3."
     />
     <meta property="og:url" content="https://fastfingaz.loftwah.com/changelog" />
     <meta property="og:image" content="https://fastfingaz.loftwah.com/social/og-1200x630.png" />
@@ -44,7 +44,7 @@
     <meta name="twitter:title" content="Fastfingaz changelog" />
     <meta
       name="twitter:description"
-      content="Fastfingaz release notes, including active-tab live readings, more reliable local history and corrected manual pause timing in 0.4.2."
+      content="Fastfingaz release notes, including clearer storage feedback, long-session cadence charts and keyboard-friendly share controls in 0.4.3."
     />
     <meta name="twitter:image" content="https://fastfingaz.loftwah.com/social/og-1200x630.png" />
     <meta name="twitter:image:alt" content="Fastfingaz typing receipt with a sample reading on warm paper." />
@@ -70,7 +70,7 @@
             "@type": "WebPage",
             "@id": "https://fastfingaz.loftwah.com/changelog#page",
             "name": "Fastfingaz changelog",
-            "description": "Fastfingaz release notes, including active-tab live readings, more reliable local history and corrected manual pause timing in 0.4.2.",
+            "description": "Fastfingaz release notes, including clearer storage feedback, long-session cadence charts and keyboard-friendly share controls in 0.4.3.",
             "url": "https://fastfingaz.loftwah.com/changelog",
             "isPartOf": { "@id": "https://fastfingaz.loftwah.com/#website" },
             "author": { "@id": "https://fastfingaz.loftwah.com/#dean-lofts" },
@@ -131,13 +131,14 @@
           <div>
             <h1>Build notes, not marketing beats.</h1>
             <p class="meta">
-              CURRENTLY v0.4.2 / 12 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
+              CURRENTLY v0.4.3 / 12 NOVEMBER 2026 / SOURCE ON GITHUB / NO STORE SUBMISSION YET
             </p>
           </div>
         </header>
 
         <div class="doc-body">
           <nav class="doc-toc" aria-label="Releases">
+            <a href="#v043">v0.4.3</a>
             <a href="#v042">v0.4.2</a>
             <a href="#v041">v0.4.1</a>
             <a href="#v040">v0.4.0</a>
@@ -155,9 +156,25 @@
           </nav>
 
           <div>
+            <section class="release" id="v043">
+              <div>
+                <span class="version">v0.4.3 <span class="tag">CURRENT</span></span>
+                <span class="date">12 NOV 2026</span>
+              </div>
+              <div>
+                <h2>Clearer receipts and better long-run charts.</h2>
+                <ul>
+                  <li>When optional prompt text exceeds the storage quota, Fastfingaz tries to save the metrics alone. The receipt reports what was saved.</li>
+                  <li>Cadence charts now spread readings across the full session, including long prompts.</li>
+                  <li>The popup keeps your selected share format while history updates. Keyboard focus returns to the session when you go back.</li>
+                  <li>Composer detection requires a recognised ChatGPT editor or a matching send control in its form.</li>
+                </ul>
+              </div>
+            </section>
+
             <section class="release" id="v042">
               <div>
-                <span class="version">v0.4.2 <span class="tag">CURRENT</span></span>
+                <span class="version">v0.4.2</span>
                 <span class="date">12 NOV 2026</span>
               </div>
               <div>
@@ -546,7 +563,7 @@
         </div>
         <div class="footer-bottom">
           <span>FASTFINGAZ.LOFTWAH.COM / LOCAL ONLY / NO SERVER</span>
-          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.4.2</span></span>
+          <span>© 2026 DEAN LOFTS <span class="orange">/ v0.4.3</span></span>
         </div>
       </div>
     </footer>

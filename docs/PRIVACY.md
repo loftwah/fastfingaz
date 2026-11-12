@@ -22,7 +22,10 @@ explains what it does with your data. The short version: everything stays in you
   the same local extension storage.
 
 By default, Fastfingaz does **not** store the text of your prompts. If you turn on **Store the text of
-sent prompts**, that text is stored locally with the session and included in your export.
+sent prompts**, that text is stored locally with the session and included in your export when
+Chrome has room. If the new prompt text would exceed the storage quota, Fastfingaz tries to save
+the metrics alone and tells you on the receipt. Turning off text storage applies to future
+readings. **Clear all sessions** removes previously stored text along with the history.
 
 ## What Fastfingaz does not do
 

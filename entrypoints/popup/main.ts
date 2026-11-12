@@ -1,5 +1,5 @@
 import { serialFromId } from '../../shared/brand';
-import { GITHUB_URL } from '../../shared/constants';
+import { GITHUB_URL, STORAGE_KEYS } from '../../shared/constants';
 import {
   formatClock,
   formatDate,
@@ -116,7 +116,8 @@ async function refreshLive(): Promise<void> {
 }
 
 function renderMain(): void {
-  const today = sessions.filter((session) => dayKey(session.startedAt) === dayKey(Date.now()));
+  const todayKey = dayKey(Date.now());
+  const today = sessions.filter((session) => dayKey(session.startedAt) === todayKey);
   const stats = aggregate(today);
   const drafts = today.filter((session) => session.resumed).length;
 
@@ -252,6 +253,13 @@ function statRows(session: SessionRecord): Array<[string, string]> {
 }
 
 function detailNote(session: SessionRecord): string {
+  const note = measurementNote(session);
+  return session.text === undefined
+    ? note
+    : `${note} Your history export includes this prompt’s text.`;
+}
+
+function measurementNote(session: SessionRecord): string {
   if (session.resumed) {
     return 'This reading resumed a draft that was already in the composer. It is kept as a draft and excluded from your best and averages.';
   }
@@ -266,7 +274,7 @@ function detailNote(session: SessionRecord): string {
   if (session.confidence < 0.6) {
     return 'Low signal: some text was replaced by autocorrect or typed with an input method. Treat these numbers as approximate.';
   }
-  return 'Measured locally from keystrokes in the ChatGPT composer. Only numbers are stored — never your words.';
+  return 'Measured locally from keystrokes in the ChatGPT composer.';
 }
 
 function cardContext(): CardContext {
@@ -282,8 +290,9 @@ function cardContext(): CardContext {
 async function openDetail(id: string): Promise<void> {
   const session = sessions.find((item) => item.id === id);
   if (!session) return;
+  const opening = selectedId !== id;
   selectedId = id;
-  selectedFormat = 'landscape';
+  if (opening) selectedFormat = 'landscape';
 
   $('view-main').hidden = true;
   $('view-detail').hidden = false;
@@ -302,13 +311,16 @@ async function openDetail(id: string): Promise<void> {
 
   $('detail-note').textContent = detailNote(session);
   renderFormatTabs();
-  window.scrollTo({ top: 0 });
+  if (opening) {
+    window.scrollTo({ top: 0 });
+    $('back').focus();
+  }
   await renderDetailPreview();
 }
 
 function renderFormatTabs(): void {
   document.querySelectorAll<HTMLButtonElement>('[data-format]').forEach((button) => {
-    button.setAttribute('aria-selected', String(button.dataset.format === selectedFormat));
+    button.setAttribute('aria-pressed', String(button.dataset.format === selectedFormat));
   });
 }
 
@@ -351,10 +363,15 @@ async function renderDetailPreview(): Promise<void> {
 }
 
 function showMain(): void {
+  const previousId = selectedId;
   selectedId = null;
+  detailToken++;
   $('view-detail').hidden = true;
   $('view-main').hidden = false;
   renderMain();
+  const previousRow = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-id]'))
+    .find((button) => button.dataset.id === previousId);
+  (previousRow ?? $('toggle-hud')).focus();
 }
 
 function toast(message: string): void {
@@ -497,15 +514,15 @@ function bind(): void {
     }
   });
 
-  chrome.storage.onChanged.addListener((_changes, area) => {
+  chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== 'local') return;
-    void refresh();
+    if (changes[STORAGE_KEYS.settings]) void refreshHudState();
+    if (changes[STORAGE_KEYS.sessions] || changes[STORAGE_KEYS.history]) void refresh();
   });
 }
 
 async function refresh(): Promise<void> {
   [sessions, history] = await Promise.all([loadSessions(), loadHistory()]);
-  await refreshHudState();
   if (selectedId) {
     if (sessions.some((session) => session.id === selectedId)) void openDetail(selectedId);
     else showMain();

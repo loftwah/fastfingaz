@@ -3,6 +3,8 @@ import type { RawSession, SessionRecord } from '../shared/types';
 import {
   aggregate,
   buildHistory,
+  buildSeries,
+  compressCadence,
   computeStats,
   countWords,
   dailyBuckets,
@@ -18,6 +20,22 @@ import {
   thinkRatio,
   wpmFrom,
 } from '../shared/metrics';
+
+it('spreads a long cadence series across the full run', () => {
+  const series = buildSeries([0, 120_000, 239_999], 0, 240_000);
+  expect(series).toHaveLength(64);
+  expect(series[32]).toBeGreaterThan(0);
+  expect(series[62]).toBe(0);
+  expect(series[63]).toBeGreaterThan(0);
+});
+
+it('preserves peaks from both ends when a receipt has fewer bars than samples', () => {
+  const series = Array.from({ length: 64 }, (_, i) => i === 0 ? 100 : i === 63 ? 80 : 0);
+  const bars = compressCadence(series, 48);
+  expect(bars).toHaveLength(48);
+  expect(bars[0]).toBe(100);
+  expect(bars[47]).toBe(80);
+});
 
 function raw(overrides: Partial<RawSession> = {}): RawSession {
   return {

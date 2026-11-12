@@ -1,13 +1,13 @@
 import { COMPOSER_SELECTORS, SEND_SELECTORS } from '../shared/constants';
 
-export function isVisible(el: HTMLElement): boolean {
+function isVisible(el: HTMLElement): boolean {
   const rect = el.getBoundingClientRect();
   if (rect.width < 80 || rect.height < 8) return false;
   const style = getComputedStyle(el);
   return style.visibility !== 'hidden' && style.display !== 'none' && style.opacity !== '0';
 }
 
-export function isEditable(el: HTMLElement): boolean {
+function isEditable(el: HTMLElement): boolean {
   return (
     el.isContentEditable ||
     el instanceof HTMLTextAreaElement ||
@@ -16,8 +16,8 @@ export function isEditable(el: HTMLElement): boolean {
 }
 
 /**
- * Find the ChatGPT composer. Most specific selectors win; the last resort is
- * geometric, because ChatGPT's class names are hashed and change often.
+ * Prefer ChatGPT's composer identifiers. The fallback needs a matching send
+ * control in its form so other editors on ChatGPT aren't measured.
  */
 export function findComposer(): HTMLElement | null {
   for (const selector of COMPOSER_SELECTORS) {
@@ -30,18 +30,12 @@ export function findComposer(): HTMLElement | null {
     }
   }
 
-  const viewportMid = window.innerHeight * 0.55;
-  const candidates = Array.from(
-    document.querySelectorAll<HTMLElement>('[contenteditable="true"], textarea'),
-  )
-    .filter((el) => isEditable(el) && isVisible(el))
-    .filter((el) => {
-      const rect = el.getBoundingClientRect();
-      return rect.width > 220 && rect.bottom > viewportMid;
-    })
-    .sort((a, b) => b.getBoundingClientRect().bottom - a.getBoundingClientRect().bottom);
-
-  return candidates[0] ?? null;
+  for (const el of document.querySelectorAll<HTMLElement>(
+    'main form .ProseMirror[contenteditable="true"], main form textarea[placeholder*="Message"]',
+  )) {
+    if (el.closest('form')?.querySelector(SEND_SELECTORS.join(',')) && isVisible(el)) return el;
+  }
+  return null;
 }
 
 /** ProseMirror's empty state is a single newline. Normalise it to "". */

@@ -86,7 +86,7 @@ async function boot(ctx: ContentScriptContext): Promise<void> {
       overlay.showReceipt(record, saved);
     } catch {
       console.warn('[fastfingaz] could not save session');
-      overlay.showReceipt(record, { newBest: false, firstReading: false, history });
+      overlay.showReceipt(record, { newBest: false, firstReading: false, history, unsaved: true });
     }
   };
 

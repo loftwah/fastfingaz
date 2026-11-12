@@ -92,7 +92,7 @@ export class ComposerTracker {
     const now = paused ? (this.session.pausedAt ?? performance.now()) : performance.now();
     const threshold = this.settings.idleThresholdMs;
     const text = getComposerText(this.el);
-    const keys = [...this.session.keyTimes];
+    const keys = this.session.keyTimes;
     const wallMs = Math.max(0, now - this.session.startedAt - this.session.pausedTotal(now));
     const activeMs = Math.max(1, this.session.activeMs(now, threshold));
     const sinceKey = now - this.lastKeyAt;

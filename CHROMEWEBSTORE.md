@@ -31,7 +31,7 @@ Key features:
 • Think WPM, flow WPM, peak, best, weighted 20-session average, words, time, signal and consistency
 • A printed receipt after each qualifying prompt, with a serial, barcode and a small NEW BEST stamp
 • Share cards in three designed formats — 1200×630, 1080×1080 and 1080×1920 — with a share sheet, live preview, copy and PNG download
-• Durable local history: best think/flow/peak, last eligible run, rolling average and all-time average
+• Durable local history: best think/flow/peak, last eligible run, rolling average and retained-history average
 • The baseline rail is optional and off by default, so the HUD is a single display; enable it in settings for the 14-day chart and recent-session panel
 • Controls for your thinking threshold, minimum message length, HUD position and privacy
 
@@ -42,7 +42,7 @@ How to use it:
 4. Open SHARE CARD to choose a format, or open the popup for your history.
 
 Privacy:
-Fastfingaz has no server, no account and no analytics. Your prompt text is not stored by default; the optional Store text setting keeps it on this machine only. Your typing metrics live in Chrome's local extension storage and never leave the browser unless you export them yourself.
+Fastfingaz has no server, no account and no analytics. Your prompt text is not stored by default. The optional Store text setting keeps it on this machine when Chrome has room. The receipt tells you if the extension could save only the metrics or if the reading could not be saved. Your typing metrics live in Chrome's local extension storage and never leave the browser unless you export them yourself.
 
 If you find a bug or have an idea, open an issue at https://github.com/loftwah/fastfingaz/issues.
 
@@ -157,6 +157,7 @@ https://github.com/loftwah/fastfingaz
 
 | Version | Date | Changes | Status |
 | --- | --- | --- | --- |
+| 0.4.3 | 2026-11-12 | Storage quota fallback, accurate long-session cadence charts, tighter composer detection and keyboard-friendly share controls | Draft — not submitted |
 | 0.4.2 | 2026-11-12 | Live popup scoped to the active tab, serialized local writes, corrected manual pause accounting and send-intent handling, no new permissions | Draft — not submitted |
 | 0.4.1 | 2026-11-12 | Baseline rail is opt-in and off by default, so the HUD is a single display; settings toggle restores it; no new permissions, 47 tests | Draft — not submitted |
 | 0.4.0 | 2026-11-11 | Renamed to Fastfingaz; Pixel F icon set at 16/32/48/128/180/192/512 plus maskable and favicon; new site host, OG/store art and 301 from the old domain; no new permissions, 47 tests | Draft — superseded by 0.4.1 |
@@ -177,7 +178,7 @@ https://github.com/loftwah/fastfingaz
 
 - IME input (Chinese, Japanese, etc.) is flagged as approximate and lowers the signal score. An IME run is excluded from best below 85% signal.
 - Editing an existing draft is measured from the next keystroke; the earlier text is not counted in the WPM. Resumed drafts are kept in a draft bucket and excluded from best and averages.
-- ChatGPT UI changes can break composer detection until the selector fallbacks are updated.
+- Composer detection uses ChatGPT editor identifiers or a matching send control in the same form. A new ChatGPT layout may need a selector update before Fastfingaz measures there.
 - Share cards are generated locally at 1200×630, 1080×1080 and 1080×1920; no image service is used.
 - The HUD docks in the empty gutter beside the conversation. In Auto, it uses the Mini orb when no side gutter fits. It can be dragged, and Reset HUD position restores the dock.
 - The 1280×800 store screenshots are designed sample compositions using the real HUD and mock conversation; replace them with real captures after the first install if preferred.

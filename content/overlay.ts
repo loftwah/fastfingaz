@@ -1,6 +1,6 @@
 import { ensureDocumentFonts, serialFromId } from '../shared/brand';
 import { formatClock, formatRelative, formatWpm, formatWords } from '../shared/format';
-import { dailyBuckets, dayKey, emptyHistory, idleReadout } from '../shared/metrics';
+import { compressCadence, dailyBuckets, dayKey, emptyHistory, idleReadout } from '../shared/metrics';
 import {
   CARD_FORMATS,
   cardBlob,
@@ -63,6 +63,8 @@ export interface ReceiptMeta {
   newBest: boolean;
   firstReading: boolean;
   history: HistorySummary;
+  textOmitted?: boolean;
+  unsaved?: boolean;
 }
 
 export class Overlay {
@@ -149,7 +151,6 @@ export class Overlay {
   private orbResize: { startX: number; startY: number; startSize: number } | null = null;
   private suppressClick = false;
   private panel: 'dashboard' | 'receipt' | 'share' = 'dashboard';
-  private receiptUntil = 0;
   private receiptTimer: number | null = null;
   private lastSession: SessionRecord | null = null;
   private history: HistorySummary = emptyHistory();
@@ -230,7 +231,7 @@ export class Overlay {
             </div>
 
             <div class="meter">
-              <div class="meter-head"><span>CADENCE</span><span>5 SEC / 38 BARS</span></div>
+              <div class="meter-head"><span>CADENCE</span><span>38 BARS</span></div>
               <div class="bars" data-bars aria-hidden="true"></div>
             </div>
 
@@ -283,7 +284,7 @@ export class Overlay {
           </div>
           <div class="r-cadence">
             <div class="r-cadence-head">
-              <span>CADENCE / 5 SEC</span>
+              <span>CADENCE</span>
               <span data-r-overhead>—</span>
             </div>
             <div class="r-bars" data-r-bars aria-hidden="true"></div>
@@ -303,11 +304,11 @@ export class Overlay {
             <span>SHARE RECEIPT</span>
             <span data-s-spec>OG / 1200×630</span>
           </div>
-          <div class="s-tabs" role="tablist" aria-label="Card format">
+          <div class="s-tabs" role="group" aria-label="Card format">
             ${Object.values(CARD_FORMATS)
               .map(
                 (spec) =>
-                  `<button role="tab" data-format="${spec.id}" aria-selected="${spec.id === 'landscape'}">${spec.short}</button>`,
+                  `<button type="button" data-format="${spec.id}" aria-pressed="${spec.id === 'landscape'}">${spec.short}</button>`,
               )
               .join('')}
           </div>
@@ -473,7 +474,7 @@ export class Overlay {
     window.removeEventListener('resize', this.handleResize);
     this.resizeObserver?.disconnect();
     if (this.resizeFrame) cancelAnimationFrame(this.resizeFrame);
-    if (this.receiptTimer) window.clearTimeout(this.receiptTimer);
+    this.stopReceiptTimer();
     this.host.remove();
   }
 
@@ -539,11 +540,8 @@ export class Overlay {
       this.hud.dataset.panel = 'dashboard';
       this.hud.dataset.state = live.status;
       this.hud.classList.remove('has-receipt');
-      this.receiptUntil = 0;
-      if (this.receiptTimer) {
-        window.clearTimeout(this.receiptTimer);
-        this.receiptTimer = null;
-      }
+      this.lastSession = null;
+      this.stopReceiptTimer();
     }
 
     this.renderDashboard(live);
@@ -556,7 +554,9 @@ export class Overlay {
     const serial = serialFromId(session.id);
 
     if (this.receipt.kicker) {
-      this.receipt.kicker.textContent = session.resumed ? 'DRAFT PRINTED' : 'SESSION PRINTED';
+      this.receipt.kicker.textContent = meta.unsaved
+        ? 'READING UNSAVED'
+        : session.resumed ? 'DRAFT PRINTED' : 'SESSION PRINTED';
     }
     if (this.receipt.think) this.receipt.think.textContent = formatWpm(session.wpm.think);
     if (this.receipt.flow) this.receipt.flow.textContent = formatWpm(session.wpm.flow);
@@ -588,7 +588,11 @@ export class Overlay {
       this.rOverhead.textContent = `${overhead}% OVERHEAD`;
     }
     this.renderReceiptBars(session.series);
-    if (this.receipt.note) this.receipt.note.textContent = this.receiptNote(session);
+    if (this.receipt.note) {
+      this.receipt.note.textContent = meta.unsaved
+        ? 'SAVE FAILED / SHARE TO KEEP A COPY'
+        : meta.textOmitted ? 'METRICS SAVED / NO ROOM FOR TEXT' : this.receiptNote(session);
+    }
     if (this.receipt.barcode) {
       this.receipt.barcode.replaceChildren(...this.barcodeBars(session.id));
     }
@@ -607,9 +611,7 @@ export class Overlay {
     this.hud.dataset.panel = 'receipt';
     this.hud.dataset.state = 'receipt';
     this.hud.classList.toggle('has-receipt', this.collapsed);
-    this.receiptUntil = Date.now() + 30_000;
-    if (this.receiptTimer) window.clearTimeout(this.receiptTimer);
-    this.receiptTimer = window.setTimeout(() => this.clearReceipt(), 30_000);
+    this.scheduleReceiptDismissal();
     this.applyPosition();
   }
 
@@ -621,12 +623,30 @@ export class Overlay {
     return 'LOCAL ONLY / NO SERVER';
   }
 
-  private clearReceipt(): void {
-    this.receiptUntil = 0;
-    if (this.receiptTimer) {
+  private stopReceiptTimer(): void {
+    if (this.receiptTimer !== null) {
       window.clearTimeout(this.receiptTimer);
       this.receiptTimer = null;
     }
+  }
+
+  private scheduleReceiptDismissal(): void {
+    this.stopReceiptTimer();
+    this.receiptTimer = window.setTimeout(() => this.clearReceipt(), 30_000);
+  }
+
+  private backToReceipt(): void {
+    this.panel = 'receipt';
+    this.hud.dataset.panel = 'receipt';
+    this.hud.dataset.state = 'receipt';
+    this.scheduleReceiptDismissal();
+    this.applyPosition();
+    this.hud.querySelector<HTMLButtonElement>('[data-act="share"]')?.focus();
+  }
+
+  private clearReceipt(): void {
+    this.stopReceiptTimer();
+    this.lastSession = null;
     this.panel = 'dashboard';
     this.hud.dataset.panel = 'dashboard';
     this.hud.classList.remove('has-receipt');
@@ -848,9 +868,9 @@ export class Overlay {
   }
 
   private renderReceiptBars(series: number[]): void {
-    const values = series.slice(-48);
+    const values = compressCadence(series, this.rBars.length);
     const max = Math.max(60, ...values);
-    const offset = 48 - values.length;
+    const offset = this.rBars.length - values.length;
     for (let i = 0; i < this.rBars.length; i++) {
       const el = this.rBars[i]!;
       const index = i - offset;
@@ -889,6 +909,7 @@ export class Overlay {
 
   private async openShare(): Promise<void> {
     if (!this.lastSession) return;
+    this.stopReceiptTimer();
     this.panel = 'share';
     this.hud.dataset.panel = 'share';
     this.hud.dataset.state = 'share';
@@ -896,12 +917,13 @@ export class Overlay {
     this.shareStatus.textContent = '';
     this.renderShareTabs();
     this.applyPosition();
+    this.tabButtons[0]?.focus();
     await this.renderShare();
   }
 
   private renderShareTabs(): void {
     for (const button of this.tabButtons) {
-      button.setAttribute('aria-selected', String(button.dataset.format === this.shareFormat));
+      button.setAttribute('aria-pressed', String(button.dataset.format === this.shareFormat));
     }
   }
 
@@ -1283,12 +1305,7 @@ export class Overlay {
       if (action === 'dock') this.resetDock();
       if (action === 'share') void this.openShare();
       if (action === 'dismiss') this.clearReceipt();
-      if (action === 'close-share') {
-        this.panel = 'receipt';
-        this.hud.dataset.panel = 'receipt';
-        this.hud.dataset.state = 'receipt';
-        this.applyPosition();
-      }
+      if (action === 'close-share') this.backToReceipt();
       if (action === 'copy-card') void this.copyShare();
       if (action === 'download-card') void this.downloadShare();
     });
@@ -1296,10 +1313,7 @@ export class Overlay {
     this.hud.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
       if (this.panel === 'share') {
-        this.panel = 'receipt';
-        this.hud.dataset.panel = 'receipt';
-        this.hud.dataset.state = 'receipt';
-        this.applyPosition();
+        this.backToReceipt();
       } else if (this.panel === 'receipt') {
         this.clearReceipt();
       }

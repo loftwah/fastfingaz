@@ -933,7 +933,7 @@ a:focus-visible {
   letter-spacing: 0.06em;
 }
 
-.share-tabs button[aria-selected='true'] {
+.share-tabs button[aria-pressed='true'] {
   border-color: var(--solid-bg);
   background: var(--solid-bg);
   color: var(--solid-text);

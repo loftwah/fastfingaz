@@ -174,7 +174,7 @@ The durable summary lives in `chrome.storage.local`:
   higher best. A best that falls out of the retained session list is still remembered.
 - **last** — the most recent eligible sent prompt, small enough to show in the idle HUD.
 - **rolling** — the last 20 eligible sessions, weighted.
-- **all time** — every eligible session retained locally (up to 500).
+- **retained-history average** (`allTime` in exports) — every eligible session still stored locally.
 - **totals** — recorded sessions and the draft bucket.
 
 A resumed draft (text already in the composer when tracking began) is kept for the record and shown
@@ -183,16 +183,16 @@ baseline.
 
 ### In-progress snapshots
 
-The content script writes a text-free snapshot of the current run to `chrome.storage.session` about
+The content script asks the service worker to write a text-free snapshot to `chrome.storage.session` about
 once per second. If the tab reloads, the HUD shows those numbers as **PAUSED / NOT RECORDED** until
 you start typing again. The snapshot contains the held live WPM, think/flow/peak, words, time, status
-and the cadence series — never prompt text — and it is never saved as history. The popup reads the
-same snapshot to show a **LIVE RUN** panel while you are typing.
+and the cadence series. It contains no prompt text and is never saved as history. The popup asks
+the active ChatGPT tab for a fresh live reading.
 
 ## Pauses
 
 Every gap over the threshold is a pause, including the final gap between the last keystroke and
-send. The card and popup report the count and median; the popup also reports the longest.
+send. The card and popup report the count and median. Exports also include the longest pause.
 
 ## Aggregation
 
@@ -204,7 +204,7 @@ averageThinkWpm = sum(finalChars) / 5 / (sum(wallMs) / 60000)
 averageFlowWpm  = sum(insertedChars) / 5 / (sum(activeMs) / 60000)
 ```
 
-The rolling average uses the last 20 eligible sessions. The all-time average uses every eligible
+The rolling average uses the last 20 eligible sessions. The retained-history average uses every eligible
 session retained locally. Drafts, paste-dominated runs and low-signal runs are excluded. This
 prevents a one-line "thanks" from moving the average.
 
