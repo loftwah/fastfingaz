@@ -35,6 +35,8 @@ readings. **Clear all sessions** removes previously stored text along with the h
 - No advertising or tracking code.
 - No reading of tabs or sites other than the ChatGPT domains listed in the extension manifest.
 
+Fastfingaz handles user data in accordance with the [Chrome Web Store User Data Policy](https://developer.chrome.com/docs/webstore/program-policies/user-data-faq/), including its Limited Use requirements.
+
 ## Permissions
 
 | Permission | Why it exists |

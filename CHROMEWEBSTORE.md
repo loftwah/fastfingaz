@@ -48,7 +48,7 @@ If you find a bug or have an idea, open an issue at https://github.com/loftwah/f
 
 **Category** [REQUIRED]
 
-Productivity
+Productivity → Workflow & Planning
 
 **Single Purpose** [REQUIRED]
 
@@ -98,7 +98,7 @@ The manifest has requested only these four entries since v0.2.0. The 0.4.0 renam
 
 ### Data Collection
 
-**Does the extension collect user data?** No. Data is processed locally and never transmitted off-device. Prompt text is not stored unless the user enables **Store the text of sent prompts**.
+The store disclosure lists personal communications (ChatGPT prompts), user activity and website content. The extension processes this data on-device and does not transmit it. Prompt text is saved only when the user enables **Store the text of sent prompts**.
 
 | Data Type | Collected? | Transmitted Off-Device? | Purpose | Shared with Third Parties? |
 | --- | --- | --- | --- | --- |
@@ -106,7 +106,7 @@ The manifest has requested only these four entries since v0.2.0. The 0.4.0 renam
 | Health info | No | No | — | No |
 | Financial info | No | No | — | No |
 | Authentication info | No | No | — | No |
-| Personal communications | No | No | — | No |
+| Personal communications | Local only | No | Reads the ChatGPT prompt being composed to calculate the reading. | No |
 | Location | No | No | — | No |
 | Web history | No | No | — | No |
 | User activity | Local only | No | Typing timings and WPM are stored in `chrome.storage.local` for your history. In-progress snapshots use `chrome.storage.session` and contain no text. | No |
