@@ -160,9 +160,10 @@ PORT=4319 npm run site:serve   # http://127.0.0.1:4319
 npm run site:deploy            # needs CLOUDFLARE_* in .env
 ```
 
-The site is deployed on **Cloudflare Pages** as the `fastfingaz` project and served at
+The site is deployed on **Cloudflare Pages** as the existing `thinktype` project and served at
 **https://fastfingaz.loftwah.com**. The DNS record is a CNAME from `fastfingaz.loftwah.com` to
-`fastfingaz-7sb.pages.dev`. No R2 bucket is used; the Pages assets are enough.
+`thinktype-7sb.pages.dev`. `thinktype.loftwah.com` is proxied and 301s to the new host via a
+Cloudflare Redirect Rule. No R2 bucket is used; the Pages assets are enough.
 
 SEO/OG assets:
 
@@ -186,7 +187,7 @@ images.
   included in your export.
 - Export or clear everything from the options page.
 - Permissions: `storage`, `clipboardWrite`, and the two ChatGPT host permissions. No new permissions
-  in v0.4.0.
+  in v0.4.1.
 
 Canonical policy: https://fastfingaz.loftwah.com/privacy · Source: [docs/PRIVACY.md](docs/PRIVACY.md)
 

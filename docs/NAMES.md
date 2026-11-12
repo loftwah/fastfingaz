@@ -19,8 +19,8 @@ Method:
 
 | Name | .com | .dev | GitHub | npm | One-line reason | Risk |
 | --- | --- | --- | --- | --- | --- | --- |
-| **Thinktype** (current) | Registered | Registered | Taken | Free | The current name; descriptive of the product. | Both domains taken; a rename would need a coordinated migration; GitHub handle is someone else's. |
-| **Fastfingaz** | Free | Free | Repo free* | Free | Fast fingers; memorable, unique and says what it measures. | The vanity `github.com/fastfingaz` handle is taken; the repo would be `loftwah/fastfingaz`. Slangier tone. |
+| **Thinktype** (previous) | Registered | Registered | Taken | Free | The previous name; descriptive of the product. | Both domains taken; GitHub handle is someone else's. |
+| **Fastfingaz** (approved) | Free | Free | Repo free* | Free | Fast fingers; memorable, unique and says what it measures. | The vanity `github.com/fastfingaz` handle is taken; the repo is `loftwah/fastfingaz`. Slangier tone. |
 | **Inkmeter** | Registered | Free | Repo free | Free | The user's preferred spelling of ink + meter. | `.com` is taken, so it is not free on everything. |
 | **Typeometer** | Free | Free | Free | Free | A meter for type; reads as a field instrument, not a SaaS. | 10 characters; pronunciation and spelling need a beat; may be premium at the registrar. |
 | **Typmeter** | Free | Free | Free | Free | Shortest candidate; "type meter" without the extra vowel. | Looks like a typo of "type meter"; less dignified in prose. |
