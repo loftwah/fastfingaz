@@ -10,17 +10,6 @@
 
 <!-- Does this change any WPM, consistency, pause or signal calculation? If not, say "none". -->
 
-## Testing
+## Verification
 
-- [ ] `npm run typecheck`
-- [ ] `npm test`
-- [ ] `npm run build`
-- [ ] Loaded unpacked and typed a real prompt
-- [ ] Sent a message and checked the receipt
-- [ ] Checked popup and options
-
-## Privacy
-
-- [ ] No network calls added
-- [ ] Prompt text is not stored or logged unless the setting is on
-- [ ] No new permissions
+<!-- Record the focused check you ran and any measurement, privacy or permission impact. -->

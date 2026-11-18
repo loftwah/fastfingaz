@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — Fastfingaz
 
-> Last Updated: 2026-11-12
+> Last Updated: 2026-11-18
 
 ## Store Listing
 
@@ -157,7 +157,7 @@ https://github.com/loftwah/fastfingaz
 
 | Version | Date | Changes | Status |
 | --- | --- | --- | --- |
-| 0.4.3 | 2026-11-12 | Storage quota fallback, accurate long-session cadence charts, tighter composer detection and keyboard-friendly share controls | Submitted for review. Publish automatically after approval. |
+| 0.4.3 | 2026-11-12 | Storage quota fallback, accurate long-session cadence charts, tighter composer detection and keyboard-friendly share controls | [Published](https://chromewebstore.google.com/detail/gajfdknfhdopbfnmcakkopeghfechkgb) |
 | 0.4.2 | 2026-11-12 | Live popup scoped to the active tab, serialized local writes, corrected manual pause accounting and send-intent handling, no new permissions | Draft — not submitted |
 | 0.4.1 | 2026-11-12 | Baseline rail is opt-in and off by default, so the HUD is a single display; settings toggle restores it; no new permissions, 47 tests | Draft — not submitted |
 | 0.4.0 | 2026-11-11 | Renamed to Fastfingaz; Pixel F icon set at 16/32/48/128/180/192/512 plus maskable and favicon; new site host, OG/store art and 301 from the old domain; no new permissions, 47 tests | Draft — superseded by 0.4.1 |
@@ -173,6 +173,9 @@ https://github.com/loftwah/fastfingaz
 | 0.1.0 | 2026-11-10 | Initial local-first typing measurement extension, HUD, receipts, history, settings | Draft |
 
 ## Review Notes
+
+For a new submission, `npm run zip` builds and packages the extension in one step. See the
+[testing and release budget](AGENTS.md#testing-and-release).
 
 ### Known Issues / Limitations
 

@@ -27,13 +27,12 @@
     "demo": "vite --config demo/vite.config.ts",
     "site:build": "node scripts/build-site.mjs",
     "site:serve": "node scripts/serve-site.mjs",
-    "site:deploy": "npm run site:build && npx wrangler pages deploy site/dist --project-name thinktype --branch main",
+    "site:deploy": "npm run site:build && npx --yes wrangler@4.162.0 pages deploy site/dist --project-name thinktype --branch main",
     "icons": "node scripts/icons.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest",
     "format": "prettier --write .",
-    "check": "npm run typecheck && npm run test && npm run build",
+    "check": "npm run typecheck && npm test",
     "zip": "wxt zip"
   },
   "devDependencies": {

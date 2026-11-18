@@ -20,10 +20,25 @@ sections, permission justifications and store limits. Every entry in `manifest` 
 - **The visual world is fixed.** Read `DESIGN.md` before UI work: paper documents, a black LCD HUD,
   signal orange, Geist Sans/Mono/Pixel. No gradients, glass, glows, lime or violet.
 
-## Checks
+## Testing and release
+
+- **Two minutes maximum for routine testing and release combined.** Count checks, packaging,
+  deployment and the live smoke check in the same wall-clock budget. If the path exceeds it, cut
+  or fix the slow step before repeating it.
+- Keep only fast checks that catch serious regressions in privacy, saved data or core measurement.
+  Exercise the production code with fixed inputs and expected results. Remove overlapping tests
+  and fixtures that recreate production logic.
+- Run one relevant check for the change. Let advisory main CI run `npm run check` once with a
+  two-minute timeout. Skip Markdown-only pushes and run the suite locally only when it helps verify
+  a check change or diagnose a failure. Avoid required CI, duplicate builds, preview deploys,
+  artifact uploads and manual sign-offs as release gates.
+- Build the release artifact once for the target that is shipping, publish it and verify it live
+  with one focused smoke check. `npm run site:deploy` includes the Pages build. `npm run zip` includes
+  the extension build. Measure through submission for Chrome Web Store releases and report Google's
+  review time separately.
 
 ```bash
-npm run check        # typecheck, tests, production build
+npm run check        # typecheck and critical regressions
 npm run unpacked     # copy the build to the visible unpacked/ folder
 npm run demo         # visual preview at localhost:4173
 npm run site:build   # build site/dist with fonts, art and icons

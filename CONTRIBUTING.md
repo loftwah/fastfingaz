@@ -42,8 +42,7 @@ in `chrome://extensions`.
 2. **Text is opt-in.** Never store prompt text unless `settings.storeText` is true. Never log it.
 3. **Never intercept typing.** Listeners are passive. Do not `preventDefault`, rewrite, or replay
    keystrokes.
-4. **Measurement changes need tests.** If you touch `metrics.ts` or `typing-session.ts`, add a case
-   that would have failed before.
+4. **Keep only critical regression tests.** Use the production path and check a concrete outcome.
 5. **No new permissions without an issue first.** `storage` and `clipboardWrite` should be enough.
 6. **Stay inside the visual world.** Read `DESIGN.md` before UI work. No gradients, glass,
    glows, or a second accent colour.
@@ -56,27 +55,10 @@ in `chrome://extensions`.
 - Self-hosted Geist only. Any new face needs a written reason and an OFL-compatible licence.
 - Prettier: `npm run format`.
 
-## Manual test checklist
+## Verification
 
-Before opening a PR that touches the content script or UI:
-
-- [ ] `npm run dev` loads the extension in Chrome.
-- [ ] Open a new ChatGPT chat and type 30+ characters. The HUD shows live WPM, timer and words.
-- [ ] Pause for 5 seconds. The status switches to THINKING and the live number **holds**; it does not
-  snap to zero.
-- [ ] Send the message. The receipt prints with think/flow/peak/words/signal and a NEW BEST stamp only
-  when it actually beats the stored best.
-- [ ] Open **Share card**. The three formats render, the file size appears, and copy/download work.
-- [ ] Open the popup. Today, baseline, chart and recent sessions update; detail renders all three
-  formats.
-- [ ] Toggle the HUD with `Alt+Shift+T`; reload and confirm the setting persists.
-- [ ] Reload the tab mid-run. The HUD shows PAUSED / NOT RECORDED, never a fake live run.
-- [ ] Paste a whole message and send. It is rejected or flagged low-signal and excluded from averages.
-- [ ] Try 1280, 1440, 1728 and 2048 widths. The HUD stays in the side gutter, never covers the composer
-  or the last message, and remains readable at full / medium / slim widths.
-- [ ] `npm run typecheck && npm test && npm run build` passes.
-- [ ] `npm run site:build` passes and `PORT=4319 npm run site:serve` loads the home, privacy, metrics,
-  changelog and 404 pages.
+Follow the [two-minute testing and release budget](AGENTS.md#testing-and-release). For changes that
+need browser verification, smoke-check the affected behavior.
 
 ## Pull requests
 

@@ -155,10 +155,10 @@ The static site lives in `site/` and is built into `site/dist` by
 `scripts/build-site.mjs`. It is plain HTML/CSS, no client JavaScript.
 
 ```bash
-npm run site:build
-PORT=4319 npm run site:serve   # http://127.0.0.1:4319
-(set -a; . ./.env; set +a; npm run site:deploy)
+npm run site:build && PORT=4319 npm run site:serve
 ```
+
+To publish from `main`, run `(set -a; . ./.env; set +a; npm run site:deploy)`.
 
 The site is deployed on **Cloudflare Pages** as the existing `thinktype` project and served at
 **https://fastfingaz.loftwah.com**. The DNS record is a CNAME from `fastfingaz.loftwah.com` to
@@ -221,7 +221,7 @@ public/
   fonts/                 Geist Sans / Mono / Pixel + OFL
   icon/                  16/32/48/128 Pixel F icons
 demo/                    Vite visual preview, gallery, artboards, card exporter
-tests/                   47 unit tests for the state machine and metrics
+tests/                   Critical storage and measurement regressions
 wxt.config.ts            manifest and permissions
 ```
 
@@ -231,7 +231,7 @@ wxt.config.ts            manifest and permissions
 | --- | --- |
 | `npm run dev` | Start WXT and Chrome |
 | `npm run typecheck` | `tsc --noEmit` |
-| `npm test` | Run the Vitest suite |
+| `npm test` | Run critical regression tests |
 | `npm run build` | Production build in `.output/chrome-mv3` |
 | `npm run unpacked` | Copy the build to the visible `unpacked/` folder |
 | `npm run zip` | Store-ready zip in `.output/` |
@@ -240,9 +240,9 @@ wxt.config.ts            manifest and permissions
 | `npm run site:serve` | Serve `site/dist` (override with `PORT=4319`) |
 | `npm run site:deploy` | Build and deploy to Cloudflare Pages |
 | `npm run icons` | Regenerate `public/icon` from `assets/icon.svg` |
-| `npm run check` | Typecheck, test and build |
+| `npm run check` | Typecheck and run critical regressions |
 
-`npm run typecheck && npm test && npm run build` is the full check.
+See [testing and release](AGENTS.md#testing-and-release) for the two-minute budget.
 
 > **zsh note:** interactive comments are off by default, so a trailing `# comment` is passed to the
 > command as arguments. Run commands on their own, or add `setopt interactivecomments` to `~/.zshrc`.
